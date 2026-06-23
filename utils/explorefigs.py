@@ -14,10 +14,6 @@ from scipy.stats import zscore
 from rastermap import Rastermap, utils
 from sklearn.decomposition import PCA
 import matplotlib.animation as animation
-import logging
-
-logger = logging.getLogger(__name__)
-
 
 def get_rand_trials(ses, ntrials=80):
     trialsel = [np.random.randint(low=5, high=len(ses.trialdata)-100)]
@@ -28,7 +24,6 @@ def get_rand_trials(ses, ntrials=80):
 def plot_excerpt(ses, trialsel=None, neuronsel=None, plot_neural=True, plot_behavioral=True, neural_version='traces'):
     if trialsel is None:
         trialsel = get_rand_trials(ses)
-    logger.info('Plotting trials %d to %d' % (trialsel[0], trialsel[1]))
     if ses.sessiondata['protocol'][0] in ['GR','GN','IM']:
         tstart  = ses.trialdata['tOffset'][trialsel[0]-1]
         tstop   = ses.trialdata['tOnset'][trialsel[1]-1]

@@ -7,8 +7,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -16,12 +14,12 @@ import statsmodels.api as sm
 from sklearn.decomposition import FactorAnalysis as FA
 from statsmodels.formula.api import ols
 
+from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import *
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.corr_lib import *
 from utils.tuning import *
 from utils.gain_lib import * 
-from preprocessing.preprocesslib import assign_layer2
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 calciumversion = 'dF'
@@ -66,16 +64,6 @@ report_sessions(sessions)
 
 #%% ##################### Compute pairwise neuronal distances: ##############################
 sessions        = compute_pairwise_anatomical_distance(sessions)
-
-#%%  #assign arealayerlabel
-for ises in range(nSessions):   
-    # sessions[ises].celldata = assign_layer(sessions[ises].celldata)
-    # sessions[ises].celldata = assign_layer2(sessions[ises].celldata,splitdepth=250)
-    sessions[ises].celldata = assign_layer2(sessions[ises].celldata,splitdepth=275)
-    sessions[ises].celldata['arealayerlabel'] = sessions[ises].celldata['arealabel'] + sessions[ises].celldata['layer'] 
-
-    sessions[ises].celldata['arealayer'] = sessions[ises].celldata['roi_name'] + sessions[ises].celldata['layer'] 
-
 
 #%% Compute noise correlations / covariance after subtracting X modes of covariance:
 # areas = ['V1','PM','AL','RSP']

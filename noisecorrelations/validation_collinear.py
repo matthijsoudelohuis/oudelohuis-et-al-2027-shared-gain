@@ -7,17 +7,15 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
-
 import copy
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import binned_statistic_2d
 
+from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions
 from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper,ori_remapping
-from preprocessing.preprocesslib import assign_layer2
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
@@ -49,15 +47,7 @@ for ises in range(len(sessions)):
 #%% ##################### Compute pairwise neuronal distances: ##############################
 sessions = compute_pairwise_anatomical_distance(sessions)
 
-#%%  #assign arealayerlabel
-for ises in range(nSessions):   
-    sessions[ises].celldata = assign_layer2(sessions[ises].celldata,splitdepth=275)
-    sessions[ises].celldata['arealayerlabel'] = sessions[ises].celldata['arealabel'] + sessions[ises].celldata['layer'] 
-    sessions[ises].celldata['arealayer'] = sessions[ises].celldata['roi_name'] + sessions[ises].celldata['layer'] 
-
 #%%
-from sklearn.decomposition import FactorAnalysis as FA
-
 areas = ['V1','PM']
 n_components = 20
 fa = FA(n_components=n_components)

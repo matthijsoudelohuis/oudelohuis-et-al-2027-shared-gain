@@ -4,18 +4,17 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 # from scipy.linalg import norm
-# from scipy.stats import vonmises
+from scipy.stats import vonmises
 # from sklearn.preprocessing import minmax_scale
 # from tqdm import tqdm
-
 
 from loaddata.get_data_folder import get_local_drive
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.gain_lib import * 
 
-from fct_stat_models import * 
-from fct_stat_models_utils import * 
-import fct_facilities as fac 
+from fct_stat.fct_stat_models import * 
+from fct_stat.fct_stat_models_utils import * 
+import fct_stat.fct_facilities as fac 
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 

@@ -14,15 +14,10 @@ import pandas as pd
 from loaddata.get_data_folder import get_data_folder
 from utils.psth import *
 import scipy
-import logging
-from utils.filter_lib import my_highpass_filter
-logger = logging.getLogger(__name__)
 
 class Session():
 
     def __init__(self, protocol='', animal_id='', sessiondate='', verbose=1):
-        logger.debug(
-            'Initializing Session object for: \n- animal ID: {}' '\n- Session ID: {}\n'.format(animal_id, sessiondate))
         self.data_folder = os.path.join(
             get_data_folder(), protocol, animal_id, sessiondate)
         self.verbose = verbose
@@ -121,12 +116,9 @@ class Session():
         #                             fp=self.behaviordata['zpos'])
 
     def reset_label_threshold(self, threshold):
-        logger.info(
-            'Setting new labeling threshold based on %1.2f overlap' % threshold)
-        # self.celldata['redcell'] = self.celldata['redcell_prob']>0.4
+
         self.celldata['redcell'] = self.celldata['frac_red_in_ROI'] >= threshold
         # print('Need to set cre non flp again\n')
-        logger.info('put lower and upper threshold')
 
         # Add recombinase enzym label to red cells:
         labelareas = ['V1', 'PM']

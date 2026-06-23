@@ -1,5 +1,6 @@
 #%% 
-import os, math
+
+import os
 import pandas as pd
 import seaborn as sns
 import numpy as np
@@ -473,9 +474,6 @@ for iN,N in enumerate(idx_N):
 
 
 #%% Pick several examples:
-
-idxs = 
-
 
 
 

@@ -1,11 +1,10 @@
-#%% 
+#%% Imports
 import os
 import pandas as pd
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
-
 
 from loaddata.get_data_folder import get_local_drive
 from utils.gain_lib import * 
@@ -17,27 +16,6 @@ from utils.corr_lib import filter_sharednan
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 resultdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Analysis\\SharedGain')
-
-
-#%% 
-
-# session_list        = np.array([['LPE11086_2024_01_05']])
-# session_list        = np.array([['LPE12223_2024_06_10']])
-# session_list        = np.array([['LPE12223_2024_06_10','LPE11086_2024_01_05','LPE10919_2023_11_06']])
-
-# sessions,nSessions  = filter_sessions(protocols = ['GR'],only_session_id=session_list,filter_noiselevel=True)
-# sessiondata         = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
-
-# #%%  Load data properly:                      
-# for ises in range(nSessions):
-#     sessions[ises].load_respmat(load_behaviordata=True, load_calciumdata=True,load_videodata=True,
-#                                 calciumversion='deconv',keepraw=False)
-
-# #%% Add how neurons are coupled to the population rate: 
-# sessions = compute_pop_coupling(sessions)
-# sessions = ori_remapping(sessions)
-# sessions = compute_tuning_wrapper(sessions)
-# sessions = compute_pairwise_anatomical_distance(sessions)
 
 
 #%% Load the data:

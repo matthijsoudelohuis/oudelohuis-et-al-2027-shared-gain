@@ -7,8 +7,6 @@ Matthijs Oude Lohuis, 2022-2026, Champalimaud Center, Lisbon
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -16,8 +14,8 @@ import seaborn as sns
 from tqdm import tqdm
 from sklearn.decomposition import FactorAnalysis as FA
 
+from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions
-from preprocessing.preprocesslib import assign_layer
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper

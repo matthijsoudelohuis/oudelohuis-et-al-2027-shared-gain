@@ -11,7 +11,6 @@ from scipy.stats import zscore
 
 from loaddata.get_data_folder import get_data_folder
 from loaddata.session import Session
-from utils.behaviorlib import * # get support functions for beh analysis 
 from utils.psth import * # get support functions for psth generation
 
 def load_sessions(protocol, session_list, load_behaviordata=False, load_calciumdata=False, load_videodata=False, 

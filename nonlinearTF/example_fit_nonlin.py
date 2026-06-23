@@ -6,7 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-
 from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions
 from utils.gain_lib import * 
@@ -17,10 +16,7 @@ from utils.nonlin_lib import *
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
-
 #%% 
-session_list        = np.array([['LPE11086_2024_01_05']])
-session_list        = np.array([['LPE12223_2024_06_10']])
 session_list        = np.array([['LPE12223_2024_06_10','LPE11086_2024_01_05','LPE10919_2023_11_06']])
 
 sessions,nSessions  = filter_sessions(protocols = ['GR'],only_session_id=session_list,filter_noiselevel=True)
