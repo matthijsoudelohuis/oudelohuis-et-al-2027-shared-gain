@@ -5,14 +5,13 @@ from scipy.stats import zscore
 import sklearn
 from sklearn.model_selection import KFold
 from sklearn.linear_model import LogisticRegression as LOGR
-from sklearn.linear_model import LinearRegression,Lasso,Ridge,ElasticNet
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn import svm as SVM
-from sklearn.metrics import accuracy_score, r2_score, explained_variance_score
+from sklearn.metrics import r2_score
 from sklearn.model_selection import cross_val_score
 from sklearn.decomposition import PCA
-from scipy.stats import zscore, wilcoxon, ranksums, ttest_rel
+from scipy.stats import zscore, ttest_rel
 from matplotlib.lines import Line2D
 
 # from utils.dimreduc_lib import *
@@ -591,7 +590,6 @@ def plot_dec_perf_arealabel(dec_perf,sbins,arealabels,clrs_arealabels,testwin=[0
     plt.tight_layout()
     return fig
 
-from statsmodels.stats.anova import AnovaRM
 
 # Show the decoding performance across space for the different populations:
 def plot_dec_perf_area(dec_perf,sbins,arealabels,clrs_arealabels,testwin=[0,25]):

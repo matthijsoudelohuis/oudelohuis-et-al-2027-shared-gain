@@ -5,11 +5,7 @@ Author: Matthijs Oude Lohuis, Champalimaud Research
 2022-2025
 """
 
-import os
 import numpy as np
-import pandas as pd
-from scipy.stats import binned_statistic,binned_statistic_2d
-from tqdm import tqdm
 import matplotlib.pyplot as plt
 
 def compute_pairwise_metrics(sessions):

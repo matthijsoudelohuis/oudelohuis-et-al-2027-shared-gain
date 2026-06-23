@@ -7,19 +7,16 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 import os
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-import scipy.stats as st
 from sklearn import preprocessing
-from loaddata.session_info import filter_sessions,load_sessions
+from loaddata.session_info import load_sessions
 from utils.plot_lib import * #get all the fixed color schemes
 
 from utils.imagelib import load_natural_images #
 from utils.explorefigs import *
-from utils.psth import compute_tensor,compute_respmat,construct_behav_matrix_ts_F
+from utils.psth import compute_respmat, construct_behav_matrix_ts_F
 from loaddata.get_data_folder import get_local_drive
-from utils.corr_lib import mean_resp_image,compute_signal_correlation, compute_pairwise_metrics
-from utils.plot_lib import shaded_error
+from utils.corr_lib import mean_resp_image
 from utils.RRRlib import *
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')

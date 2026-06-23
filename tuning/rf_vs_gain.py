@@ -1,12 +1,12 @@
 
 #%% Import libs:
-import os, math, copy
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from loaddata.session_info import filter_sessions,load_sessions
+from loaddata.session_info import filter_sessions
 from scipy.stats import zscore
 from scipy.stats import linregress
 

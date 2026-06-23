@@ -6,7 +6,7 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 """
 
 #%% ###################################################
-import math, os
+import os
 from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
@@ -17,15 +17,12 @@ from scipy.stats import binned_statistic,binned_statistic_2d
 from tqdm import tqdm
 from statannotations.Annotator import Annotator
 
-from loaddata.session_info import filter_sessions,load_sessions
-from utils.psth import compute_respmat
+from loaddata.session_info import filter_sessions
 from utils.tuning import compute_tuning, compute_prefori,compute_tuning_wrapper
 from utils.plot_lib import * #get all the fixed color schemes
-from utils.explorefigs import plot_PCA_gratings,plot_PCA_gratings_3D,plot_excerpt
+from utils.explorefigs import plot_PCA_gratings, plot_PCA_gratings_3D
 from utils.plot_lib import shaded_error
-from utils.RRRlib import regress_out_behavior_modulation
 from utils.corr_lib import *
-from utils.rf_lib import smooth_rf, filter_nearlabeled
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 

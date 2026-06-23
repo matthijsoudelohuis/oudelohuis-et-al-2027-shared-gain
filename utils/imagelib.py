@@ -1,6 +1,5 @@
 import os
 import numpy as np
-from PIL import Image
 import scipy.io as sio
 
 def im_log(image):

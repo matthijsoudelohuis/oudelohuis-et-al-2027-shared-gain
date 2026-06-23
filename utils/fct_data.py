@@ -4,8 +4,6 @@
 ### Import functions
 
 import numpy as np
-import sys
-import matplotlib.pyplot as plt
 import scipy.io
 from scipy.ndimage import gaussian_filter1d
 from scipy.ndimage import convolve1d

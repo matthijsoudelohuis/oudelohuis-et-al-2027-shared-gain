@@ -4,20 +4,15 @@ Champalimaud 2023
 
 """
 
-import pandas as pd
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy.matlib
 from sklearn.cross_decomposition import CCA
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 from sklearn.decomposition import PCA
 
 from sklearn.model_selection import KFold
 from scipy.stats import zscore
 
-from loaddata.session_info import load_sessions
-from utils.psth import compute_tensor
 
 def CCA_subsample(DATA1,DATA2,nN=None,nK=None,resamples=5,kFold=5,prePCA=None,n_components=1):
     # Data format: 

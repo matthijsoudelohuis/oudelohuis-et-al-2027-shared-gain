@@ -1,6 +1,6 @@
 
 #%% Import libs:
-import os, math, copy
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +8,7 @@ import seaborn as sns
 from scipy.stats import zscore
 from scipy.stats import linregress
 
-from loaddata.session_info import filter_sessions,load_sessions
+from loaddata.session_info import filter_sessions
 from utils.gain_lib import *
 from utils.tuning import *
 

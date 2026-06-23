@@ -13,11 +13,10 @@
 
 
 #%% ###################################################
-import math, os
+import os
 from loaddata.get_data_folder import get_local_drive
 
 # import h5py
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
@@ -26,7 +25,6 @@ from tqdm import tqdm
 from scipy.stats import zscore
 
 from loaddata.session_info import filter_sessions
-from utils.psth import compute_tensor
 from preprocessing.preprocesslib import assign_layer
 from utils.plot_lib import * #get all the fixed color schemes
 
@@ -167,7 +165,6 @@ def plot_crosscorr_poppairs(crosscorr_data,timelags,arealayerlabels,pop_pairs,ti
     return fig
 
 #%% 
-from statsmodels.tsa.stattools import grangercausalitytests
 from statsmodels.tsa.api import VAR
 
 

@@ -6,13 +6,11 @@ Created on Mon Jan  2 16:18:37 2023
 @author: joana
 """
 
-import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy.matlib
 from sklearn.cross_decomposition import CCA
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from loaddata.session_info import load_sessions
 from utils.psth import compute_tensor

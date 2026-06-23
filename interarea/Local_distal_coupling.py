@@ -6,7 +6,7 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 """
 
 #%% ###################################################
-import math, os
+import os
 from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
@@ -20,9 +20,7 @@ from scipy.stats import zscore
 # from sklearn.cross_decomposition import CCA
 from tqdm import tqdm
 
-from loaddata.session_info import filter_sessions,load_sessions
-from utils.psth import compute_tensor,compute_respmat
-from utils.tuning import compute_tuning,compute_tuning_wrapper
+from loaddata.session_info import filter_sessions
 # from utils.plot_lib import * #get all the fixed color schemes
 # from utils.explorefigs import *
 # from utils.CCAlib import *

@@ -11,15 +11,13 @@ from loaddata.get_data_folder import get_local_drive
 
 import copy
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy.stats import binned_statistic,binned_statistic_2d
+from scipy.stats import binned_statistic_2d
 
-from loaddata.session_info import filter_sessions,load_sessions
+from loaddata.session_info import filter_sessions
 from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper,ori_remapping
-from preprocessing.preprocesslib import assign_layer,assign_layer2
+from preprocessing.preprocesslib import assign_layer2
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 

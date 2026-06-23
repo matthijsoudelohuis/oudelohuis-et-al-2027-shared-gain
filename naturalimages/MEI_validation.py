@@ -17,9 +17,7 @@ from sklearn import preprocessing
 # Import personal lib funcs
 from loaddata.session_info import load_sessions
 from utils.plot_lib import *  # get all the fixed color schemes
-from utils.imagelib import load_natural_images
 from loaddata.get_data_folder import get_local_drive
-from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.rf_lib import *
 from utils.tuning import mean_resp_image
 

@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from loaddata.get_data_folder import get_local_drive
-from loaddata.session_info import filter_sessions,load_sessions
+from loaddata.session_info import load_sessions
 from utils.filter_lib import my_highpass_filter,compute_power_spectra
 from utils.explorefigs import *
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')

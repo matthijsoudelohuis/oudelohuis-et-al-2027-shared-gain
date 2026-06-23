@@ -10,7 +10,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import numpy.matlib
 from sklearn.cross_decomposition import CCA
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 #%%  
 

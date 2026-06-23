@@ -1,21 +1,16 @@
 #%% 
-import os, math
+import os
 import pandas as pd
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.linalg import norm
-from scipy.stats import vonmises
-from sklearn.preprocessing import minmax_scale
 from sklearn.metrics import r2_score
 from tqdm import tqdm
 from scipy.stats import linregress
 import statsmodels.formula.api as smf
-from statannotations.Annotator import Annotator
 
 
-from utils.explorefigs import plot_PCA_gratings_3D,plot_PCA_gratings
-from loaddata.session_info import filter_sessions,load_sessions
+from loaddata.session_info import filter_sessions
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
 from utils.pair_lib import compute_pairwise_anatomical_distance

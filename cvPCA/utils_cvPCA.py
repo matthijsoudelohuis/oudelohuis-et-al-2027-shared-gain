@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.sparse.linalg import eigsh
 from sklearn.decomposition import PCA
 
 def get_powerlaw(ss, trange):

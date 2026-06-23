@@ -6,22 +6,18 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 """
 
 #%% ###################################################
-import math, os
+import os
 from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.signal import medfilt
 from sklearn.decomposition import PCA
-from sklearn.impute import SimpleImputer
 from scipy.stats import zscore
 from sklearn.cross_decomposition import CCA
 
-from loaddata.session_info import filter_sessions,load_sessions
-from utils.psth import compute_tensor,compute_respmat
-from utils.tuning import compute_tuning
+from loaddata.session_info import filter_sessions
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.explorefigs import *
 from utils.CCAlib import *
@@ -175,9 +171,8 @@ fig = plot_respmat(orientations, datasets, ['original','pop rate gain'],prefori)
 #%% 
 from mvlearn.datasets import sample_joint_factor_model
 from mvlearn.embed import CCA as CCAmv
-from mvlearn.embed import MCCA, KMCCA
+from mvlearn.embed import MCCA
 from mvlearn.plotting import crossviews_plot
-from mvlearn.decomposition import GroupPCA
 
 
 #%% Load an example session: 
@@ -541,9 +536,8 @@ my_savefig(fig,figdir,'CCA_sorts_WithinSession_V1PM_%dsessions' % (nSessions),fo
 #%%
 from mvlearn.datasets import sample_joint_factor_model
 from mvlearn.embed import CCA as CCAmv
-from mvlearn.embed import MCCA, KMCCA
+from mvlearn.embed import MCCA
 from mvlearn.plotting import crossviews_plot
-from mvlearn.decomposition import GroupPCA
 
 
 

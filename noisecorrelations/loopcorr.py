@@ -13,20 +13,14 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from tqdm import tqdm
-from scipy.signal import detrend
 from statannotations.Annotator import Annotator
-from scipy.optimize import curve_fit
 
 from loaddata.session_info import filter_sessions,load_sessions
 from preprocessing.preprocesslib import assign_layer
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.plot_lib import shaded_error,my_ceil,my_floor
 from utils.corr_lib import *
-from utils.rf_lib import smooth_rf,exclude_outlier_rf,filter_nearlabeled,replace_smooth_with_Fsig
 from utils.tuning import compute_tuning_wrapper
-from utils.explorefigs import plot_excerpt
-from utils.shuffle_lib import my_shuffle, corr_shuffle
 from utils.gain_lib import * 
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')

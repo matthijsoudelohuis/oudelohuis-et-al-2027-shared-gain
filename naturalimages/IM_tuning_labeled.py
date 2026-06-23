@@ -12,7 +12,6 @@ from loaddata.get_data_folder import get_local_drive
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn import preprocessing
 from tqdm import tqdm
 
 from loaddata.session_info import filter_sessions,load_sessions

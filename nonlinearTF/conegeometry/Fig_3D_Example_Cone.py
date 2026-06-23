@@ -1,13 +1,14 @@
 
 #%% Import libs:
-import os, math, copy
+import os
+import copy
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import zscore
 from sklearn.decomposition import PCA
 
-from utils.explorefigs import plot_PCA_gratings_3D,plot_PCA_gratings
+from utils.explorefigs import plot_PCA_gratings_3D
 from loaddata.session_info import filter_sessions,load_sessions
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 

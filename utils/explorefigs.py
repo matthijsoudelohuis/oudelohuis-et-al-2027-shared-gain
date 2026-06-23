@@ -10,7 +10,6 @@ import copy
 from sklearn import preprocessing
 from utils.plot_lib import *  # get all the fixed color schemes
 from mpl_toolkits.axes_grid1.anchored_artists import AnchoredSizeBar
-from scipy.signal import medfilt
 from scipy.stats import zscore
 from rastermap import Rastermap, utils
 from sklearn.decomposition import PCA

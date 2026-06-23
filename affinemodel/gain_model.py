@@ -1,12 +1,11 @@
 #%% 
-import os, math
+import os
 import pandas as pd
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.linalg import norm
 from scipy.stats import vonmises
-from sklearn.preprocessing import minmax_scale
 from sklearn.metrics import r2_score
 from tqdm import tqdm
 
@@ -18,7 +17,6 @@ from utils.explorefigs import plot_PCA_gratings
 from loaddata.session import Session
 from utils.corr_lib import *
 from loaddata.session_info import filter_sessions,load_sessions
-from utils.psth import compute_respmat
 from utils.tuning import compute_tuning_wrapper
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.gain_lib import * 

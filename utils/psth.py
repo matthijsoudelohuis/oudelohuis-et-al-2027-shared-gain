@@ -7,11 +7,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 """
 
 import numpy as np
-import pandas as pd
-from scipy.stats import binned_statistic
-from scipy import stats
-from scipy.interpolate import CubicSpline
-from tqdm.auto import tqdm
 
 """
  ####### ####### #     #  #####  ####### ######  

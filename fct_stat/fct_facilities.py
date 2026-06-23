@@ -3,7 +3,6 @@ import numpy as np
 import pickle
 from matplotlib import rc
 import matplotlib as mpl
-from decimal import Decimal
 import os
 import torch
 

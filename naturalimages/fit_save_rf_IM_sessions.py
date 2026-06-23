@@ -6,13 +6,9 @@ Matthijs Oude Lohuis, 2023-2025, Champalimaud Center
 """
 # %% # Imports
 # Import general libs
-import os
-import numpy as np
-import pandas as pd
 
 # Import personal lib funcs
 from loaddata.session_info import filter_sessions
-from loaddata.get_data_folder import get_local_drive
 from utils.rf_lib import estimate_rf_IM
 
 # %% Load IM session with receptive field mapping ################################################

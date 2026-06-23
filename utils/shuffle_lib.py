@@ -2,7 +2,6 @@
 import copy
 import numpy as np
 from tqdm import tqdm
-import pandas as pd
 
 def my_shuffle(data,method='random',axis=0):
     data = copy.deepcopy(data)

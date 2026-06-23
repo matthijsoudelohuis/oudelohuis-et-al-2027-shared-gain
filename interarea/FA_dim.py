@@ -12,19 +12,9 @@ Created on Fri Dec  9 10:53:22 2022
 import numpy as np
 import numpy.matlib
 import matplotlib.pyplot as plt
-import matplotlib.pylab as pl
-import scipy.io
-from scipy.sparse import csr_matrix
-from scipy import stats
-import random
 import math
-import matplotlib.font_manager
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 from sklearn.decomposition import FactorAnalysis
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import KFold
-import sklearn.metrics
 
 # Plotting definitions
 

@@ -13,7 +13,7 @@
 
 
 #%% ###################################################
-import math, os
+import os
 from loaddata.get_data_folder import get_local_drive
 
 # import h5py
@@ -24,12 +24,10 @@ from scipy import stats
 import seaborn as sns
 from tqdm import tqdm
 from scipy.stats import zscore
-from skimage.measure import block_reduce
 
 from utils.rf_lib import filter_nearlabeled
 from loaddata.session_info import filter_sessions
-from utils.psth import compute_tensor
-from preprocessing.preprocesslib import assign_layer,assign_layer2
+from preprocessing.preprocesslib import assign_layer2
 from utils.plot_lib import * #get all the fixed color schemes
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
@@ -526,7 +524,6 @@ my_savefig(fig,figdir,'FF_FB_poprate_Corr_SP_%dsessions_boot' % nSessions)
 
 
 #%% 
-from statsmodels.tsa.stattools import grangercausalitytests
 from statsmodels.tsa.api import VAR
 
 

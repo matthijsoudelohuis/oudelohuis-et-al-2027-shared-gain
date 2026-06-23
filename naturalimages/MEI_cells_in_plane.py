@@ -13,10 +13,10 @@ import matplotlib.pyplot as plt
 
 
 # Import personal lib funcs
-from loaddata.session_info import filter_sessions, load_sessions
+from loaddata.session_info import load_sessions
 from labeling.tdTom_labeling_cellpose import *
 from natsort import natsorted
-from utils.imagelib import im_norm,im_norm8,im_log,im_sqrt
+from utils.imagelib import im_norm, im_norm8, im_sqrt
 
 #%% Set the session:
 rawdatadir      = "G:\\RawData\\"

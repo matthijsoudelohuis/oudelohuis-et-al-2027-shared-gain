@@ -16,10 +16,9 @@ from scipy import stats
 from sklearn.metrics import r2_score
 from scipy.stats import linregress
 
-from loaddata.session_info import filter_sessions,load_sessions
+from loaddata.session_info import filter_sessions
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.tuning import *
-from utils.corr_lib import compute_signal_noise_correlation
 from utils.gain_lib import *
 from utils.imagelib import * 
 

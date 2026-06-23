@@ -1,6 +1,7 @@
 
 #%% Import libs:
-import os, math, copy
+import os
+import math
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,14 +11,13 @@ from scipy.optimize import curve_fit
 
 
 from loaddata.get_data_folder import get_local_drive
-from utils.explorefigs import plot_PCA_gratings_3D,plot_PCA_gratings
-from loaddata.session_info import filter_sessions,load_sessions
+from loaddata.session_info import filter_sessions
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.regress_lib import *
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+from sklearn.preprocessing import LabelEncoder
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 

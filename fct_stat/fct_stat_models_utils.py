@@ -1,10 +1,6 @@
-import torch
 import numpy as np
-from sklearn.decomposition import FactorAnalysis
 from sklearn.metrics import r2_score 
 
-import fct_facilities as fac 
-from fct_stat_models import * 
 
 
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### 

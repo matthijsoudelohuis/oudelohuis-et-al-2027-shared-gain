@@ -5,12 +5,11 @@ Author: Matthijs Oude Lohuis, Champalimaud Research
 2022-2025
 """
 
-import os, math
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 # import matplotlib.patches
-from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.linear_model import Lasso
 from sklearn.metrics import r2_score
 import seaborn as sns
 from tqdm import tqdm
@@ -25,7 +24,6 @@ from utils.imagelib import load_natural_images
 from utils.pair_lib import *
 from utils.tuning import mean_resp_image
 from utils.plot_lib import * #get all the fixed color schemes
-from loaddata.session import Session
 
 from utils.RRRlib import *
 

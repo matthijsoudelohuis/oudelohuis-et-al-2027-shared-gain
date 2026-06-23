@@ -6,7 +6,7 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 """
 
 #%% ###################################################
-import math, os
+import os
 from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import zscore
 
-from loaddata.session_info import filter_sessions,load_sessions
+from loaddata.session_info import filter_sessions
 from utils.tuning import *
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.explorefigs import *

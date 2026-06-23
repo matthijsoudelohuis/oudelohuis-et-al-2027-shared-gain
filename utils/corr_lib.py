@@ -5,7 +5,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 """
 
 ## Import libs:
-import os
 import copy
 import numpy as np
 import pandas as pd
@@ -13,7 +12,6 @@ from scipy.stats import binned_statistic,binned_statistic_2d
 from skimage.measure import block_reduce
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
 #Repeated measures ANOVA
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
@@ -23,18 +21,12 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.tuning import mean_resp_gn,mean_resp_gr,mean_resp_image 
 from utils.rf_lib import filter_nearlabeled
 from utils.pair_lib import *
-from sklearn.decomposition import PCA
-from statannotations.Annotator import Annotator
 from scipy import stats
 from scipy.ndimage import gaussian_filter
 from scipy.stats import zscore
-from scipy.signal import detrend
 from utils.gain_lib import pop_rate_gain_model
-import itertools
 import scipy.stats as ss
 from scipy.optimize import curve_fit
-from scipy.stats import linregress
-from utils.arrayop_lib import nanweightedaverage
 from utils.shuffle_lib import * 
 
  #####  ####### #     # ######  #     # ####### #######     #####  ####### ######  ######  

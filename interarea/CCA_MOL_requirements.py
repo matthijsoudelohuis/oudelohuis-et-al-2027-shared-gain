@@ -4,13 +4,10 @@ Champalimaud 2023
 
 """
 
-import pandas as pd
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy.matlib
 from sklearn.cross_decomposition import CCA
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 from sklearn.decomposition import PCA
 
 from sklearn.model_selection import KFold

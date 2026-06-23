@@ -1,27 +1,14 @@
 #%% 
-from copyreg import pickle
-import os, math
+import os
 import pandas as pd
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.linalg import norm
-from scipy.stats import vonmises
-from sklearn.preprocessing import minmax_scale
-from sklearn.metrics import r2_score
-from tqdm import tqdm
-from scipy.stats import linregress,binned_statistic
-from scipy.optimize import minimize
-import statsmodels.formula.api as smf
-from statannotations.Annotator import Annotator
-from sklearn.decomposition import PCA
+from scipy.stats import linregress
 
 
 from loaddata.get_data_folder import get_local_drive
-from utils.explorefigs import plot_PCA_gratings_3D,plot_PCA_gratings
-from loaddata.session_info import filter_sessions,load_sessions
 from utils.gain_lib import * 
-from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.tuning import *
 from utils.nonlin_lib import *

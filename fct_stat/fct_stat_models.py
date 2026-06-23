@@ -2,7 +2,6 @@ import torch
 import numpy as np
 from sklearn.decomposition import FactorAnalysis
 
-import fct_facilities as fac 
 
 
 tol = 1e-1

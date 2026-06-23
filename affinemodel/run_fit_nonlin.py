@@ -1,14 +1,12 @@
 #%% 
-import os, math
+import os
 import pandas as pd
-import seaborn as sns
 import numpy as np
 from datetime import datetime
-import pickle
 
 
 from loaddata.get_data_folder import get_local_drive
-from loaddata.session_info import filter_sessions,load_sessions,report_sessions
+from loaddata.session_info import filter_sessions, report_sessions
 from utils.gain_lib import * 
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.tuning import *

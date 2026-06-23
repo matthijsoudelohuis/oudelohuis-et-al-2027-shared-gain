@@ -1,22 +1,19 @@
 
 #%% Import libs:
-import os, math, copy
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 import statsmodels.formula.api as smf
 
-from utils.explorefigs import plot_PCA_gratings_3D,plot_PCA_gratings,plot_PCA_gratings_3D_traces
-from loaddata.session_info import filter_sessions,load_sessions
+from loaddata.session_info import filter_sessions
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
-from utils.psth import compute_tensor
 from scipy.stats import zscore
 from utils.plot_lib import shaded_error
 from utils.regress_lib import *
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+from sklearn.preprocessing import LabelEncoder
 from utils.rf_lib import filter_nearlabeled
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')

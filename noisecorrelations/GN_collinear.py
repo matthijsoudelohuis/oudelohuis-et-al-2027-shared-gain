@@ -19,23 +19,15 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 import os
 from loaddata.get_data_folder import get_local_drive
 
-import copy
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 from tqdm import tqdm
-from scipy.stats import binned_statistic,binned_statistic_2d
-from scipy.signal import detrend
-from statannotations.Annotator import Annotator
-from scipy.ndimage import gaussian_filter
 
-from loaddata.session_info import filter_sessions,load_sessions
-from utils.plot_lib import shaded_error
+from loaddata.session_info import filter_sessions
 from utils.corr_lib import *
-from utils.rf_lib import smooth_rf,exclude_outlier_rf,filter_nearlabeled,replace_smooth_with_Fsig
 from utils.tuning import compute_tuning_wrapper,ori_remapping
-from preprocessing.preprocesslib import assign_layer,assign_layer2
+from preprocessing.preprocesslib import assign_layer2
 
 protocol = 'GR'
 protocol = 'SP'

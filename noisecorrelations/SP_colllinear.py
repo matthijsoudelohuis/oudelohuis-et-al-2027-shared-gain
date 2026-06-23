@@ -9,7 +9,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 import os
 from loaddata.get_data_folder import get_local_drive
 
-import copy
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -20,10 +19,9 @@ from statsmodels.formula.api import ols
 from loaddata.session_info import *
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.corr_lib import *
-from utils.rf_lib import smooth_rf,exclude_outlier_rf,filter_nearlabeled,replace_smooth_with_Fsig
 from utils.tuning import *
 from utils.gain_lib import * 
-from preprocessing.preprocesslib import assign_layer,assign_layer2
+from preprocessing.preprocesslib import assign_layer2
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 calciumversion = 'dF'

@@ -1,20 +1,12 @@
 
 #%% 
-import os, math
-import pandas as pd
-import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.linalg import norm
-from sklearn.preprocessing import minmax_scale
 from sklearn.metrics import r2_score
 from scipy.stats import zscore
 
 
-from scipy.stats import vonmises
-from loaddata.session import Session
 from utils.pair_lib import compute_pairwise_anatomical_distance
-from utils.psth import compute_respmat
 from utils.plot_lib import * #get all the fixed color schemes
 
 
