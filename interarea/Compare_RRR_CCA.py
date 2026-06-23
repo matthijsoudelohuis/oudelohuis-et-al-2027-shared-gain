@@ -7,9 +7,7 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import math, os
-os.chdir('e:\\Python\\molanalysis')
 from loaddata.get_data_folder import get_local_drive
-# os.chdir(os.path.join(get_local_drive(),'Python','molanalysis'))
 
 import numpy as np
 import pandas as pd

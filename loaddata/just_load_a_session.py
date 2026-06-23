@@ -8,7 +8,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% 
 import os
-os.chdir('E:\\Python\\molanalysis\\')
 import numpy as np
 from loaddata.session_info import load_sessions,filter_sessions
 import matplotlib.pyplot as plt

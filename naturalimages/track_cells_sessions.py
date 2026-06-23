@@ -56,7 +56,6 @@ plt.show()
 # import matplotlib.pyplot as plt
 # import suite2p
 
-# os.chdir('../')  # set working directory to the root of the git repo
 
 # # Import personal lib funcs
 # from loaddata.session_info import filter_sessions, load_sessions

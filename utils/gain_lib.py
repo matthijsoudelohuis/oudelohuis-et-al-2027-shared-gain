@@ -10,7 +10,6 @@ from sklearn.preprocessing import minmax_scale
 from sklearn.metrics import r2_score
 from scipy.stats import zscore
 
-# os.chdir('e:\\Python\\molanalysis')
 
 from scipy.stats import vonmises
 from loaddata.session import Session

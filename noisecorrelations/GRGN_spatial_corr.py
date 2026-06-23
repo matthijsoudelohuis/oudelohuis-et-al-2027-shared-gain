@@ -7,7 +7,6 @@ Matthijs Oude Lohuis, 2022-2026, Champalimaud Center, Lisbon
 
 #%% ###################################################
 import os
-os.chdir('e:\\Python\\molanalysis')
 from loaddata.get_data_folder import get_local_drive
 
 import numpy as np

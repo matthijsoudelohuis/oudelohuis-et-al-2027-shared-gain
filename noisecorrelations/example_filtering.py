@@ -8,7 +8,6 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-os.chdir('e:\\Python\\molanalysis')
 from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions,load_sessions
 from utils.filter_lib import my_highpass_filter,compute_power_spectra

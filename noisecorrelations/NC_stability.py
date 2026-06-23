@@ -3,7 +3,6 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-os.chdir('e:\\Python\\molanalysis')
 from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions,load_sessions
 from utils.corr_lib import *

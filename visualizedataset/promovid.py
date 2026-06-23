@@ -6,7 +6,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Foundation
 """
 
 import os, shutil
-os.chdir('T:\\Python\\molanalysis\\')
 
 import numpy as np
 import pandas as pd

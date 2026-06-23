@@ -9,7 +9,6 @@ Matthijs Oude Lohuis, 2023-2025, Champalimaud Center
 import os
 import numpy as np
 import pandas as pd
-os.chdir('e:\\Python\\molanalysis')
 
 # Import personal lib funcs
 from loaddata.session_info import filter_sessions

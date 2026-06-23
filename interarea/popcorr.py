@@ -14,9 +14,7 @@
 
 #%% ###################################################
 import math, os
-os.chdir('c:\\Python\\molanalysis')
 from loaddata.get_data_folder import get_local_drive
-# os.chdir(os.path.join(get_local_drive(),'Python','molanalysis'))
 
 # import h5py
 import pandas as pd

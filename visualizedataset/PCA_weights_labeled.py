@@ -20,7 +20,6 @@ and unlabeled neurons and taking multiple different sessions into account?
 
 #%% ###################################################
 import math, os
-os.chdir('e:\\Python\\molanalysis')
 from loaddata.get_data_folder import get_local_drive
 
 from sklearn import preprocessing

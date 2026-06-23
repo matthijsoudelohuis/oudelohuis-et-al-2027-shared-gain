@@ -5,7 +5,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import os
-os.chdir('e:\\Python\\molanalysis')
 
 import numpy as np
 import pandas as pd

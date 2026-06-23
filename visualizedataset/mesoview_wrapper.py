@@ -8,10 +8,8 @@ This script makes an average image of the mesoview data for each session
 """
 #%% Import packages
 import os
-os.chdir('e:\\Python\\molanalysis')
 
 from loaddata.get_data_folder import get_local_drive,get_data_folder
-# os.chdir(os.path.join(get_local_drive(),'Python','molanalysis'))
 import numpy as np
 import tifffile
 from utils.twoplib import split_mROIs

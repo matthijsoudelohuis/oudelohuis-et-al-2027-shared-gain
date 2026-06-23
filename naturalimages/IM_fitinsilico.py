@@ -15,7 +15,6 @@ import matplotlib.pyplot as plt
 import scipy.stats as st
 from sklearn import preprocessing
 
-os.chdir('../')  # set working directory to the root of the git repo
 
 # Import personal lib funcs
 from loaddata.session_info import filter_sessions, load_sessions
