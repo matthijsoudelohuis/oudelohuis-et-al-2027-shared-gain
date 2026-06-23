@@ -10,7 +10,7 @@ from loaddata.session_info import filter_sessions,load_sessions
 from scipy.stats import zscore
 from scipy.stats import linregress
 
-savedir = 'E:\\OneDrive\\PostDoc\\Figures\\SharedGain'
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% LPE09665_2023_03_14
 
@@ -82,7 +82,7 @@ datasets            = (data,data_hat_tuned,data_hat_poprate)
 dataset_labels      = ['original','tuning','pop rate gain']
 
 fig = plot_respmat(orientations, datasets, dataset_labels,sessions[ises].celldata['pref_ori'].to_numpy())
-fig.savefig(os.path.join(savedir,'Heatmap_respmat_modelversions_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Heatmap_respmat_modelversions_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 #%% 
@@ -162,7 +162,7 @@ for iPopCouplingBin in range(nPopCouplingBins):
     # ax.set_ylabel('Neuron',fontsize=9)
     ax.tick_params(axis='x', labelrotation=45)
 sns.despine(fig=fig, top=True, right=True, offset=1,trim=True)
-my_savefig(fig,savedir,'SP_coupling_vs_GR_tunedresp_%s' % (sessions[idx_GR].session_id), formats = ['png'])
+my_savefig(fig,figdir,'SP_coupling_vs_GR_tunedresp_%s' % (sessions[idx_GR].session_id), formats = ['png'])
 
 #%% 
 clrs_popcoupling    = sns.color_palette('viridis',nPopCouplingBins)
@@ -200,7 +200,7 @@ for iPopCouplingBin in range(nPopCouplingBins):
 fig.suptitle('Additive and multiplicative scaling across op coupling bins in spontaneous data',fontsize=12)
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True, offset=1,trim=True)
-my_savefig(fig,savedir,'SP_coupling_vs_GR_gain_%s' % (sessions[idx_GR].session_id), formats = ['png'])
+my_savefig(fig,figdir,'SP_coupling_vs_GR_gain_%s' % (sessions[idx_GR].session_id), formats = ['png'])
 
 
 #%% Load data of sessions with large numbers of neurons: 
@@ -249,4 +249,4 @@ ax.set_ylabel('Split-half correlation',fontsize=9)
 ax.set_xlim([0,1000])
 ax.set_ylim([0,1])
 sns.despine(fig=fig, top=True, right=True, offset=1,trim=True)
-my_savefig(fig,savedir,'Population_Rate_estimate_%d_GRsessions' % (nSessions), formats = ['png'])
+my_savefig(fig,figdir,'Population_Rate_estimate_%d_GRsessions' % (nSessions), formats = ['png'])

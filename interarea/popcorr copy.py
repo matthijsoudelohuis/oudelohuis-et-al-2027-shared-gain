@@ -32,7 +32,7 @@ from utils.psth import compute_tensor
 from preprocessing.preprocesslib import assign_layer,assign_layer2
 from utils.plot_lib import * #get all the fixed color schemes
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\PopRateCorr\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% ################################################
 session_list        = np.array([['LPE12223_2024_06_10'], #GR
@@ -149,7 +149,7 @@ ax.set_xlabel('Time (sec)')
 ax.set_ylabel('Population rate (normalized)')
 
 sns.despine(top=True,right=True,offset=3)
-#my_savefig(fig,savedir,'Poprate_Excertp_%s_%s' % ('_'.join(protocols),sessions[ises].session_id),formats=['png'])
+#my_savefig(fig,figdir,'Poprate_Excertp_%s_%s' % ('_'.join(protocols),sessions[ises].session_id),formats=['png'])
 
 #%% 
 fig, axes = plt.subplots(3,1,figsize=(6,6))
@@ -165,7 +165,7 @@ ax.set_xlabel('Time (sec)')
 ax.set_ylabel('Population rate (z-score)')
 plt.tight_layout()
 sns.despine(top=True,right=True,offset=3)
-my_savefig(fig,savedir,'Poprate_Excerpt_LayerLabeled_%s_%s' % ('_'.join(protocols),sessions[ises].session_id),formats=['png'])
+my_savefig(fig,figdir,'Poprate_Excerpt_LayerLabeled_%s_%s' % ('_'.join(protocols),sessions[ises].session_id),formats=['png'])
 
 #%% 
 
@@ -464,7 +464,7 @@ sns.stripplot(data=df, x="arealabelpair", y="correlation", palette='pastel',dodg
 ax.axhline(0,linestyle='--',color='k')
 sns.despine(fig=fig, top=True, right=True,offset=3)
 ax.set_xticklabels(arealabelpairs,rotation=45,fontsize=8)
-my_savefig(fig,savedir,'FF_FB_poprate_Corr_SP_%dsessions_boot' % nSessions)
+my_savefig(fig,figdir,'FF_FB_poprate_Corr_SP_%dsessions_boot' % nSessions)
 
 #%% 
 
@@ -710,7 +710,7 @@ ax.set_title('Residual Pop. Rate Correlation')
 
 plt.tight_layout()
 
-my_savefig(fig,savedir,'Poprate_corr_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
+my_savefig(fig,figdir,'Poprate_corr_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
 
 #%% 
 vrange = 0.3
@@ -727,7 +727,7 @@ for i in range(nLags):
 cbar = fig.colorbar(ax.imshow(np.nanmean(crosscorrmat_raw[:,:,i,:],axis=-1),cmap='RdBu_r',vmin=-vrange,vmax=vrange), ax=ax,shrink=0.5)
 cbar.set_label('Correlation')
 plt.tight_layout()
-my_savefig(fig,savedir,'Poprate_corr_lags_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
+my_savefig(fig,figdir,'Poprate_corr_lags_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
 
 #%% 
 vrange = 0.1
@@ -746,7 +746,7 @@ for i in range(nLags):
 cbar = fig.colorbar(ax.imshow(np.nanmean(crosscorrmat_diff[:,:,i,:],axis=-1),cmap='RdBu_r',vmin=-vrange,vmax=vrange), ax=ax,shrink=0.5)
 cbar.set_label('Correlation')
 plt.tight_layout()
-my_savefig(fig,savedir,'Poprate_diff_corr_lags_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
+my_savefig(fig,figdir,'Poprate_diff_corr_lags_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
 
 #%% Show temporal cross-correlation:
 titles = np.array(['Within V1','Within PM','V1-PM'])
@@ -778,12 +778,12 @@ pop_pairs =[np.array([[0,1]]),
 
 #%% Compute average rate for different populations: 
 fig = plot_crosscorr_poppairs(crosscorrmat_raw,timelags,arealayerlabels,pop_pairs,titles)
-# my_savefig(fig,savedir,'Poprate_corr_Xlags_V1PM_%s_%dsessions' % ('_'.join(protocols),nSessions),formats=['png'])
-#my_savefig(fig,savedir,'Poprate_corr_Xlags_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
+# my_savefig(fig,figdir,'Poprate_corr_Xlags_V1PM_%s_%dsessions' % ('_'.join(protocols),nSessions),formats=['png'])
+#my_savefig(fig,figdir,'Poprate_corr_Xlags_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
 
 #%% Compute average rate for different populations: 
 fig = plot_crosscorr_poppairs(crosscorrmat_diff,timelags,arealayerlabels,pop_pairs,titles)
-my_savefig(fig,savedir,'Poprate_corr_diff_Xlags_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
+my_savefig(fig,figdir,'Poprate_corr_diff_Xlags_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
 
 #%% Compute an asymmetry score of the crosscorrelation:
 
@@ -844,7 +844,7 @@ ax.set_yticks(range(nArealayerlabels),labels=arealayerlabels)
 cbar = fig.colorbar(ax.imshow(datatoplot,cmap='RdBu_r',vmin=vmin,vmax=vmax), ax=ax,shrink=0.5)
 ax.set_title('Asymmetry Score Diff')
 plt.tight_layout()
-my_savefig(fig,savedir,'Poprate_asymm_score_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
+my_savefig(fig,figdir,'Poprate_asymm_score_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
 
 #%% 
 fig, axes = plt.subplots(1, gc_lagorder, figsize=(gc_lagorder*4, 4), sharey=True)
@@ -866,7 +866,7 @@ for i in range(gc_lagorder):
     if i == 0:
         ax.set_ylabel('Source Pop')
 
-my_savefig(fig,savedir,'VAR_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
+my_savefig(fig,figdir,'VAR_%s_%s_%dsessions' % (popversion,'_'.join(protocols),nSessions),formats=['png'])
 
 # fig.colorbar(ax.imshow(coefficients[0], cmap='hot', interpolation='nearest'), ax=axes, orientation='vertical', fraction=0.02, pad=0.04)
 # fig.suptitle('VAR Model Coefficients for Each Lag')

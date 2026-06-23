@@ -19,7 +19,7 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.regress_lib import *
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 
-savedir =  os.path.join(get_local_drive(),'OneDrive\\Fellowships & Grants\\2025 VENI\\2025 Application\\Full Proposal\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 
@@ -100,7 +100,7 @@ ax.set_yticks([-2,-1,0],labels=['Soloist','Chorister','Population'])
 ax.set_xlabel('Trial')
 ax.set_title('Example neurons with different population coupling')
 sns.despine(fig=fig, top=True, right=True, offset=1,trim=False)
-my_savefig(fig=fig,savedir=savedir,filename='VENI_populationcoupling_exampleneurons')
+my_savefig(fig=fig,savedir=figdir,filename='VENI_populationcoupling_exampleneurons')
 
 #%%
 sessions,nSessions   = filter_sessions(protocols = 'GR')
@@ -184,7 +184,7 @@ for ixarea,xarea in enumerate(arealabels):
     print('Dprime %s: %.2f' % (xarea[1],dprime))
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,top=True,right=True)
-my_savefig(fig,savedir,'VENI_populationcoupling_area_comparison')
+my_savefig(fig,figdir,'VENI_populationcoupling_area_comparison')
 
 #%% How are neurons are coupled to the population rate of different areas:
 arealabels = np.array([['V1unl','V1lab'],['PMunl','PMlab']])
@@ -225,7 +225,7 @@ for ixarea,xarea in enumerate(arealabels):
     print('Dprime %s: %.2f' % (xarea[1],dprime))
 plt.tight_layout()
 sns.despine(fig=fig,trim=False,top=True,right=True)
-my_savefig(fig,savedir,'VENI_populationcoupling_area_comparison_barplot')
+my_savefig(fig,figdir,'VENI_populationcoupling_area_comparison_barplot')
 
 # %% 
 sessions,nSessions   = filter_sessions(protocols = 'GR',filter_areas=['V1'])
@@ -342,7 +342,7 @@ for iPopCouplingBin,PopCouplingBin in enumerate([0,nPopCouplingBins-1]):
     ax.tick_params(axis='x', labelrotation=45)
     ax.set_title(subplotlabels[iPopCouplingBin])
 sns.despine(fig=fig, top=True, right=True, offset=1,trim=False)
-# my_savefig(fig=fig,savedir=savedir,filename='VENI_populationcoupling_gain')
+# my_savefig(fig=fig,savedir=figdir,filename='VENI_populationcoupling_gain')
 
 #%%
 
@@ -462,7 +462,7 @@ ax.legend(subplotlabels,title='Pop. coupling bins',loc='best',frameon=False)
 # ax.legend(['mean+-sem\nn=%d sessions' % nSessions],loc='center right',frameon=False)
 sns.despine(fig=fig,trim=True,top=True,right=True)
 
-my_savefig(fig,savedir,'Decoding_Low_High_ActBins_PopCoupling_%dsessions' % nSessions)
+my_savefig(fig,figdir,'Decoding_Low_High_ActBins_PopCoupling_%dsessions' % nSessions)
 
 
 #%% Plot error as a function of population rate and for different populations with coupling
@@ -508,8 +508,8 @@ my_savefig(fig,savedir,'Decoding_Low_High_ActBins_PopCoupling_%dsessions' % nSes
 # # ax.legend(['mean+-sem\nn=%d sessions' % nSessions],loc='center right',frameon=False)
 # sns.despine(fig=fig,trim=True,top=True,right=True)
 
-# # my_savefig(fig,savedir,'Decoding_Ori_LOGR_ActBins_PopCoupling_%dsessions' % nSessions, formats = ['png'])
-# # my_savefig(fig,savedir,'Decoding_Low_High_ActBins_PopCoupling_%dsessions' % nSessions, formats = ['png'])
+# # my_savefig(fig,figdir,'Decoding_Ori_LOGR_ActBins_PopCoupling_%dsessions' % nSessions, formats = ['png'])
+# # my_savefig(fig,figdir,'Decoding_Low_High_ActBins_PopCoupling_%dsessions' % nSessions, formats = ['png'])
 
 #%% 
 lam = 1

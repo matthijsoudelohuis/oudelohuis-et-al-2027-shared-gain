@@ -21,7 +21,7 @@ from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper,ori_remapping
 from preprocessing.preprocesslib import assign_layer,assign_layer2
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\Collinear\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE09665_2023_03_21',
@@ -254,5 +254,5 @@ ax.set_facecolor('grey')
 
 filename = '%s_%ddeg_%s_rotated%d_%s' % (areapair,centerori,corr_type,rotate_prefori,
                                          sessions[ises].session_id)
-my_savefig(fig,savedir,filename,formats=['png'])
+my_savefig(fig,figdir,filename,formats=['png'])
 

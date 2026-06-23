@@ -8,7 +8,7 @@ from loaddata.session_info import filter_sessions,load_sessions
 from utils.corr_lib import *
 from utils.psth import compute_tensor
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% ###################################################
 
@@ -60,7 +60,7 @@ xdata = xdata[~np.isnan(xdata)]
 ydata = ydata[~np.isnan(ydata)]
 plt.suptitle('Signal Correlation stability r=%1.2f' % np.corrcoef(xdata,ydata)[0,1])
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'SC_stability_%s.png' % sessions[ises].sessiondata['session_id'][0]), format = 'png')
+fig.savefig(os.path.join(figdir,'SC_stability_%s.png' % sessions[ises].sessiondata['session_id'][0]), format = 'png')
 
 #%% heatmap of noise correlations per session
 fig,axes = plt.subplots(1,2,figsize=(8,5))
@@ -77,7 +77,7 @@ xdata = xdata[~np.isnan(xdata)]
 ydata = ydata[~np.isnan(ydata)]
 plt.suptitle('Noise Correlation stability r=%1.2f' % np.corrcoef(xdata,ydata)[0,1])
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'NC_stability_deconv_%s.png' % sessions[ises].sessiondata['session_id'][0]), format = 'png')
+fig.savefig(os.path.join(figdir,'NC_stability_deconv_%s.png' % sessions[ises].sessiondata['session_id'][0]), format = 'png')
 
 plt.scatter(xdata,ydata,s=3,c='k',alpha=0.05)
 
@@ -136,10 +136,10 @@ for iM in range(M):
     ax.set_xticks([])
     ax.set_yticks([])
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Corr_types_%s.png' % sessions[ises].sessiondata['session_id'][0]), format = 'png')
+fig.savefig(os.path.join(figdir,'Corr_types_%s.png' % sessions[ises].sessiondata['session_id'][0]), format = 'png')
 
 #%%
 fig,ax = plt.subplots(figsize=(6,4.5))
 sns.heatmap(crosscorr,vmin=-1,vmax=1,cmap="vlag",xticklabels=labels,yticklabels=labels,ax=ax)
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Crosscorr_corrtypes_%s.png' % sessions[ises].sessiondata['session_id'][0]), format = 'png')
+fig.savefig(os.path.join(figdir,'Crosscorr_corrtypes_%s.png' % sessions[ises].sessiondata['session_id'][0]), format = 'png')

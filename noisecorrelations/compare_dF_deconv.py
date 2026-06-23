@@ -23,7 +23,7 @@ from utils.psth import compute_tensor,compute_respmat
 from utils.corr_lib import *
 from utils.explorefigs import plot_excerpt,plot_PCA_gratings,plot_tuned_response
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\DescriptiveStatisticsSessions\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919','2023_11_06']])
@@ -69,7 +69,7 @@ plt.ylabel('deconv')
 plt.xlabel('dF/F')
 plt.title('Pref Ori')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'Deconvolution','Prefori_dF_deconv_optimwindows' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'Deconvolution','Prefori_dF_deconv_optimwindows' + '.png'), format = 'png')
 
 #%% Scatter of 
 plt.figure(figsize=(4,4))
@@ -79,7 +79,7 @@ plt.ylabel('deconv')
 plt.xlabel('dF/F')
 plt.title('OSI')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'Deconvolution','OSI_dF_deconv_optimwindows' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'Deconvolution','OSI_dF_deconv_optimwindows' + '.png'), format = 'png')
 
 #%% Scatter of 
 plt.figure(figsize=(4,4))
@@ -89,7 +89,7 @@ plt.ylabel('deconv')
 plt.xlabel('dF/F')
 plt.title('Tuning Variance Explained')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'Deconvolution','Tuning_Var_dF_deconv_optimwindows' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'Deconvolution','Tuning_Var_dF_deconv_optimwindows' + '.png'), format = 'png')
 
 #%% Noise correlations:
 sessions = compute_noise_correlation(sessions,uppertriangular=False)
@@ -102,7 +102,7 @@ plt.xlim([-0.15,0.4])
 plt.legend(labels=['deconv','dF'],frameon=False)
 plt.xlabel('Noise Correlation')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'Deconvolution','NC_dF_deconv' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'Deconvolution','NC_dF_deconv' + '.png'), format = 'png')
 
 #%% #############################################################################
 ## Construct tensor: 3D 'matrix' of N neurons by K trials by T time bins
@@ -123,12 +123,12 @@ example_cells = [3,100,58,62,70]
 fig = plot_tuned_response(sessions[0].tensor,sessions[0].trialdata,t_axis,example_cells)
 fig.suptitle('%s - Deconvolved' % sessions[0].sessiondata['session_id'][0],fontsize=12)
 # save the figure
-fig.savefig(os.path.join(savedir,'TunedResponse_deconv_%s.png' % sessions[0].sessiondata['session_id']))
+fig.savefig(os.path.join(figdir,'TunedResponse_deconv_%s.png' % sessions[0].sessiondata['session_id']))
 
 fig = plot_tuned_response(sessions[1].tensor,sessions[1].trialdata,t_axis,example_cells)
 fig.suptitle('%s - dF/F' % sessions[1].sessiondata['session_id'][0],fontsize=12)
 # save the figure
-fig.savefig(os.path.join(savedir,'TunedResponse_dF_%s.png' % sessions[0].sessiondata['session_id']))
+fig.savefig(os.path.join(figdir,'TunedResponse_dF_%s.png' % sessions[0].sessiondata['session_id']))
 
 #%% Figure of complete average response for dF/F and deconv: 
 fig,ax = plt.subplots(figsize=(5,4))
@@ -141,7 +141,7 @@ plt.legend(labels=['deconv','dF'],frameon=False)
 plt.ylabel('Normalized Activity')
 plt.ylabel('Time (s)')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'Deconvolution','Resp_dF_deconv' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'Deconvolution','Resp_dF_deconv' + '.png'), format = 'png')
 
 #%% How does the tuning vary with the time window used to calciulate the response (for dF/F):
 ises = 1
@@ -172,7 +172,7 @@ ax.set_title('Tuning variance - %s - dF/F' % sessions[1].sessiondata['session_id
 ax.set_yticks(t_resp_start)
 ax.set_xticks(t_resp_stop)
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'ResponseWindow_TuningVar_dF_%s.png' % sessions[1].sessiondata['session_id'][0]))
+fig.savefig(os.path.join(figdir,'ResponseWindow_TuningVar_dF_%s.png' % sessions[1].sessiondata['session_id'][0]))
 
 #%% How does the tuning vary with the time window used to calciulate the response (for deconvolved):
 ises = 0
@@ -202,14 +202,14 @@ ax.set_title('Tuning variance - %s - deconv' % sessions[0].sessiondata['session_
 ax.set_yticks(t_resp_start)
 ax.set_xticks(t_resp_stop)
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'ResponseWindow_TuningVar_deconv_%s.png' % sessions[0].sessiondata['session_id'][0]))
+fig.savefig(os.path.join(figdir,'ResponseWindow_TuningVar_deconv_%s.png' % sessions[0].sessiondata['session_id'][0]))
 
 #%% PCA projections: 
 fig = plot_PCA_gratings(sessions[0],apply_zscore=True)
-fig.savefig(os.path.join(savedir,'Deconvolution','PCA_deconv_%s.png' % sessions[0].sessiondata['session_id'][0]))
+fig.savefig(os.path.join(figdir,'Deconvolution','PCA_deconv_%s.png' % sessions[0].sessiondata['session_id'][0]))
 
 fig = plot_PCA_gratings(sessions[1],apply_zscore=True)
-fig.savefig(os.path.join(savedir,'Deconvolution','PCA_dF_%s.png' % sessions[0].sessiondata['session_id'][0]))
+fig.savefig(os.path.join(figdir,'Deconvolution','PCA_dF_%s.png' % sessions[0].sessiondata['session_id'][0]))
 
 
 #%% Figure of complete average response for dF/F and deconv: 
@@ -223,4 +223,4 @@ plt.legend(labels=labels_labeled,frameon=False)
 plt.ylabel('Normalized Activity')
 plt.ylabel('Time (s)')
 plt.tight_layout()
-# plt.savefig(os.path.join(savedir,'Deconvolution','Resp_dF_deconv' + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'Deconvolution','Resp_dF_deconv' + '.png'), format = 'png')

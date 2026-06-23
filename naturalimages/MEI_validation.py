@@ -23,7 +23,7 @@ from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.rf_lib import *
 from utils.tuning import mean_resp_image
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Images\\MEI\\Validation\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% 
 
@@ -152,7 +152,7 @@ for iim in range(nIMs):
 # cell_id_map = dict(zip(old_mei_cell_ids,np.random.choice(sessions[0].celldata['cell_id'],90)))
 
 ###### load mapping of old cell id to new cell id
-# old_cell_ids = np.load(os.path.join(savedir,'old_cell_ids.npy'))
+# old_cell_ids = np.load(os.path.join(figdir,'old_cell_ids.npy'))
 # output something like: 
 # cell_id_map = dict(zip(old_mei_cell_ids,new_mei_cell_ids))
 

@@ -25,7 +25,7 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.tuning import *
 from utils.nonlin_lib import *
 
-savedir =  os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\TransferFunctions')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% 
 session_list        = np.array([['LPE11086_2024_01_05']])
@@ -242,7 +242,7 @@ ax.set_title('MAI by TF type and drive level\n(solid = high r̄_pref,  dashed = 
 sns.despine(ax=ax, trim=True, offset=3)
 
 plt.tight_layout()
-my_savefig(fig, savedir, f'MAI_vs_rPref_{nSessions}sessions', formats=['png'])
+my_savefig(fig, figdir, f'MAI_vs_rPref_{nSessions}sessions', formats=['png'])
 
 #%% --- Plot 2: ΔI_F profile across orientation distance, grouped by TF and drive level ---
 
@@ -319,6 +319,6 @@ ax.legend(fontsize=7, frameon=False, markerscale=3)
 sns.despine(ax=ax, trim=True, offset=3)
 
 plt.tight_layout()
-# my_savefig(fig, savedir, f'dIF_profile_{nSessions}sessions', formats=['png'])
+# my_savefig(fig, figdir, f'dIF_profile_{nSessions}sessions', formats=['png'])
 
 #%%

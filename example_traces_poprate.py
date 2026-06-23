@@ -21,7 +21,7 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.explorefigs import *
 from utils.gain_lib import *
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% Load an example session: 
 session_list        = np.array(['LPE12223_2024_06_10']) #GR
@@ -167,8 +167,8 @@ fig = plot_tuned_response(sessions[0].tensor,sessions[0].trialdata,t_axis,neuron
 # fig.suptitle('%s - dF/F' % sessions[0].session_id,fontsize=12)
 fig.suptitle('%s - deconv' % sessions[0].session_id,fontsize=12)
 # save the figure
-# fig.savefig(os.path.join(savedir,'TunedResponse_dF_%s.png' % sessions[0].session_id))
-fig.savefig(os.path.join(savedir,'TunedResponse_deconv_%s.png' % sessions[0].session_id))
+# fig.savefig(os.path.join(figdir,'TunedResponse_dF_%s.png' % sessions[0].session_id))
+fig.savefig(os.path.join(figdir,'TunedResponse_deconv_%s.png' % sessions[0].session_id))
 
 #%% 
 poprate = np.mean(sessions[0].calciumdata, axis=1)
@@ -186,12 +186,12 @@ idx_T = np.logical_and(
 
 fig = plt.figure(figsize=(5,2))
 plt.plot(poprate[idx_T],linewidth=0.5)
-my_savefig(fig,savedir,'Poprate_example_%s' % sessions[0].session_id,formats=['pdf'])
+my_savefig(fig,figdir,'Poprate_example_%s' % sessions[0].session_id,formats=['pdf'])
 
 #%% 
 fig = plot_excerpt(sessions[0],trialsel=trialsel,neuronsel=neuronsel,plot_neural=True,
              plot_behavioral=False,neural_version='traces')
-my_savefig(fig,savedir,'Rate_exampleneurons_%s' % sessions[0].session_id,formats=['pdf'])
+my_savefig(fig,figdir,'Rate_exampleneurons_%s' % sessions[0].session_id,formats=['pdf'])
 
 
 #%% 
@@ -225,4 +225,4 @@ sns.despine(fig=fig,trim=True,top=True,right=True,offset=3)
 ax.legend(['0-10%','10-20%','20-30%','30-40%','40-50%','50-60%','60-70%','70-80%','80-90%','90-100%'],
                     reverse=True,fontsize=7,frameon=False,title='pop. rate bins',bbox_to_anchor=(0.7,1), loc='upper left')
 
-my_savefig(fig,savedir,'Poprate_quantiles_%s' % sessions[0].session_id,formats=['png'])
+my_savefig(fig,figdir,'Poprate_quantiles_%s' % sessions[0].session_id,formats=['png'])

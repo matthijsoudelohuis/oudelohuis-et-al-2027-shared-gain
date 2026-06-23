@@ -22,7 +22,7 @@ from utils.tuning import *
 
 # from utils.plot_lib import shaded_error
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Images\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% ################################################
 session_list        = np.array([['LPE11086','2023_12_16']])
@@ -63,7 +63,7 @@ for metric in ['tuning_SNR','corr_half','rel_half','sparseness','selectivity_ind
     plt.xlim([-0.1,1.2])
     plt.legend(loc='upper right',frameon=False,fontsize=5)
     plt.tight_layout()
-    fig.savefig(os.path.join(savedir,'Distribution_%s_%d_IMsessions' % (metric,nSessions) + '.png'), format = 'png')
+    fig.savefig(os.path.join(figdir,'Distribution_%s_%d_IMsessions' % (metric,nSessions) + '.png'), format = 'png')
 
 #%% Make a barplot 
 celldata = pd.concat([ses.celldata for ses in sessions]).reset_index(drop=True)
@@ -89,7 +89,7 @@ for metric in ['tuning_SNR','corr_half','rel_half','sparseness','selectivity_ind
     sns.stripplot(data=sesdata,x='roi_name',y=metric,color='k',ax=ax,size=4,alpha=0.8,jitter=0.1,order=areas,hue_order=areas)
     ax.get_legend().remove()
     plt.tight_layout()
-    fig.savefig(os.path.join(savedir,'Area_Mean_%s_%d_IMsessions' % (metric,nSessions) + '.png'), format = 'png')
+    fig.savefig(os.path.join(figdir,'Area_Mean_%s_%d_IMsessions' % (metric,nSessions) + '.png'), format = 'png')
 
 #%% Get information about labeled cells per session per area: 
 sesdata = pd.DataFrame()
@@ -119,7 +119,7 @@ for metric in ['tuning_SNR','corr_half','rel_half','sparseness','gini_coefficien
                   order=area_labeled,hue_order=area_labeled,dodge=True,ec='k',linewidth=0.5)
     # ax.get_legend().remove()
     plt.tight_layout()
-    fig.savefig(os.path.join(savedir,'Area_Labeled_Mean_%s_%d_IMsessions' % (metric,nSessions) + '.png'), format = 'png')
+    fig.savefig(os.path.join(figdir,'Area_Labeled_Mean_%s_%d_IMsessions' % (metric,nSessions) + '.png'), format = 'png')
 
 
 

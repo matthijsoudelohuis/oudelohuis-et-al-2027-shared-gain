@@ -24,7 +24,7 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.gain_lib import * 
 from utils.plot_lib import shaded_error
 
-savedir =  os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\GainModel\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% Explore this lib as well for multiplicative gain fit with alternating least squares: 
 # https://github.com/jcbyts/V1Locomotion/tree/main
@@ -100,7 +100,7 @@ model_ses.sessiondata['protocol'] = ['GR']
 
 fig = plot_PCA_gratings(model_ses,apply_zscore=True)
 
-# fig.savefig(os.path.join(savedir,'AffineModel_Gain%1.2f_O%1.2f_noise%1.2f_N%d_K%d' % (gain_level,offset_level,noise_level,nNeurons,nTrials) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'AffineModel_Gain%1.2f_O%1.2f_noise%1.2f_N%d_K%d' % (gain_level,offset_level,noise_level,nNeurons,nTrials) + '.png'), format = 'png')
 
 #%% ########################### Compute noise correlations: ###################################
 model_ses = compute_signal_noise_correlation([model_ses],filter_stationary=False)[0]
@@ -136,8 +136,8 @@ plt.ylabel('NoiseCorrelation')
 plt.legend(tuning_perc_labels[1:],fontsize=9,loc='best')
 plt.tight_layout()
 
-# fig.savefig(os.path.join(savedir,'NoiseCorr_PosWeight_AffineModel_Gain%1.2f_O%1.2f_noise%1.2f_N%d_K%d' % (gain_level,offset_level,noise_level,nNeurons,nTrials) + '.png'), format = 'png')
-# fig.savefig(os.path.join(savedir,'NoiseCorr_RandWeight_AffineModel_Gain%1.2f_O%1.2f_noise%1.2f_N%d_K%d' % (gain_level,offset_level,noise_level,nNeurons,nTrials) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'NoiseCorr_PosWeight_AffineModel_Gain%1.2f_O%1.2f_noise%1.2f_N%d_K%d' % (gain_level,offset_level,noise_level,nNeurons,nTrials) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'NoiseCorr_RandWeight_AffineModel_Gain%1.2f_O%1.2f_noise%1.2f_N%d_K%d' % (gain_level,offset_level,noise_level,nNeurons,nTrials) + '.png'), format = 'png')
 
 
 #===============================================================================
@@ -199,7 +199,7 @@ ax.legend(frameon=False,loc='upper right')
 ax.set_xlabel('Trials')
 ax.set_ylabel('Z-scored response')
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Rate_behavior_across_trials_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Rate_behavior_across_trials_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 #%% Correlations between variables:
 df = pd.DataFrame({'pop. rate V1':stats.zscore(np.nanmean(sessions[ises].respmat[sessions[ises].celldata['roi_name']=='V1',:],axis=0)),
@@ -214,7 +214,7 @@ sns.heatmap(df.corr(),ax=ax,cmap='RdBu_r',center=0,vmin=-1,vmax=1,
 plt.xticks(rotation=45,fontsize=8)
 plt.yticks(rotation=0,fontsize=8)
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Corrmat_rate_behavior_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Corrmat_rate_behavior_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 #%% 
@@ -238,10 +238,10 @@ datasets            = (data,data_hat_tuned,data_hat_gainonly,data_hat_poprate)
 dataset_labels      = ['original','tuning only','gain only','tuned gain',]
 
 fig = plot_respmat(orientations, datasets, dataset_labels,sessions[ises].celldata['pref_ori'].to_numpy())
-fig.savefig(os.path.join(savedir,'Heatmap_respmat_modelversions_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Heatmap_respmat_modelversions_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 fig = plot_tuned_response(orientations, datasets, dataset_labels)
-fig.savefig(os.path.join(savedir,'Heatmap_respmean_modelversions_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Heatmap_respmean_modelversions_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 for i in range(len(datasets)-1):
     print('%s: R2 = %1.2f' % (dataset_labels[i+1],r2_score(datasets[0].flatten(),datasets[i+1].flatten())))
@@ -262,7 +262,7 @@ axes[1].hist(gain_weights,bins=25,color='grey')
 axes[1].set_title('Neuron gain ')
 axes[1].set_xlabel('Correlation neuron rate to pop. rate')
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Hist_poprate_gain_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Hist_poprate_gain_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 #%% 
 nbins = 10
@@ -285,7 +285,7 @@ axes[0].set_ylabel('Density (a.u.)')
 axes[0].set_yticks([])
 axes[1].set_yticks([])
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Hist_poprate_gain_arealabels_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Hist_poprate_gain_arealabels_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 
@@ -345,7 +345,7 @@ axes[1].set_title('gain subtracted')
 axes[1].set_xticks(np.arange(0,ses_nogain.noise_corr.shape[0],1000))
 axes[1].set_yticks(np.arange(0,ses_nogain.noise_corr.shape[1],1000))
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'NoiseCorrMat_subgain_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'NoiseCorrMat_subgain_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 ytrue = ses_orig.noise_corr.flatten()
 yhat = ses_orig.noise_corr.flatten()-ses_nogain.noise_corr.flatten()
@@ -441,7 +441,7 @@ plt.legend(labels=['original','gain-subtracted'],handles=handles,frameon=False)
 plt.xlabel('principal component')
 plt.ylabel('variance explained')
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'PCA_EV_Original_GainModel' + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'PCA_EV_Original_GainModel' + '.png'), format = 'png')
 
 #%% 
 fig,ax = plt.subplots(1,1,figsize=(3,3))
@@ -451,7 +451,7 @@ handles.append(shaded_error(ax=ax,x=np.arange(1,ncomps+1),y=EV_nogain / EV_orig,
 plt.xlabel('principal component')
 plt.ylabel('Fraction of variance \nexplained by gain model')
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'PCA_EV_Ratio_GainModel' + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'PCA_EV_Ratio_GainModel' + '.png'), format = 'png')
 
 
 

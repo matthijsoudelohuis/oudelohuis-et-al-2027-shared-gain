@@ -23,7 +23,7 @@ from utils.gain_lib import *
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
 
-savedir =  os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\TransferFunctions')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% Define nonlinearities:
 
@@ -99,8 +99,8 @@ for i, nonlinearity in enumerate(nonlinearities):
     ax.grid()
 plt.tight_layout()
 sns.despine()
-# my_savefig(plt.gcf(),savedir,f'{nonlinearity_names[i]}_Nonlinearity_TransferFunction')
-# my_savefig(fig,savedir,f'Tranfer_functions_overview')
+# my_savefig(plt.gcf(),figdir,f'{nonlinearity_names[i]}_Nonlinearity_TransferFunction')
+# my_savefig(fig,figdir,f'Tranfer_functions_overview')
 
 #%% Show gain as well: 
 
@@ -141,7 +141,7 @@ for i, nonlinearity in enumerate(nonlinearities):
         # ax.legend(
 plt.tight_layout()
 sns.despine(fig=fig,right=True,top=True)
-# my_savefig(fig,savedir,'Nonlinearity_Simulation_PopCouplingModel')
+# my_savefig(fig,figdir,'Nonlinearity_Simulation_PopCouplingModel')
 
 #%% Now for each nonlinearity, compare for neurons with high vs low poppulation rate and population coupling:
 
@@ -167,7 +167,7 @@ for ip, popmod in enumerate(popmodulations):
         ax.set_title(f'{popmod} (Gain={tuning:.1f})')
 plt.tight_layout()
 sns.despine(fig=fig,right=True,top=True)
-# my_savefig(fig,savedir,'Nonlinearity_Simulation_PopCouplingModel')
+# my_savefig(fig,figdir,'Nonlinearity_Simulation_PopCouplingModel')
 
 #%% Plotting:
 
@@ -217,7 +217,7 @@ for inonlin, nonlinearity in enumerate(nonlinearities):
             # ax.legend(
     plt.tight_layout()
     sns.despine(fig=fig,right=True,top=True)
-    my_savefig(fig,savedir,f'Simulation_TuningCurve_HeterogeneousPopCoupling_Model_{nonlinearity_names[inonlin]}')
+    my_savefig(fig,figdir,f'Simulation_TuningCurve_HeterogeneousPopCoupling_Model_{nonlinearity_names[inonlin]}')
 
 #%% 
 
@@ -321,7 +321,7 @@ nonlinearity = sigmoid
 fig = visualize_tuning_curve_with_popcoupling(tuning=tuning, offset=offset, popmod = popmod, 
                                         nonlinearity=nonlinearity, operating_range=[-4,4])
 
-my_savefig(fig,savedir,'Nonlinearity_IO_%s' % (examplename))
+my_savefig(fig,figdir,'Nonlinearity_IO_%s' % (examplename))
 
 #%%
 examplename = 'Sigmoid_Additive_Nontuned_High'
@@ -332,7 +332,7 @@ nonlinearity = sigmoid
 fig = visualize_tuning_curve_with_popcoupling(tuning=tuning, offset=offset, popmod = popmod, 
                                         nonlinearity=nonlinearity, operating_range=[-4,4])
 
-my_savefig(fig,savedir,'Nonlinearity_IO_%s' % (examplename))
+my_savefig(fig,figdir,'Nonlinearity_IO_%s' % (examplename))
 
 #%%
 examplename = 'Sigmoid_Mult_Tuned_Low'
@@ -343,7 +343,7 @@ nonlinearity = sigmoid
 fig = visualize_tuning_curve_with_popcoupling(tuning=tuning, offset=offset, popmod = popmod, 
                                         nonlinearity=nonlinearity, operating_range=[-4,4])
 
-my_savefig(fig,savedir,'Nonlinearity_IO_%s' % (examplename))
+my_savefig(fig,figdir,'Nonlinearity_IO_%s' % (examplename))
 
 #%%
 examplename = 'Sigmoid_Mult_Tuned_High'
@@ -354,7 +354,7 @@ nonlinearity = sigmoid
 fig = visualize_tuning_curve_with_popcoupling(tuning=tuning, offset=offset, popmod = popmod, 
                                         nonlinearity=nonlinearity, operating_range=[-4,4])
 
-my_savefig(fig,savedir,'Nonlinearity_IO_%s' % (examplename))
+my_savefig(fig,figdir,'Nonlinearity_IO_%s' % (examplename))
 
 #%%
 examplename = 'Sigmoid_Curved_Tuned'
@@ -365,7 +365,7 @@ nonlinearity = sigmoid
 fig = visualize_tuning_curve_with_popcoupling(tuning=tuning, offset=offset, popmod = popmod, 
                                         nonlinearity=nonlinearity, operating_range=[-4,4])
 
-my_savefig(fig,savedir,'Nonlinearity_IO_%s' % (examplename))
+my_savefig(fig,figdir,'Nonlinearity_IO_%s' % (examplename))
 
 #%%
 nonlinearity_names = ['Linear', 'ReLU', 'Softplus', 'Sigmoid', 'Tanh', 'Power-law (p=2)', 'Exp']
@@ -387,7 +387,7 @@ nonlinearity = exp
 fig = visualize_tuning_curve_with_popcoupling(tuning=tuning, offset=offset, popmod = popmod, 
                                         nonlinearity=nonlinearity, operating_range=[-.5,1])
 
-my_savefig(fig,savedir,'Nonlinearity_IO_%s' % (examplename))
+my_savefig(fig,figdir,'Nonlinearity_IO_%s' % (examplename))
 
 #%%
 examplename = 'Exp_Tuned_Multiplicative'
@@ -398,7 +398,7 @@ nonlinearity = exp
 fig = visualize_tuning_curve_with_popcoupling(tuning=tuning, offset=offset, popmod = popmod, 
                                         nonlinearity=nonlinearity, operating_range=[-.5,1])
 
-my_savefig(fig,savedir,'Nonlinearity_IO_%s' % (examplename))
+my_savefig(fig,figdir,'Nonlinearity_IO_%s' % (examplename))
 
 #%%
 examplename = 'Powerlaw_Tuned_Additive'
@@ -408,7 +408,7 @@ offset = 0.75
 nonlinearity = nonlinearities[5]
 fig = visualize_tuning_curve_with_popcoupling(tuning=tuning, offset=offset, popmod = popmod, 
                                         nonlinearity=nonlinearity, operating_range=[-.5,1])
-my_savefig(fig,savedir,'Nonlinearity_IO_%s' % (examplename))
+my_savefig(fig,figdir,'Nonlinearity_IO_%s' % (examplename))
 
 #%%
 examplename = 'Powerlaw_Tuned_Multiplicative'
@@ -418,7 +418,7 @@ offset = 0.2
 nonlinearity = nonlinearities[5]
 fig = visualize_tuning_curve_with_popcoupling(tuning=tuning, offset=offset, popmod = popmod, 
                                         nonlinearity=nonlinearity, operating_range=[-.5,1])
-my_savefig(fig,savedir,'Nonlinearity_IO_%s' % (examplename))
+my_savefig(fig,figdir,'Nonlinearity_IO_%s' % (examplename))
 
 
 
@@ -515,7 +515,7 @@ for inonlin, nonlinearity in enumerate(nonlinearities):
     #         loc='center left', bbox_to_anchor=(1, 0.5))
     plt.suptitle(nonlinearity_names[inonlin])
     plt.tight_layout()
-    # my_savefig(fig,savedir,f'PCA_Simulation_HeterogeneousPopCoupling_Model_{nonlinearity_names[inonlin]}')
+    # my_savefig(fig,figdir,f'PCA_Simulation_HeterogeneousPopCoupling_Model_{nonlinearity_names[inonlin]}')
 
 
 #%%  
@@ -545,6 +545,6 @@ ax.set_xlabel('PCA component')
 ax.set_ylabel('Variance')
 plt.tight_layout()
 sns.despine(fig=fig,top=True)
-my_savefig(fig,savedir,f'PCA_EV_TransferFunctions')
+my_savefig(fig,figdir,f'PCA_EV_TransferFunctions')
 
 #%% 

@@ -22,7 +22,7 @@ from utils.tuning import *
 from utils.gain_lib import * 
 from scipy.stats import binned_statistic,binned_statistic_2d
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919_2023_11_06']])
@@ -127,7 +127,7 @@ sns.despine(fig=fig, top=True, right=True,offset=3)
 axes[1,0].set_xticks(oris[::2],oris[::2],rotation=45,fontsize=6)
 axes[1,1].set_xticks(oris[::2],oris[::2],rotation=45,fontsize=6)
 
-# my_savefig(fig,savedir,'RunningModulation_V1PM_LabUnl_' + str(nSessions) + 'sessions')
+# my_savefig(fig,figdir,'RunningModulation_V1PM_LabUnl_' + str(nSessions) + 'sessions')
 
 #%% Is the gain modulation similar for labeled and unlabeled, and for V1 and PM?
 arealabels = ['V1unl','V1lab','PMunl','PMlab']
@@ -163,7 +163,7 @@ ax.set_xlim([0,3.5])
 ax.set_ylim([0,3.5])
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True,offset=3)
-# fig.savefig(os.path.join(savedir,'SharedGain','Gain_V1PM_LabUnl_' + str(nSessions) + 'sessions.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'SharedGain','Gain_V1PM_LabUnl_' + str(nSessions) + 'sessions.png'), format = 'png')
 
 #%% Fit gain coefficient for each neuron and compare labeled and unlabeled neurons:
 N = len(celldata)
@@ -192,7 +192,7 @@ axes[nbyn//2,0].set_ylabel('Running (Norm. Response)')
 axes[nbyn-1,nbyn//2].set_xlabel('Still (Norm. Response)')
 sns.despine(fig=fig, top=True, right=True,offset=3)
 fig.suptitle('Gain Modulation - Individual neurons')
-fig.savefig(os.path.join(savedir,'Gain_ExampleNeurons' + str(nSessions) + 'sessions.png'), 
+fig.savefig(os.path.join(figdir,'Gain_ExampleNeurons' + str(nSessions) + 'sessions.png'), 
             bbox_inches='tight',format = 'png')
 
 #%%
@@ -253,7 +253,7 @@ for ivar,var in enumerate(['slope','intercept']):
 
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-my_savefig(fig,savedir,'GainPopulation_V1PM_LabUnl_' + str(nSessions) + 'sessions',formats=['png'])
+my_savefig(fig,figdir,'GainPopulation_V1PM_LabUnl_' + str(nSessions) + 'sessions',formats=['png'])
 
 
 #%% Is the gain modulation fully mediated by increase in population rate: 
@@ -292,9 +292,9 @@ ax.legend(handles,['0-20%','20-40%','40-60%','60-80%','80-100%'],
 
 sns.despine(fig=fig, top=True, right=True,offset=0,trim=True)
 fig.suptitle('Gain Modulation - Soloists vs Choristers')
-my_savefig(fig,savedir,'AffineModulation_Locomotion' + str(nSessions),formats = ['png'])
+my_savefig(fig,figdir,'AffineModulation_Locomotion' + str(nSessions),formats = ['png'])
 
-# fig.savefig(os.path.join(savedir,'Gain_ExampleNeurons' + str(nSessions) + 'sessions.png'), 
+# fig.savefig(os.path.join(figdir,'Gain_ExampleNeurons' + str(nSessions) + 'sessions.png'), 
 #             bbox_inches='tight',format = 'png')
 
 # from utils.pair_lib import value_matching
@@ -391,7 +391,7 @@ ax.legend(handles,['0-20%','20-40%','40-60%','60-80%','80-100%'],
 
 sns.despine(fig=fig, top=True, right=True,offset=0,trim=True)
 fig.suptitle('Gain Modulation - Soloists vs Choristers')
-my_savefig(fig,savedir,'AffineModulation_Locomotion_BalanceRate' + str(nSessions),formats = ['png'])
+my_savefig(fig,figdir,'AffineModulation_Locomotion_BalanceRate' + str(nSessions),formats = ['png'])
 
 #%% 
 idx_N = np.all((celldata['roi_name']=='V1',
@@ -454,7 +454,7 @@ ax.set_xticks([0,0.5,1])
 
 sns.despine(fig=fig, top=True, right=True, offset=5,trim=True)
 plt.tight_layout()
-my_savefig(fig,savedir,'GainModulation_vs_Tuning_%s_%dsessions' % (xfield,nSessions) ,formats=['png'])
+my_savefig(fig,figdir,'GainModulation_vs_Tuning_%s_%dsessions' % (xfield,nSessions) ,formats=['png'])
 
 #%% Subtracting gain removes tuned gain modulation in mean response:
 redcells            = np.unique(celldata['redcell'])
@@ -478,7 +478,7 @@ for imodel,model in enumerate(['orig','nogain']):
     ax.set_ylim([-0.6,3])
     ax.axhline(0,ls='--',color='grey')
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'SharedGain','RunningMod_Gainsub_' + str(nSessions) + 'sessions.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'SharedGain','RunningMod_Gainsub_' + str(nSessions) + 'sessions.png'), format = 'png')
 
 
 

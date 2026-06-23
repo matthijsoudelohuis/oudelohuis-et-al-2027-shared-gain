@@ -27,7 +27,7 @@ from utils.corr_lib import *
 from utils.rf_lib import smooth_rf,exclude_outlier_rf,filter_nearlabeled,replace_smooth_with_Fsig
 from utils.tuning import compute_tuning_wrapper
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\Collinear\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 
 colors = [(0, 0, 0), (1, 0, 0), (1, 1, 1)] # first color is black, last is red
@@ -196,38 +196,38 @@ iap = 0
 fig = plot_2D_mean_corr_projs_dori(bin_2d_mean_oris,bin_2d_count_oris,bincenters_2d,deltaoris,
                                    areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs,cmap='magma',
                                    centerthr=centerthr,min_counts=min_counts,gaussian_sigma=gaussian_sigma)
-fig.savefig(os.path.join(savedir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_mean' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_mean' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 #%% Show radial tuning for each delta ori:
 fig = plot_corr_radial_tuning_projs_dori(bincenters_dist,bin_dist_count_oris,bin_dist_mean_oris,deltaoris,	
                            areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
-fig.savefig(os.path.join(savedir,'Projs','Collinear_Radial_Tuning_projs_%s_mean' % (corr_type) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Projs','Collinear_Radial_Tuning_projs_%s_mean' % (corr_type) + '.png'), format = 'png')
 
 #%% Show spatial maps per delta ori for the fraction positive 
 fig = plot_2D_mean_corr_projs_dori(bin_2d_posf_oris,bin_2d_count_oris,bincenters_2d,deltaoris,areapairs=areapairs,layerpairs=layerpairs,
                         projpairs=projpairs,centerthr=centerthr,min_counts=min_counts,gaussian_sigma=gaussian_sigma,cmap=cm_red)
-fig.savefig(os.path.join(savedir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_posf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_posf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 #%% Show radial tuning for each delta ori:
 fig = plot_corr_radial_tuning_projs_dori(bincenters_dist,bin_dist_count_oris,bin_dist_posf_oris,deltaoris,	
                            areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
-fig.savefig(os.path.join(savedir,'Projs','Collinear_Radial_Tuning_projs_%s_posf' % (corr_type) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Projs','Collinear_Radial_Tuning_projs_%s_posf' % (corr_type) + '.png'), format = 'png')
 
 #%% Show spatial maps per delta ori for the fraction negative 
 fig = plot_2D_mean_corr_projs_dori(bin_2d_negf_oris,bin_2d_count_oris,bincenters_2d,deltaoris,areapairs=areapairs,layerpairs=layerpairs,
                         projpairs=projpairs,centerthr=centerthr,min_counts=min_counts,gaussian_sigma=gaussian_sigma,cmap=cm_blue)
-fig.savefig(os.path.join(savedir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_negf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_negf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 #%% Show radial tuning for each delta ori:
 fig = plot_corr_radial_tuning_projs_dori(bincenters_dist,bin_dist_count_oris,bin_dist_negf_oris,deltaoris,	
                            areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
-fig.savefig(os.path.join(savedir,'Projs','Collinear_Radial_Tuning_projs_%s_negf' % (corr_type) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Projs','Collinear_Radial_Tuning_projs_%s_negf' % (corr_type) + '.png'), format = 'png')
 
 #%%
 fig = plot_corr_center_tuning_projs_dori(bincenters_dist,bin_dist_count_oris,bin_dist_mean_oris,
                                          bin_dist_posf_oris,bin_dist_negf_oris,deltaoris,	
                                         areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
-fig.savefig(os.path.join(savedir,'Projs','Center_Tuning_projs_%s' % (corr_type) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Projs','Center_Tuning_projs_%s' % (corr_type) + '.png'), format = 'png')
 
 
 #%% 

@@ -21,7 +21,7 @@ from sklearn.decomposition import PCA
 from scipy.stats import zscore, pearsonr,spearmanr
 from utils.explorefigs import plot_excerpt,plot_PCA_gratings,plot_tuned_response
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Neural - Gratings\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #################################################
 session_list        = np.array([['LPE09830','2023_04_10']])
@@ -61,8 +61,8 @@ for ises in range(nSessions):
 example_cells = [3,56,58,62,70]
 fig = plot_tuned_response(sessions[sesidx].tensor,sessions[sesidx].trialdata,t_axis,example_cells)
 # save the figure
-fig.savefig(os.path.join(savedir,'ExploreFigs','TunedResponse_dF_%s.png' % sessions[sesidx].session_id))
-# fig.savefig(os.path.join(savedir,'ExploreFigs','TunedResponse_deconv_%s.png' % sessions[sesidx].session_id))
+fig.savefig(os.path.join(figdir,'ExploreFigs','TunedResponse_dF_%s.png' % sessions[sesidx].session_id))
+# fig.savefig(os.path.join(figdir,'ExploreFigs','TunedResponse_deconv_%s.png' % sessions[sesidx].session_id))
 
 #%% ############################################################################
 

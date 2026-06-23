@@ -29,7 +29,7 @@ from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper
 from utils.regress_lib import *
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Interarea\\CCA\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% 
 session_list        = np.array([['LPE12223_2024_06_10'], #GR
@@ -150,7 +150,7 @@ sns.despine(fig=fig, top=True, right=True,offset=5)
 
 fig.suptitle('Correlation between CCA and RRR:')
 fig.tight_layout()
-fig.savefig(os.path.join(savedir,'Corr_CCA_RRR_weights.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Corr_CCA_RRR_weights.png'), format = 'png')
 
 
 
@@ -363,9 +363,9 @@ cbar.set_label('Correlation', rotation=90, labelpad=-40)
 fig.suptitle('CC1 correlation to:')
 # plt.tight_layout()
 
-# plt.savefig(os.path.join(savedir,'CC1_CorrVars_Heatmap_V1PM_%dsessions.png' % nSessions),
+# plt.savefig(os.path.join(figdir,'CC1_CorrVars_Heatmap_V1PM_%dsessions.png' % nSessions),
             #  bbox_inches='tight',  format = 'png')
-my_savefig(fig,savedir,'CC1_CorrVars_Heatmap_V1PM_%dsessions.png' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'CC1_CorrVars_Heatmap_V1PM_%dsessions.png' % nSessions,formats=['png'])
 
 #%% 
 colorvars                = sns.color_palette("husl",nvars)
@@ -392,7 +392,7 @@ ax.set_title('CC1 correlation to:')
 ax.set_xlabel('Area pairs')
 ax.set_ylabel('CC1 correlation with\n variable of interest')
 # plt.tight_layout()
-plt.savefig(os.path.join(savedir,'CC1_CorrVars_Lineplot_V1PM_%dsessions.png' % nSessions),
+plt.savefig(os.path.join(figdir,'CC1_CorrVars_Lineplot_V1PM_%dsessions.png' % nSessions),
              bbox_inches='tight',  format = 'png')
 
 
@@ -468,7 +468,7 @@ ax.set_yticks([0,0.25,0.5,0.75,1])
 ax.set_xlabel('Area')
 ax.set_ylabel('Correlation CC1 weights\nto pop. correlation')
 sns.despine(top=True,right=True,offset=3)
-my_savefig(fig,savedir,'CC1_CorrPopCorr_V1PM_%dsessions' % nSessions)
+my_savefig(fig,figdir,'CC1_CorrPopCorr_V1PM_%dsessions' % nSessions)
 
 #%% 
 oris                = np.sort(sessions[ises].trialdata['Orientation'].unique())
@@ -589,8 +589,8 @@ ax.set_xlabel('CCA Dimension')
 ax.set_ylabel('Correlation')
 ax.legend(arealabelpairs,loc='upper right',frameon=False,fontsize=9)
 sns.despine(top=True,right=True,offset=3)
-# plt.savefig(os.path.join(savedir,'CCA_cvShuffleTestCorr_Dim_V1PM_LabUnl_%dsessions.png' % nSessions), format = 'png')
-# plt.savefig(os.path.join(savedir,'CCA_cvTestCorr_Dim_V1PM_LabUnl_%dsessions.png' % nSessions), 
+# plt.savefig(os.path.join(figdir,'CCA_cvShuffleTestCorr_Dim_V1PM_LabUnl_%dsessions.png' % nSessions), format = 'png')
+# plt.savefig(os.path.join(figdir,'CCA_cvTestCorr_Dim_V1PM_LabUnl_%dsessions.png' % nSessions), 
             # format = 'png', bbox_inches='tight')
 
 #%% Make one for different number of neurons per population:
@@ -659,7 +659,7 @@ ax.axhline(y=0,color='k',linestyle='--')
 sns.despine(top=True,right=True,offset=3)
 
 fig.tight_layout()
-plt.savefig(os.path.join(savedir,'CCA_PopulationSizes_CrossVal_%dsessions.png' % nSessions), format = 'png')
+plt.savefig(os.path.join(figdir,'CCA_PopulationSizes_CrossVal_%dsessions.png' % nSessions), format = 'png')
 
 #%% Crossvalidated CCA for different number of population sizes with and without regularization/PCA:
 
@@ -721,7 +721,7 @@ ax.set_title('with PCA first')
 ax.axhline(y=0,color='k',linestyle='--')
 
 sns.despine(top=True,right=True,offset=3)
-plt.savefig(os.path.join(savedir,'CCA_corr_PCARegularization_%dsessions.png' % nSessions), format = 'png')
+plt.savefig(os.path.join(figdir,'CCA_corr_PCARegularization_%dsessions.png' % nSessions), format = 'png')
 
 #%% Run CCA and PCA and estimate the fraction of power that CCA captures for each dimension:
 ndims               = 25    #perform dim reduc before fitting CCA, otherwise overfitting
@@ -795,7 +795,7 @@ ax.legend(loc='best',frameon=False)
 sns.despine(top=True,right=True,offset=3)
 
 fig.tight_layout()
-plt.savefig(os.path.join(savedir,'PCA_CCA_EV_Ratio_%dsessions.png' % nSessions), format = 'png')
+plt.savefig(os.path.join(figdir,'PCA_CCA_EV_Ratio_%dsessions.png' % nSessions), format = 'png')
 
 
 
@@ -911,7 +911,7 @@ ax.set_xlim([1,ncomponents+1])
 ax.set_xticks(np.arange(ncomponents)+1)
 sns.despine(top=True,right=True,offset=3)
 fig.tight_layout()
-my_savefig(fig,savedir,'CCA_V1PMAL_ProjCorr_%dsessions' % nSessions)
+my_savefig(fig,figdir,'CCA_V1PMAL_ProjCorr_%dsessions' % nSessions)
 
 
 #%% 

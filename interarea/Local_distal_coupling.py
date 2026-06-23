@@ -32,8 +32,8 @@ from utils.gain_lib import *
 # from utils.RRRlib import estimate_dimensionality
 from utils.rf_lib import filter_nearlabeled
 
-# savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Interarea\\CCA\\')
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+# figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Interarea\\CCA\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% Load an example session: 
 session_list        = np.array(['LPE12223_2024_06_10']) #GR
@@ -190,7 +190,7 @@ for ixarea,xarea in enumerate(areas):
 
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,offset=2)
-# my_savefig(fig,savedir,'PopCouplingHist_%ssession' % sessions[ises].session_id,formats=['png'])
+# my_savefig(fig,figdir,'PopCouplingHist_%ssession' % sessions[ises].session_id,formats=['png'])
 
 #%% 
 nbins = 15

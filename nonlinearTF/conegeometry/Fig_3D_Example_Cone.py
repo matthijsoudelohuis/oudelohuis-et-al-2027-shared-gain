@@ -12,7 +12,7 @@ from loaddata.session_info import filter_sessions,load_sessions
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
 
-savedir = 'E:\\OneDrive\\PostDoc\\Figures\\SharedGain'
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919_2023_11_06']])
@@ -61,7 +61,7 @@ for ax in axes:
     ax.zaxis.pane.set_edgecolor('w')
 
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Example_Cone_3D_V1_PM_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Example_Cone_3D_V1_PM_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 #%% SHOW AL as well: #############################################################################
 
@@ -156,7 +156,7 @@ ax.yaxis.pane.fill = False
 ax.zaxis.pane.fill = False
 
 # plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Example_Cone_3D_V1_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Example_Cone_3D_V1_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 
@@ -268,7 +268,7 @@ ax.zaxis.pane.set_edgecolor('w')
 
 print('Variance Explained by first 3 components: %2.2f' %
         (pca.explained_variance_ratio_.cumsum()[2]))
-# my_savefig(fig,savedir,'Example_Cone_3D_PopRate_%s' % sessions[0].session_id,formats=['png','pdf'])
+# my_savefig(fig,figdir,'Example_Cone_3D_PopRate_%s' % sessions[0].session_id,formats=['png','pdf'])
 
 
 #%% Make a 3D cone where coloring is based on population rate: 
@@ -380,7 +380,7 @@ ax.zaxis.pane.set_edgecolor('w')
 
 print('Variance Explained by first 3 components: %2.2f' %
         (pca.explained_variance_ratio_.cumsum()[2]))
-# my_savefig(fig,savedir,'Example_Cone_3D_PopRate_%s' % sessions[0].session_id,formats=['png','pdf'])
+# my_savefig(fig,figdir,'Example_Cone_3D_PopRate_%s' % sessions[0].session_id,formats=['png','pdf'])
 
 #%% 
 
@@ -421,19 +421,19 @@ fig = plot_PCA_gratings_3D(sessions[0],thr_tuning=0)
 axes = fig.get_axes()
 axes[0].view_init(elev=-45, azim=0, roll=-10)
 axes[0].set_zlim([-5,45])
-fig.savefig(os.path.join(savedir,'Cone_3D_V1_Original_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Cone_3D_V1_Original_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 #%% Make the 3D figure for only gain data:
 fig = plot_PCA_gratings_3D(sessions_onlygain[0],thr_tuning=0)
 axes = fig.get_axes()
 axes[0].view_init(elev=-45, azim=-15, roll=-35)
-fig.savefig(os.path.join(savedir,'Cone_3D_V1_Gainonly_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Cone_3D_V1_Gainonly_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 #%% Make the 3D figure for gain-subtracted data:
 fig = plot_PCA_gratings_3D(sessions_nogain[0],thr_tuning=0)
 axes = fig.get_axes()
 axes[0].view_init(elev=65, azim=-135, roll=0)
-fig.savefig(os.path.join(savedir,'Cone_3D_V1_Nogain_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Cone_3D_V1_Nogain_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 # #%% #############################################################################
 
@@ -487,7 +487,7 @@ for iPopCouplingBin in range(nPopCouplingBins):
         ax.scatter(x, y, z, color=pal[t], s=0.3, alpha=0.7)
     
     ax_3d_makeup(ax,Xp.T)
-# my_savefig(fig,savedir,'Cone_High_Low_PopCoupling_%s' % (sessions[ises].session_id),formats=['png','pdf'])
+# my_savefig(fig,figdir,'Cone_High_Low_PopCoupling_%s' % (sessions[ises].session_id),formats=['png','pdf'])
 
 #%% Get good unmodulated cells, multiplicative and additively modulated neurons: 
 N = len(sessions[ises].celldata)
@@ -560,7 +560,7 @@ for iBin in range(3):
         ax.scatter(x, y, z, color=pal[t], s=0.3, alpha=0.7)
     ax.set_title('%s (n=%d)' % (labels[iBin],np.sum(idx_N[:,iBin])))
     ax_3d_makeup(ax,Xp.T)
-my_savefig(fig,savedir,'Cone_Affine_Pops_%s' % (sessions[ises].session_id),formats=['png','pdf'])
+my_savefig(fig,figdir,'Cone_Affine_Pops_%s' % (sessions[ises].session_id),formats=['png','pdf'])
 
 #%% 
 # plt.scatter(sessions[ises].celldata['Affine_Mult'],sessions[ises].celldata['Affine_Add'])
@@ -596,7 +596,7 @@ ax.set_xlabel('Z-scored population activity')
 ax.legend(['All','Low Variance','High Variance'],frameon=False,
           loc='upper right',fontsize=10,title='Trials')
 idx_T_both = np.column_stack((idx_T_low,idx_T_high))
-my_savefig(fig,savedir,'Hist_High_Low_PopRateVariance_%s' % (sessions[ises].session_id),formats=['png'])
+my_savefig(fig,figdir,'Hist_High_Low_PopRateVariance_%s' % (sessions[ises].session_id),formats=['png'])
 
 #%% Show PCA for differen subsets of trials with little or a lot of variance:
 fig = plt.figure(figsize=(6,2.5))
@@ -634,7 +634,7 @@ for iPopRateVarianceBin in range(nPopRateVarianceBins):
     
     ax_3d_makeup(ax,Xp.T)
     ax.set_title('Low rate variance' if iPopRateVarianceBin==0 else 'High rate variance')
-my_savefig(fig,savedir,'Cone_High_Low_Variance%s' % (sessions[ises].session_id),formats=['png','pdf'])
+my_savefig(fig,figdir,'Cone_High_Low_Variance%s' % (sessions[ises].session_id),formats=['png','pdf'])
 
 
 #%% PCA for trials without locomotion:
@@ -682,7 +682,7 @@ for ibin in range(nBins):
         ax.scatter(x, y, z, color=pal[t], s=0.3, alpha=0.7)
     
     ax_3d_makeup(ax,Xp.T)
-my_savefig(fig,savedir,'Cone_High_Low_Tuning_%s' % (sessions[ises].session_id),formats=['png'])
+my_savefig(fig,figdir,'Cone_High_Low_Tuning_%s' % (sessions[ises].session_id),formats=['png'])
 
 
 #%% PCA for trials without locomotion:
@@ -727,7 +727,7 @@ for t, t_type in enumerate(oris):
 
 ax_3d_makeup(ax,Xp.T)
 ax.set_title('No locomotion')
-my_savefig(fig,savedir,'Cone_NoLocomotion_%s' % (sessions[ises].session_id),formats=['png'])
+my_savefig(fig,figdir,'Cone_NoLocomotion_%s' % (sessions[ises].session_id),formats=['png'])
 
 
 

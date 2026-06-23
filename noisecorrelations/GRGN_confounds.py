@@ -33,7 +33,7 @@ from utils.corr_lib import *
 from utils.rf_lib import smooth_rf,exclude_outlier_rf,filter_nearlabeled,replace_smooth_with_Fsig
 from utils.tuning import compute_tuning, compute_prefori
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% Load all sessions from certain protocols: 
 sessions,nSessions   = filter_sessions(protocols = ['GR','GN'],filter_areas=['V1','PM']) 
@@ -135,10 +135,10 @@ for i in range(nfields):
     ax.set_ylabel('')
     ax.set_title(fields[i])
     plt.tight_layout()
-    fig.savefig(os.path.join(savedir,'Quality_Metric_GRGN_%s_%dcells_%dsessions' % (fields[i],len(celldata),nSessions) + '.png'), format = 'png')
+    fig.savefig(os.path.join(figdir,'Quality_Metric_GRGN_%s_%dcells_%dsessions' % (fields[i],len(celldata),nSessions) + '.png'), format = 'png')
 
 # plt.tight_layout()
-# fig.savefig(os.path.join(savedir,'Quality_Metrics_GRGN_%dcells_%dsessions' % (len(celldata),nSessions) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Quality_Metrics_GRGN_%dcells_%dsessions' % (len(celldata),nSessions) + '.png'), format = 'png')
 
 #%% Find the session with the biggest difference in pairwise correlations between labeled and unlabeled cells:
 
@@ -187,4 +187,4 @@ axes[1,1].hist(celldata['yloc'][celldata['redcell']==0],bins=25,histtype='step',
 axes[1,1].hist(celldata['yloc'][celldata['redcell']==1],bins=25,histtype='step',color='r',density=True)
 axes[1,1].set_title('PM - Y location')
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'XYPosition_Unl_Lab_cells_%dsessions' % (nSessions) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'XYPosition_Unl_Lab_cells_%dsessions' % (nSessions) + '.png'), format = 'png')

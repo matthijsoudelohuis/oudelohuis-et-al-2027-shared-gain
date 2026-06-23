@@ -27,7 +27,7 @@ from utils.RRRlib import regress_out_behavior_modulation
 from utils.corr_lib import *
 from utils.rf_lib import smooth_rf, filter_nearlabeled
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919','2023_11_06']])
@@ -98,7 +98,7 @@ celldata = pd.concat([ses.celldata for ses in sessions]).reset_index(drop=True)
 
 #%% 
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\CellProperties\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 
 #%%  Scatter plot of average noise correlations versus skew:
@@ -114,9 +114,9 @@ def plot_corr_NC_var(sessions,vartoplot):
     plt.ylabel('Correlation')
     plt.ylim(0,0.2)
     plt.text(x=np.nanpercentile(celldata[vartoplot],25),y=0.18,s='Mean correlation: %1.3f +- %1.3f' % (np.nanmean(cdata),np.nanstd(cdata)))
-    # plt.savefig(os.path.join(savedir,'NoiseCorrelations','%s_vs_NC' % vartoplot + '.png'), format = 'png')
+    # plt.savefig(os.path.join(figdir,'NoiseCorrelations','%s_vs_NC' % vartoplot + '.png'), format = 'png')
     plt.tight_layout()
-    plt.savefig(os.path.join(savedir,'AbsTC_vs_%s' % vartoplot + '.png'), format = 'png')
+    plt.savefig(os.path.join(figdir,'AbsTC_vs_%s' % vartoplot + '.png'), format = 'png')
 
 #%%  Scatter plot of average correlations versus skew:
 plot_corr_NC_var(sessions,vartoplot = 'skew')
@@ -186,7 +186,7 @@ def plot_corr_NC_var_2d(sessions,vartoplot):
     cbar = plt.colorbar(shrink=0.4)
     cbar.set_label('Mean trace corr')
     plt.tight_layout()
-    plt.savefig(os.path.join(savedir,'2D_tracecorr_vs_%s' % vartoplot + '.png'), format = 'png')
+    plt.savefig(os.path.join(figdir,'2D_tracecorr_vs_%s' % vartoplot + '.png'), format = 'png')
 
 #%%  2D plot of trace correlations versus skew:
 plot_corr_NC_var_2d(sessions,vartoplot = 'skew')
@@ -236,17 +236,17 @@ celldata['cell_id'][celldata['noise_corr_avg']>0.19]
 #%% Show relationships between multiple cell data properties at the same time:
 plotvars = ['noise_corr_avg','skew','chan2_prob','depth','redcell','tuning_var','event_rate']
 sns.pairplot(data=celldata[plotvars],hue='redcell')
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','Pairplot_NC' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','Pairplot_NC' + '.png'), format = 'png')
 
 sns.heatmap(data=celldata[plotvars].corr(),vmin=-1,vmax=1,cmap='bwr')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','Heatmap_NC_features' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','Heatmap_NC_features' + '.png'), format = 'png')
 
 #%% Show tuning variance vs noise correlation:
 clr_labeled = get_clr_labeled()
 sns.histplot(data=celldata,x='tuning_var',y='noise_corr_avg',hue='redcell',palette=clr_labeled,
              bins=40,alpha=0.5,cbar=True,cbar_kws={'norm': 1})
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','Tuning Variance vs NC' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','Tuning Variance vs NC' + '.png'), format = 'png')
 
 #%% Plot fraction of visuall responsive: 
 
@@ -272,12 +272,12 @@ plt.savefig(os.path.join(savedir,'NoiseCorrelations','Tuning Variance vs NC' + '
 sesidx = 3
 sesidx = np.where([ses.sessiondata['session_id'][0] == 'LPE09830_2023_04_12' for ses in sessions])[0][0]
 fig = plot_PCA_gratings_3D(sessions[sesidx])
-fig.savefig(os.path.join(savedir,'PCA','PCA_3D_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'PCA','PCA_3D_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 fig = plot_PCA_gratings_3D(sessions[sesidx],export_animation=True)
 
 fig = plot_PCA_gratings(sessions[sesidx],cellfilter=sessions[sesidx].celldata['redcell'].to_numpy()==1)
-fig.savefig(os.path.join(savedir,'PCA','PCA_Gratings_All_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'PCA','PCA_Gratings_All_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 #%% ##################### Plot control figure of signal and noise corrs ##############################
@@ -287,13 +287,13 @@ plt.imshow(sessions[sesidx].sig_corr, cmap='coolwarm',
            vmin=np.nanpercentile(sessions[sesidx].sig_corr,15),
            vmax=np.nanpercentile(sessions[sesidx].sig_corr,85))
 # plt.xlabel = 'Neurons'
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','Signal_Correlation_Mat_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','Signal_Correlation_Mat_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 fig = plt.figure(figsize=(8,5))
 plt.imshow(sessions[sesidx].noise_corr, cmap='coolwarm',
            vmin=np.nanpercentile(sessions[sesidx].noise_corr,5),
            vmax=np.nanpercentile(sessions[sesidx].noise_corr,95))
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','Noise_Correlation_Mat_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','Noise_Correlation_Mat_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 #%% Plotting Noise Correlation distribution across all pairs:
 fig,ax = plt.subplots(figsize=(5,4))
@@ -302,7 +302,7 @@ for ses in tqdm(sessions,total=len(sessions),desc= 'Kernel Density Estimation fo
 plt.xlim([-0.15,0.4])
 plt.legend()
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','NoiseCorr_distribution_allSessions.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','NoiseCorr_distribution_allSessions.png'), format = 'png')
 
 #%% ##################### Noise correlations within and across areas: #########################
 areapairs = ['V1-V1','V1-PM','PM-PM']
@@ -337,7 +337,7 @@ annotator.apply_and_annotate()
 # plt.yticks(np.arange(0, 1, step=0.01)) 
 # plt.ylim([0,0.07])
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','NoiseCorr_average_%dsessions' %nSessions + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','NoiseCorr_average_%dsessions' %nSessions + '.png'), format = 'png')
 
 #%% ###################################################################
 ####### Noise correlations as a function of anatomical distance ####
@@ -348,8 +348,8 @@ clrs_areapairs = get_clr_area_pairs(areapairs)
 
 #%% Make the figure per protocol:
 fig = plot_bin_corr_distance(sessions,binmean,binedges,areapairs,corr_type='noise_corr')
-fig.savefig(os.path.join(savedir,'NoiseCorrelations','NoiseCorr_anatomdistance_perArea_%dsessions' % nSessions + '.png'), format = 'png')
-# plt.savefig(os.path.join(savedir,'NoiseCorr_anatomdistance_perArea_regressout' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'NoiseCorrelations','NoiseCorr_anatomdistance_perArea_%dsessions' % nSessions + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'NoiseCorr_anatomdistance_perArea_regressout' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 #%% ###################################################################
 # Show distribution of delta receptive fields across sessions:
@@ -361,7 +361,7 @@ for ses in tqdm(sessions,total=len(sessions),desc= 'Histogram of delta RF for ea
                      fill=False,element="step",stat="percent",alpha=0.8,label=ses.sessiondata['session_id'][0])
 ax.set(xlabel='delta RF')
 ax.legend(loc='upper right',frameon=False,fontsize=7)
-fig.savefig(os.path.join(savedir,'Distribution_deltaRF_%dsessions' %nSessions + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Distribution_deltaRF_%dsessions' %nSessions + '.png'), format = 'png')
 
 #%% ###################################################################
 # areapairs = ['V1-V1','V1-PM','PM-PM']
@@ -384,7 +384,7 @@ clrs_areapairs = get_clr_area_pairs(areapairs)
 #%% Make the figure:
 fig = plot_bin_corr_deltarf(sessions,binmean,binedges,areapairs,corr_type='noise_corr')
 
-fig.savefig(os.path.join(savedir,'TraceCorr_distRF_Protocols_%dsessions_' %nSessions + areapair + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'TraceCorr_distRF_Protocols_%dsessions_' %nSessions + areapair + '.png'), format = 'png')
 
 
 #%% #########################################################################################
@@ -417,11 +417,11 @@ plt.colorbar(IM,fraction=0.026, pad=0.04,label='counts')
 if not rotate_prefori:
     plt.xlabel('delta Azimuth')
     plt.ylabel('delta Elevation')
-    # fig.savefig(os.path.join(savedir,'NoiseCorrelations','2D_NoiseCorrMap_Counts_%dsessions' %nSessions  + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'NoiseCorrelations','2D_NoiseCorrMap_Counts_%dsessions' %nSessions  + '.png'), format = 'png')
 else:
     plt.xlabel('Collinear')
     plt.ylabel('Orthogonal')
-    # fig.savefig(os.path.join(savedir,'NoiseCorrelations','2D_NoiseCorrMap_Counts_Rotated_%dsessions' %nSessions  + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'NoiseCorrelations','2D_NoiseCorrMap_Counts_Rotated_%dsessions' %nSessions  + '.png'), format = 'png')
 
 ## Show the noise correlation map:
 fig,ax = plt.subplots(1,1,figsize=(7,4))
@@ -431,11 +431,11 @@ plt.colorbar(IM,fraction=0.026, pad=0.04,label='noise correlation')
 if not rotate_prefori:
     plt.xlabel('delta Azimuth')
     plt.ylabel('delta Elevation')
-    # fig.savefig(os.path.join(savedir,'NoiseCorrelations','2D_NoiseCorrMap_%dsessions' %nSessions  + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'NoiseCorrelations','2D_NoiseCorrMap_%dsessions' %nSessions  + '.png'), format = 'png')
 else:
     plt.xlabel('Collinear')
     plt.ylabel('Orthogonal')
-    # fig.savefig(os.path.join(savedir,'NoiseCorrelations','2D_NoiseCorrMap_Rotated_%dsessions' %nSessions  + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'NoiseCorrelations','2D_NoiseCorrMap_Rotated_%dsessions' %nSessions  + '.png'), format = 'png')
 
 # sns.histplot(celldata['pref_ori'],bins=oris)
 
@@ -479,8 +479,8 @@ for i in range(2):
                          vmax=np.nanpercentile(noiseRFmat_mean,99),cmap="hot",interpolation="none",extent=np.flipud(binrange).flatten())
         axes[i,j].set_title(areas[i] + '-' + areas[j])
 plt.tight_layout()
-# plt.savefig(os.path.join(savedir,'NoiseCorrelations','2D_NC_Map_Interarea_%dsessions' %nSessions  + '.png'), format = 'png')
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','2D_NC_Map_Interarea_smooth_%dsessions' %nSessions  + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'NoiseCorrelations','2D_NC_Map_Interarea_%dsessions' %nSessions  + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','2D_NC_Map_Interarea_smooth_%dsessions' %nSessions  + '.png'), format = 'png')
 
 #%% Plot Circular tuning:
 
@@ -522,8 +522,8 @@ for i in range(4):
         axes[i,j].set_xlim([-75,75])
         axes[i,j].set_ylim([-75,75])
 plt.tight_layout()
-# plt.savefig(os.path.join(savedir,'NoiseCorrelations','2D_NC_Map_Area_Proj_%dsessions' %nSessions  + '.png'), format = 'png')
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','2D_NC_Map_rotate_smooth_Area_Proj_%dsessions' %nSessions  + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'NoiseCorrelations','2D_NC_Map_Area_Proj_%dsessions' %nSessions  + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','2D_NC_Map_rotate_smooth_Area_Proj_%dsessions' %nSessions  + '.png'), format = 'png')
 
 fig,axes = plt.subplots(4,4,figsize=(10,7))
 for i in range(4):
@@ -531,8 +531,8 @@ for i in range(4):
         axes[i,j].imshow(np.log10(countsRFmat[i,j,:,:]),vmax=np.nanpercentile(np.log10(countsRFmat),99.9),cmap="hot",interpolation="none",extent=np.flipud(binrange).flatten())
         axes[i,j].set_title(legendlabels[i,j])
 plt.tight_layout()
-# plt.savefig(os.path.join(savedir,'NoiseCorrelations','2D_NC_Map_Area_Proj_Counts_%dsessions' %nSessions  + '.png'), format = 'png')
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','2D_NC_Map_Area_rotate_Proj_Counts_%dsessions' %nSessions  + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'NoiseCorrelations','2D_NC_Map_Area_Proj_Counts_%dsessions' %nSessions  + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','2D_NC_Map_Area_rotate_Proj_Counts_%dsessions' %nSessions  + '.png'), format = 'png')
 
 ####################################### ####################################### #######################
 #################################### LABELED AND UNLABELED ############################################
@@ -554,7 +554,7 @@ annotator.apply_and_annotate()
 
 plt.ylabel('Orientation Selectivity')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'Labeling_tuning_%dsessions' %nSessions + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'Labeling_tuning_%dsessions' %nSessions + '.png'), format = 'png')
 
 #%% Plot the tuning parameters for labeled and unlabeled cells, per area
 
@@ -577,7 +577,7 @@ annotator.apply_and_annotate()
 
 plt.ylabel('Orientation Selectivity')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'Area_Labeling_TuningVar_%dsessions' %nSessions + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'Area_Labeling_TuningVar_%dsessions' %nSessions + '.png'), format = 'png')
 
 
 #%% Same but for recombinase with area:
@@ -601,7 +601,7 @@ annotator.apply_and_annotate()
 
 plt.ylabel('Orientation Selectivity')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'Area_Recombinase_TuningVar_%dsessions' %nSessions + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'Area_Recombinase_TuningVar_%dsessions' %nSessions + '.png'), format = 'png')
 
 #%% ##################### Noise correlations within and across areas: #########################
 
@@ -615,7 +615,7 @@ sns.stripplot(data=df,palette='dark:k',ax=ax,size=3,alpha=0.5,jitter=0.1)
 ax.set_xticklabels(labels=legendlabels_upper_tri,rotation=90,fontsize=8)
 ax.set_ylim([0,0.15])
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'TraceCorr_labeling_areas_Indiv%dsessions' %nSessions + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'TraceCorr_labeling_areas_Indiv%dsessions' %nSessions + '.png'), format = 'png')
 
 #%% With stats:
 fig,ax = plt.subplots(figsize=(5,4))
@@ -638,7 +638,7 @@ annotator.configure(test='t-test_paired', text_format='star', loc='inside')
 annotator.apply_and_annotate()
 ax.set_ylim([0,0.13])
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'TraceCorr_labeling_areas_%dsessions' %nSessions + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'TraceCorr_labeling_areas_%dsessions' %nSessions + '.png'), format = 'png')
 
 #%% ############################################################################################
 ################### Noise correlations as a function of pairwise distance: ####################
@@ -686,9 +686,9 @@ for iap,areapair in enumerate(areapairs):
     ax.legend(handles,labelpairs,frameon=False,loc='upper right')
     plt.tight_layout()
     ax.set_title(areapair)
-# plt.savefig(os.path.join(savedir,'NoiseCorr_anatomdistance_perArea' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','NoiseCorr_anatomdistance_perArea_Labeled_%dsessions' % nSessions + '.png'), format = 'png')
-# plt.savefig(os.path.join(savedir,'NoiseCorr_anatomdistance_perArea_regressout' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'NoiseCorr_anatomdistance_perArea' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','NoiseCorr_anatomdistance_perArea_Labeled_%dsessions' % nSessions + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'NoiseCorr_anatomdistance_perArea_regressout' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 #%% ############################################################################################
@@ -738,9 +738,9 @@ for iap,areapair in enumerate(areapairs):
     ax.legend(handles,labelpairs,frameon=False,loc='upper right')
     plt.tight_layout()
     ax.set_title(areapair)
-# plt.savefig(os.path.join(savedir,'NoiseCorr_anatomdistance_perArea' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
-plt.savefig(os.path.join(savedir,'NoiseCorrelations','NoiseCorr_deltaRF_Labeled_%dsessions' % nSessions + '.png'), format = 'png')
-# plt.savefig(os.path.join(savedir,'NoiseCorr_anatomdistance_perArea_regressout' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'NoiseCorr_anatomdistance_perArea' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorrelations','NoiseCorr_deltaRF_Labeled_%dsessions' % nSessions + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'NoiseCorr_anatomdistance_perArea_regressout' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 
@@ -780,5 +780,5 @@ ax2.scatter(sessions[sesidx].celldata['meanF_chan2'][filter_area],
 ax2.set_xlabel('F Chan2')
 # ax2.set_ylabel('Noise Correlations')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'NoiseCorr_FChan2_curated_%s' % sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'NoiseCorr_FChan2_curated_%s' % sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 

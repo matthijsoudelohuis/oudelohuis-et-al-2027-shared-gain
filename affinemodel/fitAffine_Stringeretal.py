@@ -24,7 +24,7 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.gain_lib import * 
 from utils.plot_lib import shaded_error
 
-savedir =  os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\GainModel\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% Based on Stringer et al: 
 # https://github.com/MouseLand/stringer-pachitariu-et-al-2018a/tree/master/stimspont

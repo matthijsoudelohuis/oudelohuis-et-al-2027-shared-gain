@@ -30,7 +30,7 @@ from utils.tuning import compute_tuning_wrapper
 from utils.regress_lib import *
 from utils.gain_lib import *
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Interarea\\CCA\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% Load an example session: 
 session_list        = np.array(['LPE12223_2024_06_10']) #GR
@@ -53,7 +53,7 @@ fig = plot_PCA_gratings_3D(sessions[0],thr_tuning=0)
 axes = fig.get_axes()
 axes[0].view_init(elev=-45, azim=0, roll=-10)
 axes[0].set_zlim([-5,45])
-# fig.savefig(os.path.join(savedir,'Cone_3D_V1_Original_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Cone_3D_V1_Original_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 
@@ -149,7 +149,7 @@ for iarea, (area,ccaproj) in enumerate(zip(['V1','PM'],[Xp,Yp])):
     ax.zaxis.pane.set_edgecolor('w')
     # ax.view_init(elev=30, azim=-15, roll=45)
 # plt.tight_layout()
-my_savefig(fig,savedir,'CCA_GR_V1PM_3D_%s' % sessions[ises].sessiondata['session_id'][0],formats=['png'])
+my_savefig(fig,figdir,'CCA_GR_V1PM_3D_%s' % sessions[ises].sessiondata['session_id'][0],formats=['png'])
 
 
 #%% Fit population gain model:
@@ -299,7 +299,7 @@ for iarea,area in enumerate(areas):
         ax.view_init(elev=120, azim=-15,roll=60)
 
 plt.tight_layout()
-my_savefig(fig,savedir,'GR_MCCA_V1PMAL_%s.png' % (ses.session_id),formats=['png'])
+my_savefig(fig,figdir,'GR_MCCA_V1PMAL_%s.png' % (ses.session_id),formats=['png'])
 
 
 
@@ -423,8 +423,8 @@ for ises, (plottitle,ccaproj) in enumerate(zip(['V1-Session1','V1-Session2'],[Xp
     ax.zaxis.pane.set_edgecolor('w')
     # ax.view_init(elev=30, azim=-15, roll=45)
 # plt.tight_layout()
-# my_savefig(fig,savedir,'CCA_GR_V1PM_3D_%s' % sessions[ises].sessiondata['session_id'][0],formats=['png'])
-my_savefig(fig,savedir,'CCA_GR_AcrossSession_V1_%s_with_%s' % (sessions[ises1].sessiondata['session_id'][0],
+# my_savefig(fig,figdir,'CCA_GR_V1PM_3D_%s' % sessions[ises].sessiondata['session_id'][0],formats=['png'])
+my_savefig(fig,figdir,'CCA_GR_AcrossSession_V1_%s_with_%s' % (sessions[ises1].sessiondata['session_id'][0],
                                                                 sessions[ises2].sessiondata['session_id'][0]),formats=['png'])
 
 
@@ -525,7 +525,7 @@ ax.grid(True, which='major', axis='both')
 # ax.grid(True, which='minor', axis='both', linestyle='--', linewidth=0.5)
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
 plt.tight_layout()
-my_savefig(fig,savedir,'CCA_sorts_WithinSession_V1PM_%dsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'CCA_sorts_WithinSession_V1PM_%dsessions' % (nSessions),formats=['png'])
 
 #%% 
 
@@ -685,7 +685,7 @@ for ises in range(nviews):
     ax.zaxis.pane.set_edgecolor('w')
     # ax.view_init(elev=30, azim=-15, roll=45)
 plt.tight_layout()
-my_savefig(fig,savedir,'GR_CCA_interarea_intersession_%s_%dsessions.png' % (sortmethod,nSessions),formats=['png'])
+my_savefig(fig,figdir,'GR_CCA_interarea_intersession_%s_%dsessions.png' % (sortmethod,nSessions),formats=['png'])
 
 #%%
 fig,axes = plt.subplots(1,3,figsize=(11,3))
@@ -702,4 +702,4 @@ for icomp in range(3):
     ax.set_xticklabels(np.arange(nSessions)+1)
     ax.set_yticklabels(np.arange(nSessions)+1)
 plt.tight_layout()
-my_savefig(fig,savedir,'GR_CCA_CanonCorr_%s_%dsessions.png' % (sortmethod,nSessions),formats=['png'])
+my_savefig(fig,figdir,'GR_CCA_CanonCorr_%s_%dsessions.png' % (sortmethod,nSessions),formats=['png'])

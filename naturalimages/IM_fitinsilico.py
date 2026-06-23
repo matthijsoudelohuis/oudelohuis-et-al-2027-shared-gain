@@ -26,7 +26,7 @@ from loaddata.get_data_folder import get_local_drive
 from utils.corr_lib import mean_resp_image, compute_pairwise_metrics
 
 # Updated by Anastasia Simonoff for her local computer, etc.
-savedir = os.path.join(get_local_drive(
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 ), 'Users\\asimo\\Documents\\BCCN\\Lab Rotations\\Petreanu Lab\\Figures\\Images' if os.environ['USERDOMAIN'] == 'ULTINTELLIGENCE' else 'OneDrive\\PostDoc\\Figures\\Images\\')
 
 # %% Load one session including raw data: ################################################
@@ -57,15 +57,15 @@ sesidx = 0
 # Plot random excerpt with traces:
 fig = plot_excerpt(sessions[sesidx], trialsel=None,
                    plot_neural=True, plot_behavioral=False)
-fig.savefig(os.path.join(savedir, 'TraceExcerpt_%s' % sessions[sesidx].sessiondata['session_id'][0] + '.png'), format='png')
-fig.savefig(os.path.join(savedir, 'TraceExcerpt_%s' % sessions[sesidx].sessiondata['session_id'][0] + '.pdf'), format='pdf')
+fig.savefig(os.path.join(figdir, 'TraceExcerpt_%s' % sessions[sesidx].sessiondata['session_id'][0] + '.png'), format='png')
+fig.savefig(os.path.join(figdir, 'TraceExcerpt_%s' % sessions[sesidx].sessiondata['session_id'][0] + '.pdf'), format='pdf')
 
 # plot specific trials with a lot behavior related modulation:
 trialsel = [3294, 3374]
 fig = plot_excerpt(sessions[sesidx], trialsel=trialsel,
                    plot_neural=True, plot_behavioral=True, neural_version='traces')
-# fig.savefig(os.path.join(savedir,'TraceExcerpt_dF_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
-fig.savefig(os.path.join(savedir, 'Excerpt_Traces_deconv_' +
+# fig.savefig(os.path.join(figdir,'TraceExcerpt_dF_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir, 'Excerpt_Traces_deconv_' +
             sessions[sesidx].sessiondata['session_id'][0] + '.png'), format='png')
 
 # Plot random excerpt as a Rastermap (Stringer et al 2023 BioRxiv):
@@ -74,7 +74,7 @@ fig = plot_excerpt(sessions[sesidx], trialsel=None, plot_neural=True,
                    plot_behavioral=True, neural_version='raster')
 fig = plot_excerpt(sessions[sesidx], trialsel=trialsel,
                    plot_neural=True, plot_behavioral=True, neural_version='raster')
-fig.savefig(os.path.join(savedir, 'Excerpt_Raster_dF_' +
+fig.savefig(os.path.join(figdir, 'Excerpt_Raster_dF_' +
             sessions[sesidx].sessiondata['session_id'][0] + '.png'), format='png')
 
 
@@ -82,7 +82,7 @@ fig.savefig(os.path.join(savedir, 'Excerpt_Raster_dF_' +
 sesidx = 0
 
 fig = plot_PCA_images(sessions[sesidx])
-fig.savefig(os.path.join(savedir, 'PCA', 'PCA_Gratings_All_' +
+fig.savefig(os.path.join(figdir, 'PCA', 'PCA_Gratings_All_' +
             sessions[sesidx].sessiondata['session_id'][0] + '.png'), format='png')
 
 fig = plt.figure()
@@ -161,7 +161,7 @@ for area in areas:
         ax.set_title("%d" % n)
     plt.suptitle(area, fontsize=18)
     plt.tight_layout(rect=[0, 0, 1, 1])
-    # fig.savefig(os.path.join(savedir,'ResponseTriggeredAverageImage_%s' % area + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'ResponseTriggeredAverageImage_%s' % area + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 ####

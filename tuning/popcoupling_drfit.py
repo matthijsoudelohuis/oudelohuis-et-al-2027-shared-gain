@@ -12,7 +12,7 @@ from loaddata.session_info import filter_sessions,load_sessions
 from utils.gain_lib import *
 from utils.tuning import *
 
-savedir = 'E:\\OneDrive\\PostDoc\\Figures\\SharedGain'
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 
@@ -241,7 +241,7 @@ ax.text(0.6,0.6,'r=%1.2f, p=%1.2e' % (r_value,p_value),transform=plt.gca().trans
 ax.set_ylim([0,25])
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,top=True,right=True,offset= 5)
-my_savefig(fig,savedir,'PO_drift_vs_popcoupling_%dsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'PO_drift_vs_popcoupling_%dsessions' % (nSessions),formats=['png'])
 
 #%% 
 percthr = 50
@@ -302,6 +302,6 @@ ax.set_xlabel('Population Coupling')
 ax.set_ylabel('Signal Correlation\n(Start-End)')
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,top=True,right=True,offset= 5)
-my_savefig(fig,savedir,'SigCorr_vs_popcoupling_%dsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'SigCorr_vs_popcoupling_%dsessions' % (nSessions),formats=['png'])
 
 

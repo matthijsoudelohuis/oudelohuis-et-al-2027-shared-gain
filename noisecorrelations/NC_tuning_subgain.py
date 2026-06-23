@@ -25,7 +25,7 @@ from utils.tuning import *
 from utils.gain_lib import * 
 from scipy.stats import binned_statistic,binned_statistic_2d
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\NoiseCorrelations\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919_2023_11_06']])
@@ -158,8 +158,8 @@ ax.legend(handles,perc_labels,frameon=False,loc='upper right',fontsize=8)
 sns.despine(trim=False,top=True,right=True,offset=3)
 ax.set_xticks(oris[::2],oris[::2].astype(int),rotation=45)
 plt.tight_layout()
-my_savefig(fig, savedir, 'NC_deltaOri_V1_tuningperc', formats = ['png'])
-# plt.savefig(os.path.join(savedir,'PairwiseCorrelations','NC_deltaOri_V1_tuningperc' + '.png'), format = 'png')
+my_savefig(fig, figdir, 'NC_deltaOri_V1_tuningperc', formats = ['png'])
+# plt.savefig(os.path.join(figdir,'PairwiseCorrelations','NC_deltaOri_V1_tuningperc' + '.png'), format = 'png')
 
 #%% Show within and across area tuning dependent correlations:
 clrs_areapairs = get_clr_area_pairs(areapairs)
@@ -178,7 +178,7 @@ ax.legend(handles,areapairs,frameon=False,loc='upper right')
 sns.despine(trim=False,top=True,right=True,offset=3)
 ax.set_xticks(oris[::2],oris[::2].astype(int),rotation=45)
 plt.tight_layout()
-my_savefig(fig, savedir, 'NC_deltaOri_areapairs', formats = ['png'])
+my_savefig(fig, figdir, 'NC_deltaOri_areapairs', formats = ['png'])
 
 #%% #########################################################################################
 data = np.empty((nSessions,len(oris),2)) #for each session, combination of delta pref store the mean noise corr for all and for with and without gain subtraction
@@ -211,7 +211,7 @@ ax.set_ylim([0,my_ceil(np.nanmax(data),2)])
 ax.set_title('')
 ax.legend(frameon=False,loc='upper right')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'PairwiseCorrelations','NC_deltaOri_subgainmodel' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'PairwiseCorrelations','NC_deltaOri_subgainmodel' + '.png'), format = 'png')
 
 #%% 
 
@@ -360,7 +360,7 @@ for iareapair,areapair in enumerate(areapairs):
         # cb.set_label('Noise correlation',fontsize=6,loc='center')
 sns.despine(fig=fig, top=True, right=True,offset=3)
 fig.tight_layout()
-my_savefig(fig,savedir,'GR_Signal_Coupling_NC_Areapairs_%dsessions' % (nSessions), formats = ['png'])
+my_savefig(fig,figdir,'GR_Signal_Coupling_NC_Areapairs_%dsessions' % (nSessions), formats = ['png'])
 
 
 
@@ -469,9 +469,9 @@ ax_nticks(ax,3)
 sns.despine(top=True,right=True,offset=5)
 ax.set_xticks(oris[::2],oris[::2].astype(int),rotation=45)
 plt.tight_layout()
-my_savefig(fig, savedir, 'NC_deltaOri_V1-PM_diffses', formats = ['png'])
+my_savefig(fig, figdir, 'NC_deltaOri_V1-PM_diffses', formats = ['png'])
 
-# plt.savefig(os.path.join(savedir,'PairwiseCorrelations','NC_deltaOri_subgainmodel' + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'PairwiseCorrelations','NC_deltaOri_subgainmodel' + '.png'), format = 'png')
 
 
 
@@ -541,7 +541,7 @@ sns.despine(top=True,right=True,offset=5)
 # for ax in axes: 
     # ax.set_xticks(oris[::2],oris[::2].astype(int),rotation=45)
 plt.tight_layout()
-my_savefig(fig, savedir, 'GainResponse_prefOri_coupling_tuning_quantiles', formats = ['png'])
+my_savefig(fig, figdir, 'GainResponse_prefOri_coupling_tuning_quantiles', formats = ['png'])
 
 
 #%% 
@@ -562,7 +562,7 @@ my_savefig(fig, savedir, 'GainResponse_prefOri_coupling_tuning_quantiles', forma
 # for ax in axes: 
 #     ax.set_xticks(oris[::2],oris[::2].astype(int),rotation=45)
 # plt.tight_layout()
-# my_savefig(fig, savedir, 'GainResponse_prefOri_coupling_quantiles', formats = ['png'])
+# my_savefig(fig, figdir, 'GainResponse_prefOri_coupling_quantiles', formats = ['png'])
 
 
 
@@ -641,7 +641,7 @@ sourcecell,targetcell = sourcecells[random_cell],targetcells[random_cell]
 [sessions[ises].meanresp_orig,sessions[ises].respmat_res] = mean_resp_gr(sessions[ises])
 
 fig = plot_noise_pair(sessions[ises],sourcecell,targetcell)
-my_savefig(fig, os.path.join(savedir,'NoiseCorrelations'), 'NC_example_orthotuning_%s_cell%d_%d' % (sessions[ises].session_id,sourcecell,targetcell), formats = ['png']) 
+my_savefig(fig, os.path.join(figdir,'NoiseCorrelations'), 'NC_example_orthotuning_%s_cell%d_%d' % (sessions[ises].session_id,sourcecell,targetcell), formats = ['png']) 
 
 #%% Find a neuron pair that is strongly tuned, has similar tuning pref and has negative correlation
 ises = 0
@@ -655,7 +655,7 @@ random_cell = np.random.choice(len(sourcecells))
 sourcecell,targetcell = sourcecells[random_cell],targetcells[random_cell]
 
 fig = plot_noise_pair(sessions[ises],sourcecell,targetcell)
-my_savefig(fig, os.path.join(savedir,'NoiseCorrelations'), 'NC_example_isotuning_%s_cell%d_%d' % (sessions[ises].session_id,sourcecell,targetcell), formats = ['png']) 
+my_savefig(fig, os.path.join(figdir,'NoiseCorrelations'), 'NC_example_isotuning_%s_cell%d_%d' % (sessions[ises].session_id,sourcecell,targetcell), formats = ['png']) 
 
 #%%
 oris = np.arange(0,360,22.5)

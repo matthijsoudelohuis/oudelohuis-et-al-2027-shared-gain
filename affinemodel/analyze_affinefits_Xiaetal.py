@@ -24,7 +24,7 @@ from fct_stat_models import *
 from fct_stat_models_utils import * 
 import fct_facilities as fac 
 
-savedir =  os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\GainModel\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%%
 # Multiplicative: 
@@ -141,7 +141,7 @@ for i in range(Ncompo):
     ax[1,i].set_title(f'Beta compo {i+1}')
 plt.tight_layout()
 plt.show()
-my_savefig(fig,savedir,'Corr_alpha_beta_folds',formats=['png'])
+my_savefig(fig,figdir,'Corr_alpha_beta_folds',formats=['png'])
 
 #%% Show the correlation between the population coupling and the multiplicative
 # gain parameter and additive gain parameter
@@ -175,7 +175,7 @@ for i_compo in range(Ncompo):
 
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True, offset=1)
-my_savefig(fig,savedir,'Corr_alpha_beta_popcoupling',formats=['png'])
+my_savefig(fig,figdir,'Corr_alpha_beta_popcoupling',formats=['png'])
 
 #%% 
 fig,axes = plt.subplots(1,1,figsize=(4,3))

@@ -17,7 +17,7 @@ from loaddata.get_data_folder import get_local_drive
 from utils.corr_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\RF mapping\\RF_quantification')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% ################### Loading the data ##############################
 
@@ -63,8 +63,8 @@ sessions = compute_pairwise_delta_rf(sessions,rf_type='Fsmooth')
 #%% Show fraction of receptive fields per session before any corrections:
 for rf_type in ['F','Fneu','Fsmooth']:
     [fig,rf_frac_F] = plot_RF_frac(sessions,rf_type=rf_type,r2_thr=r2_thr)
-    fig.savefig(os.path.join(savedir,'RF_fraction_%s' % rf_type  + '.png'), format = 'png')
-# fig.savefig(os.path.join(savedir,'RF_quantification','RF_fraction_F_IMincluded' + '.png'), format = 'png')
+    fig.savefig(os.path.join(figdir,'RF_fraction_%s' % rf_type  + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'RF_quantification','RF_fraction_F_IMincluded' + '.png'), format = 'png')
 
 #%% ##################### Retinotopic mapping within V1 and PM #####################
 rf_type = 'Fneu'
@@ -72,19 +72,19 @@ rf_type = 'Fsmooth'
 for ises in range(nSessions):
 # for ises in [1,5,12]:
     fig = plot_rf_plane(sessions[ises].celldata,r2_thr=r2_thr,rf_type=rf_type) 
-    fig.savefig(os.path.join(savedir,'RF_planes','V1_PM_plane_' + sessions[ises].sessiondata['session_id'][0] +  rf_type + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'RF_planes','V1_PM_plane_allcells_' + sessions[ises].sessiondata['session_id'][0] +  rf_type + '.png'), format = 'png')
+    fig.savefig(os.path.join(figdir,'RF_planes','V1_PM_plane_' + sessions[ises].sessiondata['session_id'][0] +  rf_type + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'RF_planes','V1_PM_plane_allcells_' + sessions[ises].sessiondata['session_id'][0] +  rf_type + '.png'), format = 'png')
 
 #%%
 # sessions = exclude_outlier_rf(sessions) 
 rf_type = 'F'
 #Show fraction of receptive fields per session after filtering out scattered neurons: 
 [fig,rf_frac_F] = plot_RF_frac(sessions,rf_type=rf_type,r2_thr=r2_thr)
-# fig.savefig(os.path.join(savedir,'RF_quantification','RF_fraction_F_filter' + '.png'), format = 'png')
-fig.savefig(os.path.join(savedir,'RF_quantification','RF_fraction_out%s_%s' % (rf_type,sessions[ises].sessiondata['session_id'][0]) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'RF_quantification','RF_fraction_F_filter' + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'RF_quantification','RF_fraction_out%s_%s' % (rf_type,sessions[ises].sessiondata['session_id'][0]) + '.png'), format = 'png')
 
 #%% 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\RF mapping\\RF_planes')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% 
 ises = 22
@@ -97,7 +97,7 @@ rf_type = 'F'
 for ises in range(nSessions):
 # for ises in [5]:
     fig = plot_rf_screen(sessions[ises].celldata,r2_thr=r2_thr,rf_type=rf_type) 
-    fig.savefig(os.path.join(savedir,'RF_planes','RF_gauss_screen_' + rf_type + '_' + sessions[ises].sessiondata['session_id'][0] +  rf_type + '.png'), format = 'png')
+    fig.savefig(os.path.join(figdir,'RF_planes','RF_gauss_screen_' + rf_type + '_' + sessions[ises].sessiondata['session_id'][0] +  rf_type + '.png'), format = 'png')
 
 #%% Show distribution of delta receptive fields across areas: 
 sessions = compute_pairwise_delta_rf(sessions,rf_type='Fsmooth')
@@ -105,18 +105,18 @@ sessions = compute_pairwise_delta_rf(sessions,rf_type='F')
 
 #%% Make a figure with each session is one line for each of the areapairs a histogram of distmat_rf:
 areapairs = ['V1-V1','PM-PM','V1-PM']
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\RF mapping')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 # r2_thr = 0.2
 fig = plot_delta_rf_across_sessions(sessions,areapairs,r2_thr=r2_thr,rf_type='F')
-fig.savefig(os.path.join(savedir,'DeltaRF_Areapairs_%dsessions_' % nSessions + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'DeltaRF_Areapairs_%dsessions_' % nSessions + '.png'), format = 'png')
 
 #%% Make a histogram of delta receptive fields across V1 and PM based on labeling
 areapairs = ['V1-V1','PM-PM','V1-PM']
 projpairs = ['unl-unl','lab-lab']
 
 fig = plot_delta_rf_projections(sessions,areapairs,projpairs,filter_near=False)
-fig.savefig(os.path.join(savedir,'DeltaRF_Projpairs_nearfilter_%dsessions_' % nSessions + '.png'), format = 'png')
-fig.savefig(os.path.join(savedir,'DeltaRF_Projpairs_%dsessions_' % nSessions + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'DeltaRF_Projpairs_nearfilter_%dsessions_' % nSessions + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'DeltaRF_Projpairs_%dsessions_' % nSessions + '.png'), format = 'png')
 
 
 #%% 
@@ -168,7 +168,7 @@ for iarea,area in enumerate(areas):
 
 plt.tight_layout()
 
-fig.savefig(os.path.join(savedir,'RF_quantification','RF_scatter_vs_pval' + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'RF_quantification','RF_scatter_vs_pval' + '.png'), format = 'png')
 
 #%% ##################### How far are individual cells from neuropil #####################
 fig,axes = plt.subplots(1,4,figsize=(8,2))
@@ -188,7 +188,7 @@ axes[3].hist(celldata['rf_el_F'][celldata['roi_name']=='PM'] - celldata['rf_el_F
 axes[3].set_title('PM - Elevation')
 plt.suptitle('RF Scatter vs Neuropil')
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'RF_jitter_hist' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'RF_jitter_hist' + '.png'), format = 'png')
 
 #%% 
 fig,axes = plt.subplots(1,2,figsize=(8,3))
@@ -226,7 +226,7 @@ axes[1].set_title('Elevation')
 
 plt.tight_layout()
 
-plt.savefig(os.path.join(savedir,'RF_jitter_vs_pval' + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'RF_jitter_vs_pval' + '.png'), format = 'png')
 
 #%% 
 sessions = compute_pairwise_metrics(sessions)
@@ -238,13 +238,13 @@ sessions = compute_pairwise_metrics(sessions)
 # ###### Smooth RF with local good fits (spatial location of somata): ######
 # for ises in range(nSessions):
 #     fig = plot_rf_plane(sessions[ises].celldata,r2_thr=r2_thr) 
-#     fig.savefig(os.path.join(savedir,'V1_PM_azimuth_elevation_inplane_' + sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+#     fig.savefig(os.path.join(figdir,'V1_PM_azimuth_elevation_inplane_' + sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 # smooth_rf(sessions,sig_thr=0.001,radius=100)
 
 # for ises in range(nSessions):
 #     fig = plot_rf_plane(sessions[ises].celldata,sig_thr=1) 
-#     fig.savefig(os.path.join(savedir,'V1_PM_azimuth_elevation_inplane_smooth_' + sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+#     fig.savefig(os.path.join(figdir,'V1_PM_azimuth_elevation_inplane_smooth_' + sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 # ###
 
@@ -271,7 +271,7 @@ annotator.apply_and_annotate()
 ax.set_xlabel('area')
 ax.set_ylabel('RF size\n(squared degrees)')
 
-plt.savefig(os.path.join(savedir,'V1_PM_rf_size_' + sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'V1_PM_rf_size_' + sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 ###################### Include only neurons nearby labeled cells #####################
 rads = np.arange(600)
@@ -288,7 +288,7 @@ plt.plot(rads,np.median(fracincl,axis=0),linewidth=3,color='black')
 plt.xlabel(u"Dist. from labeled neuron \u03bcm")
 plt.ylabel('Included data')
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Filter_NearLabeled_%d_Sessions' % nSessions + '.png'))
+fig.savefig(os.path.join(figdir,'Filter_NearLabeled_%d_Sessions' % nSessions + '.png'))
 
 #%% 
 for ses in sessions:
@@ -313,7 +313,7 @@ ax[1].set_ylabel('RF size\n(elevation)')
 ax[1].set_ylim([0,50])
 
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'V1_PM_rf_xysize_boxplot' + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'V1_PM_rf_xysize_boxplot' + '.png'), format = 'png')
 
 #%% Print medians:
 for area in areas:
@@ -332,7 +332,7 @@ ax.set_xlabel('area')
 ax.set_ylabel('RF size\n(squared degrees)')
 plt.tight_layout()
 ax.set_ylim([0,1000])
-fig.savefig(os.path.join(savedir,'V1_PM_rf_size_boxplot' + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'V1_PM_rf_size_boxplot' + '.png'), format = 'png')
 
 #%% Print medians:
 for area in areas:

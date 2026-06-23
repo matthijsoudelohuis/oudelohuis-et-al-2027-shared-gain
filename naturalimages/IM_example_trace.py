@@ -22,7 +22,7 @@ from utils.corr_lib import mean_resp_image,compute_signal_correlation, compute_p
 from utils.plot_lib import shaded_error
 from utils.RRRlib import *
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Images\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #################################################
 # session_list        = np.array([['LPE09665','2023_03_15']])
@@ -51,21 +51,21 @@ fig = plot_excerpt(sessions[sesidx],trialsel=None,plot_neural=True,plot_behavior
 
 trialsel = [3294, 3374]
 fig = plot_excerpt(sessions[sesidx],trialsel=trialsel,plot_neural=True,plot_behavioral=True,neural_version='traces')
-# fig.savefig(os.path.join(savedir,'TraceExcerpt_dF_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
-fig.savefig(os.path.join(savedir,'Excerpt_Traces_deconv_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'TraceExcerpt_dF_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Excerpt_Traces_deconv_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 fig = plot_excerpt(sessions[sesidx],trialsel=None,plot_neural=True,plot_behavioral=True,neural_version='raster')
 fig = plot_excerpt(sessions[sesidx],trialsel=trialsel,plot_neural=True,plot_behavioral=True,neural_version='raster')
-fig.savefig(os.path.join(savedir,'Excerpt_Raster_dF_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Excerpt_Raster_dF_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 ########################### Show PCA ##########################
 sesidx = 0
 # fig = PCA_gratings_3D(sessions[sesidx])
-# fig.savefig(os.path.join(savedir,'PCA','PCA_3D_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'PCA','PCA_3D_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 fig = plot_PCA_images(sessions[sesidx])
-fig.savefig(os.path.join(savedir,'PCA','PCA_Gratings_All_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'PCA','PCA_Gratings_All_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 fig = plt.figure()
 sns.histplot(sessions[sesidx].respmat_runspeed,binwidth=0.5)
@@ -160,14 +160,14 @@ for area in areas:
         ax.set_title("%d" % n)
     plt.suptitle(area, fontsize=18)
     plt.tight_layout(rect=[0, 0, 1, 1])
-    fig.savefig(os.path.join(savedir,'ResponseTriggeredAverageImage_%s' % area + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+    fig.savefig(os.path.join(figdir,'ResponseTriggeredAverageImage_%s' % area + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 #%% ##################### Plot control figure of signal corrs ##############################
 sesidx = 0
 fig = plt.subplots(figsize=(8,5))
 plt.imshow(sessions[sesidx].sig_corr, cmap='coolwarm',vmin=-0.02,vmax=0.04)
-plt.savefig(os.path.join(savedir,'SignalCorrelations','Signal_Correlation_Images_Mat_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'SignalCorrelations','Signal_Correlation_Images_Mat_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 #%% ###### Regress out behavioral state related activity  #################################

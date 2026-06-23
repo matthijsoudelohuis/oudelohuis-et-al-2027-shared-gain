@@ -12,7 +12,7 @@ from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions,load_sessions
 from utils.filter_lib import my_highpass_filter,compute_power_spectra
 from utils.explorefigs import *
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\DescriptiveStatisticsSessions\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919','2023_11_06']]) #GR
@@ -51,7 +51,7 @@ plt.ylim([0,1.2e6])
 plt.legend(frameon=False)
 plt.title('Power Spectrum dF/F %s' % ses.sessiondata['session_id'][0])
 plt.show()
-fig.savefig(os.path.join(savedir,'Filtering','PSD_Filtering_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
+fig.savefig(os.path.join(figdir,'Filtering','PSD_Filtering_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
 
 
 #%% #############################################################################
@@ -88,7 +88,7 @@ sessions[2].calciumdata.head(10)
 filtertext = ['NO','01Hz','001Hz']
 for ises, ses in enumerate(sessions):
     fig = plot_excerpt(sessions[ises],trialsel=[1,200],plot_neural=True,plot_behavioral=False,neural_version='raster')
-    fig.savefig(os.path.join(savedir,'Filtering','ExampleRaster_First200trials_Filter%s_%s.png' % (filtertext[ises],sessions[ises].sessiondata['session_id'][0])), format = 'png')
+    fig.savefig(os.path.join(figdir,'Filtering','ExampleRaster_First200trials_Filter%s_%s.png' % (filtertext[ises],sessions[ises].sessiondata['session_id'][0])), format = 'png')
 
 #%% 
 areas           = np.unique(sessions[0].celldata['roi_name'])
@@ -108,13 +108,13 @@ for iarea, area in enumerate(areas):
 filtertext = ['NO','01Hz','001Hz']
 for ises, ses in enumerate(sessions):
     fig = plot_excerpt(sessions[ises],trialsel=[1,200],plot_neural=True,plot_behavioral=True,neuronsel=example_cells,neural_version='traces')
-    fig.savefig(os.path.join(savedir,'Filtering','ExampleTraces_First200trials_Filter%s_%s.png' % (filtertext[ises],sessions[ises].sessiondata['session_id'][0])), format = 'png')
+    fig.savefig(os.path.join(figdir,'Filtering','ExampleTraces_First200trials_Filter%s_%s.png' % (filtertext[ises],sessions[ises].sessiondata['session_id'][0])), format = 'png')
 
 #%% PCA plot of trials for each session:
 filtertext = ['NO','01Hz','001Hz']
 for ises, ses in enumerate(sessions):
     fig = plot_PCA_gratings(sessions[ises])
-    fig.savefig(os.path.join(savedir,'Filtering','PCA_2D_Filter%s_%s.png' % (filtertext[ises],sessions[ises].sessiondata['session_id'][0])), format = 'png')
+    fig.savefig(os.path.join(figdir,'Filtering','PCA_2D_Filter%s_%s.png' % (filtertext[ises],sessions[ises].sessiondata['session_id'][0])), format = 'png')
 
 #%% ########################## Compute signal and noise correlations: ###################################
 from corr_lib import compute_signal_noise_correlation
@@ -132,7 +132,7 @@ for ises, ses in enumerate(sessions):
     cbar_ax = fig.add_axes([0.8, 0.2, 0.02, 0.2]) # [left, bottom, width, height]
     cbar = plt.colorbar(cax=cbar_ax, orientation='vertical')
     plt.tight_layout()
-    fig.savefig(os.path.join(savedir,'Filtering','NC_map_Filter%s_%s.png' % (filtertext[ises],sessions[ises].sessiondata['session_id'][0])), format = 'png')
+    fig.savefig(os.path.join(figdir,'Filtering','NC_map_Filter%s_%s.png' % (filtertext[ises],sessions[ises].sessiondata['session_id'][0])), format = 'png')
 
 #%%
 filtertext = ['NO','01Hz','001Hz']
@@ -147,7 +147,7 @@ plt.xlabel('Noise Correlation')
 plt.ylabel('Count')
 plt.title('Noise Correlation Histogram')
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Filtering','NoiseCorr_Histogram.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Filtering','NoiseCorr_Histogram.png'), format = 'png')
 
 #%%
 

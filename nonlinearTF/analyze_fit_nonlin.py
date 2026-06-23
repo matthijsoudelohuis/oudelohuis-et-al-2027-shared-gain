@@ -27,7 +27,7 @@ from utils.tuning import *
 from utils.nonlin_lib import *
 from utils.corr_lib import filter_sharednan
 
-savedir =  os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\TransferFunctions')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 resultdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Analysis\\SharedGain')
 
@@ -108,7 +108,7 @@ ax.axhline(0, color='k', lw=0.5, ls=':')
 sns.despine(ax=ax, trim=True, offset=3)
 
 plt.tight_layout()
-# my_savefig(fig, savedir, f'NLfit_R2_distributions_{nSessions}sessions', formats=['png'])
+# my_savefig(fig, figdir, f'NLfit_R2_distributions_{nSessions}sessions', formats=['png'])
 
 #%% Scatter: pop_coupling vs fitted gamma across models
 # from utils.corr_lib import filter_sharednan
@@ -147,7 +147,7 @@ for i, name in enumerate(nl_names):
 
 plt.suptitle('Population coupling vs fitted γ  (pop-rate scaling)', fontsize=10, y=1.02)
 plt.tight_layout()
-# my_savefig(fig, savedir, f'PopCoupling_vs_gamma_{nSessions}sessions', formats=['png'])
+# my_savefig(fig, figdir, f'PopCoupling_vs_gamma_{nSessions}sessions', formats=['png'])
 
 #%% Scatter of linear vs. best model R2
 fig, axes = plt.subplots(1, len(nl_names)-1, figsize=((len(nl_names)-1) * 2, 2),
@@ -168,6 +168,6 @@ for i, name in enumerate(nl_names[1:]):
 sns.despine(trim=True, offset=3)
 
 plt.tight_layout()
-# my_savefig(fig, savedir, f'NLfit_R2_scatter_{nSessions}sessions', formats=['png'])
+# my_savefig(fig, figdir, f'NLfit_R2_scatter_{nSessions}sessions', formats=['png'])
 
 

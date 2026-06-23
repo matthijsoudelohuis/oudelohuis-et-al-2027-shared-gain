@@ -23,7 +23,7 @@ from utils.tuning import *
 from utils.corr_lib import compute_signal_noise_correlation
 from utils.gain_lib import *
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Images\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 
 #%% ################################################
@@ -152,7 +152,7 @@ ax.axhline(1/2400/nActBins, color='grey', linewidth=2, linestyle='--')
 ax.text(1,1/2400/nActBins+0.02,'Chance',color='k',fontsize=8)
 sns.despine(fig=fig, top=True, right=True,offset=3)
 fig.tight_layout()
-my_savefig(fig,savedir,'KNN_decoding_ActBins_%dsessions' % (nSessions), formats = ['png'])
+my_savefig(fig,figdir,'KNN_decoding_ActBins_%dsessions' % (nSessions), formats = ['png'])
 
 #%% 
 
@@ -272,7 +272,7 @@ ax.legend(handles,['0-20%','20-40%','40-60%','60-80%','80-100%'],
 
 sns.despine(fig=fig, top=True, right=True,offset=3)
 fig.tight_layout()
-my_savefig(fig,savedir,'KNN_decoding_ActBins_CouplingBins_%dsessions' % (nSessions), formats = ['png'])
+my_savefig(fig,figdir,'KNN_decoding_ActBins_CouplingBins_%dsessions' % (nSessions), formats = ['png'])
 
 #%% Repeated measures ANOVA on knn_dec
 df = data=pd.DataFrame({'knn_dec': knn_dec.ravel(), 

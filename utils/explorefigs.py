@@ -432,7 +432,7 @@ def plot_PCA_gratings(ses,size='runspeed',cellfilter=None,apply_zscore=True,plot
     return fig
 
 
-def plot_PCA_gratings_3D(ses, size='runspeed', export_animation=False, savedir=None,idx_N=None,plotgainaxis=False):
+def plot_PCA_gratings_3D(ses, size='runspeed', export_animation=False, figdir=None,idx_N=None,plotgainaxis=False):
 
     ########### PCA on trial-averaged responses ############
     ######### plot result as scatter by orientation ########
@@ -542,7 +542,7 @@ def plot_PCA_gratings_3D(ses, size='runspeed', export_animation=False, savedir=N
         rot_animation = animation.FuncAnimation(
             fig, rotate, frames=np.arange(0, 364, 4), interval=100)
         rot_animation.save(os.path.join(
-            savedir, 'rotation.gif'), dpi=80, writer='imagemagick')
+            figdir, 'rotation.gif'), dpi=80, writer='imagemagick')
 
     return fig
 

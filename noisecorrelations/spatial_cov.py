@@ -28,7 +28,7 @@ from utils.explorefigs import plot_excerpt
 from utils.shuffle_lib import my_shuffle, corr_shuffle
 from utils.gain_lib import * 
 from utils.arrayop_lib import nanweightedaverage
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\RadialTuning')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 
 #%% 
@@ -163,8 +163,8 @@ for corr_type in ['noise_corr','noise_cov']:
 
     #Make the figure per protocol:
     fig = plot_bin_corr_distance(sessions,binmean,binedges,areapairs,corr_type=corr_type)
-    # fig.savefig(os.path.join(savedir,'Corr_anatomicaldist_Protocols_' % (corr_type) + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'Corr_anatomicaldist_Protocols_' % (corr_type) + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'Corr_anatomicaldist_Protocols_' % (corr_type) + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'Corr_anatomicaldist_Protocols_' % (corr_type) + '.pdf'), format = 'pdf')
 
 
 
@@ -330,14 +330,14 @@ fig = plot_corr_radial_tuning_areas_sessions(binsdRF,bin_dist_count_ses,bin_dist
 
 # fig = plot_corr_radial_tuning_areas_sessions(binsdRF,bin_dist_count_ses[idx_ses],bin_dist_mean_ses[idx_ses],areapairs,layerpairs,projpairs)
 
-fig.savefig(os.path.join(savedir,'RadialTuning',filestring + 'mean_sessions' + '.png'), format = 'png')
-# fig.savefig(os.path.join(savedir,'RadialTuning',filestring + 'mean_sessions' + '.pdf'), format = 'pdf')
+fig.savefig(os.path.join(figdir,'RadialTuning',filestring + 'mean_sessions' + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'RadialTuning',filestring + 'mean_sessions' + '.pdf'), format = 'pdf')
 
 #%% 
 filestring = 'RadialTuning_ExponentialFits_areas_%s_' % (corr_type)
 fig = plot_corr_radial_tuning_areas(binsdRF,bin_dist_count_ses,bin_dist_mean_ses,areapairs,layerpairs,projpairs)
-fig.savefig(os.path.join(savedir,'RadialTuning',filestring + 'mean' + '.png'), format = 'png')
-# fig.savefig(os.path.join(savedir,'RadialTuning',filestring + 'mean' + '.pdf'), format = 'pdf')
+fig.savefig(os.path.join(figdir,'RadialTuning',filestring + 'mean' + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'RadialTuning',filestring + 'mean' + '.pdf'), format = 'pdf')
 
 #%% 
 
@@ -429,9 +429,9 @@ fig = plot_corr_radial_tuning_projs(binsdRF,bin_dist_count_ses,bin_dist_mean_ses
                                     layerpairs,projpairs,datatype='Correlation',min_counts=min_counts)
 # fig = plot_corr_radial_tuning_projs(binsdRF,bin_dist_count,bin_dist_mean,areapairs,layerpairs,projpairs,datatype='Correlation')
 
-fig.savefig(os.path.join(savedir,'RadialTuning','RadialTuning_projs_%s_mean' % (corr_type) + '.png'), format = 'png')
-# fig.savefig(os.path.join(savedir,'RadialTuning','RadialTuning_projs_%s_mean_shuf' % (corr_type) + '.png'), format = 'png')
-# fig.savefig(os.path.join(savedir,'RadialTuning_projs_%s_mean_GRGN_shuf' % (corr_type) + '.pdf'), format = 'pdf')
+fig.savefig(os.path.join(figdir,'RadialTuning','RadialTuning_projs_%s_mean' % (corr_type) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'RadialTuning','RadialTuning_projs_%s_mean_shuf' % (corr_type) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'RadialTuning_projs_%s_mean_GRGN_shuf' % (corr_type) + '.pdf'), format = 'pdf')
 
 
 #%% Regress pairwise metrics onto different dimensions of covariance matrix:
@@ -514,8 +514,8 @@ for iap in range(nareapairs):
         ax.legend(np.arange(n_components)+1,frameon=False,title='Components',fontsize=7,bbox_to_anchor=(1,0.9))
 sns.despine(top=True,right=True,offset=3)
 plt.tight_layout()
-# my_savefig(fig,savedir,'CrossArea_Spatial_Cov_RF_%dsessions_abs' % (nSessions))
-my_savefig(fig,savedir,'CrossArea_Spatial_Cov_RF_%dsessions' % (nSessions))
+# my_savefig(fig,figdir,'CrossArea_Spatial_Cov_RF_%dsessions_abs' % (nSessions))
+my_savefig(fig,figdir,'CrossArea_Spatial_Cov_RF_%dsessions' % (nSessions))
 
 #%% 
 ilp = 0
@@ -545,7 +545,7 @@ ax.set_xlim([0,45])
 ax.set_ylim([-0.1,0.15])
 sns.despine(top=True,right=True,offset=3)
 plt.tight_layout()
-my_savefig(fig,savedir,'CrossArea_Spatial_Cov_RF_%d_indiv_sessions' % (nSessions))
+my_savefig(fig,figdir,'CrossArea_Spatial_Cov_RF_%d_indiv_sessions' % (nSessions))
 
 
 #%% Spatial XYZ:
@@ -577,7 +577,7 @@ ax.set_xlim([0,750])
 ax.set_ylim([-0.1,0.15])
 sns.despine(top=True,right=True,offset=3)
 plt.tight_layout()
-my_savefig(fig,savedir,'CrossArea_Spatial_Cov_XYZ_%dsessions_BinDims' % (nSessions))
+my_savefig(fig,figdir,'CrossArea_Spatial_Cov_XYZ_%dsessions_BinDims' % (nSessions))
 
 #%% 
 ilp = 0
@@ -608,7 +608,7 @@ ax.set_ylim([-0.1,0.15])
 
 sns.despine(top=True,right=True,offset=3)
 plt.tight_layout()
-my_savefig(fig,savedir,'CrossArea_Spatial_Cov_XYZ_%dsessions_IndivDims' % (nSessions))
+my_savefig(fig,figdir,'CrossArea_Spatial_Cov_XYZ_%dsessions_IndivDims' % (nSessions))
 
 
 
@@ -655,7 +655,7 @@ ax.set_xlim([0,45])
 ax.set_ylim([-0.05,0.15])
 sns.despine(top=True,right=True,offset=3)
 plt.tight_layout()
-my_savefig(fig,savedir,'CrossArea_Spatial_Cov_RF_%dsessions_projpairs' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'CrossArea_Spatial_Cov_RF_%dsessions_projpairs' % (nSessions),formats=['png'])
 
 #%% 
 ilp = 0
@@ -686,7 +686,7 @@ ax.set_xlim([0,750])
 ax.set_ylim([-0.05,0.1])
 sns.despine(top=True,right=True,offset=3)
 plt.tight_layout()
-my_savefig(fig,savedir,'CrossArea_Spatial_Cov_XYZ_%dsessions_projpairs' % (nSessions))
+my_savefig(fig,figdir,'CrossArea_Spatial_Cov_XYZ_%dsessions_projpairs' % (nSessions))
 
 #%% 
 
@@ -746,7 +746,7 @@ for corr_type in ['trace_corr','noise_cov']:
 
     #Make the figure per protocol:
     fig = plot_bin_corr_distance(sessions,binmean,binedges,areapairs,corr_type=corr_type)
-    my_savefig(fig,savedir,'Corr_anatomicaldist_SP_%s' % (corr_type),formats = ['png'])
+    my_savefig(fig,figdir,'Corr_anatomicaldist_SP_%s' % (corr_type),formats = ['png'])
 
 
 #%% #########################################################################################
@@ -777,11 +777,11 @@ bin_angle_surr_count_ses,binsangle] = bin_corr_deltarf_ses(sessions,rf_type=rf_t
 #%% Plot radial tuning:
 fig = plot_corr_radial_tuning_areas_sessions(binsdRF,bin_dist_count_ses,bin_dist_mean_ses,
                                              areapairs,layerpairs,projpairs,min_counts=100)
-my_savefig(fig,savedir,'RadialTuning_Areas_SP_%s' % (corr_type),formats = ['png'])
+my_savefig(fig,figdir,'RadialTuning_Areas_SP_%s' % (corr_type),formats = ['png'])
 
 #%% Plot radial tuning with exponential fits:
 fig = plot_corr_radial_tuning_areas(binsdRF,bin_dist_count_ses,bin_dist_mean_ses,areapairs,layerpairs,projpairs)
-my_savefig(fig,savedir,'RadialTuning_ExponentialFits_areas_SP_%s_' % (corr_type),formats = ['png'])
+my_savefig(fig,figdir,'RadialTuning_ExponentialFits_areas_SP_%s_' % (corr_type),formats = ['png'])
 
 
 #%% #########################################################################################
@@ -811,7 +811,7 @@ bin_angle_surr_count_ses,binsangle] = bin_corr_deltarf_ses(sessions,rf_type=rf_t
 #%% Plot radial tuning:
 fig = plot_corr_radial_tuning_projs(binsdRF,bin_dist_count_ses,bin_dist_mean_ses,
                                              areapairs,layerpairs,projpairs,min_counts=100)
-my_savefig(fig,savedir,'RadialTuning_Areas_Projs_SP_%s' % (corr_type),formats = ['png'])
+my_savefig(fig,figdir,'RadialTuning_Areas_Projs_SP_%s' % (corr_type),formats = ['png'])
 
 
 
@@ -876,7 +876,7 @@ clrs_areapairs  = get_clr_area_pairs(areapairs)
 
 #     #Make the figure per protocol:
 #     fig = plot_bin_corr_distance(sessions,binmean,binedges,areapairs,corr_type=corr_type)
-#     # my_savefig(fig,savedir,'Corr_anatomicaldist_SP_%s' % (corr_type),formats = ['png'])
+#     # my_savefig(fig,figdir,'Corr_anatomicaldist_SP_%s' % (corr_type),formats = ['png'])
 
 [binmean_B,binedges] = bin_corr_distance(sessions,areapairs=' ',corr_type='noise_cov_B',absolute=False)
 [binmean_noB,binedges] = bin_corr_distance(sessions,areapairs=' ',corr_type='noise_cov_noB',absolute=False)
@@ -897,7 +897,7 @@ for ict,corr_type in enumerate(corrtypes):
         ax.plot(binedges[:-1],binmean[ises,ict,:].squeeze(),linewidth=0.15,color=clrs[ict])
     handles.append(shaded_error(ax=ax,x=binedges[:-1],y=binmean[:,ict,:].squeeze(),
                                 error='sem',color=clrs[ict],linewidth=3))
-    # plt.savefig(os.path.join(savedir,'NoiseCorr_distRF_RegressOut_' + areapair + '_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+    # plt.savefig(os.path.join(figdir,'NoiseCorr_distRF_RegressOut_' + areapair + '_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 ax.legend(handles,corrtypelabelss,loc='upper right',frameon=False,fontsize=9)	
 ax.set_xlabel('Anatomical distance ($\mu$m)')
@@ -909,7 +909,7 @@ ax.set_aspect('auto')
 ax.tick_params(axis='both', which='major', labelsize=8)
 sns.despine(top=True,right=True,offset=3)
 plt.tight_layout()
-my_savefig(fig,savedir,'RadialTuning_BehaviorRelated_SP_%dsessions' % nSessions,formats = ['png'])
+my_savefig(fig,figdir,'RadialTuning_BehaviorRelated_SP_%dsessions' % nSessions,formats = ['png'])
 
 
 #%% #########################################################################################
@@ -969,7 +969,7 @@ for ict,corr_type in enumerate(corrtypes):
         ax.plot(binsdRF,binmean[ises,ict,:].squeeze(),linewidth=0.15,color=clrs[ict])
     handles.append(shaded_error(ax=ax,x=binsdRF,y=binmean[:,ict,:].squeeze(),
                                 error='sem',color=clrs[ict],linewidth=3))
-    # plt.savefig(os.path.join(savedir,'NoiseCorr_distRF_RegressOut_' + areapair + '_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+    # plt.savefig(os.path.join(figdir,'NoiseCorr_distRF_RegressOut_' + areapair + '_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 ax.legend(handles,corrtypelabelss,loc='upper right',frameon=False,fontsize=9)	
 ax.set_xlabel('Delta RF (deg)')
@@ -981,5 +981,5 @@ ax.set_aspect('auto')
 ax.tick_params(axis='both', which='major', labelsize=8)
 sns.despine(top=True,right=True,offset=3)
 plt.tight_layout()
-my_savefig(fig,savedir,'DeltaRF_RadialTuning_BehaviorRelated_SP_%dsessions' % nSessions,formats = ['png'])
+my_savefig(fig,figdir,'DeltaRF_RadialTuning_BehaviorRelated_SP_%dsessions' % nSessions,formats = ['png'])
 

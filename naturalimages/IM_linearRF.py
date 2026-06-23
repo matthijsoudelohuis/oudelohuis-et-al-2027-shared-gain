@@ -28,7 +28,7 @@ from utils.RRRlib import *
 from utils.corr_lib import compute_signal_noise_correlation
 from utils.gain_lib import *
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Images\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%%
 # TODO:
@@ -116,7 +116,7 @@ cRF,Y_hat = lowrank_RF_cv(resp, IMdata,lam=0.1,nranks=25,nsub=nsub)
 #%% Show the difference in the distribution of the responses for predicted vs true data:
 plt.hist(Y_hat.flatten(), bins=100, color='red', alpha=0.5)
 plt.hist(resp.flatten(), bins=100, color='blue', alpha=0.5)
-plt.savefig(os.path.join(savedir,'LowRank_RF_FittedResponses_%s.png' % (sessions[sesidx].sessiondata['session_id'][0])),format='png',dpi=300,bbox_inches='tight')
+plt.savefig(os.path.join(figdir,'LowRank_RF_FittedResponses_%s.png' % (sessions[sesidx].sessiondata['session_id'][0])),format='png',dpi=300,bbox_inches='tight')
 
 #%% Fit the cRF with a 2D gaussian:
 sessions[sesidx].celldata = fit_2dgauss_cRF(cRF, nsub=nsub,celldata=sessions[sesidx].celldata)
@@ -154,7 +154,7 @@ for ial,arealabel in enumerate(arealabels):
         ax.set_yticks([])
         ax.set_axis_off()
         ax.set_title(arealabel + sessions[sesidx].celldata['cell_id'][iN],fontsize=8)
-fig.savefig(os.path.join(savedir,'ReducedRank_FitRF_example_neurons_arealabel_%s.png' % sessions[sesidx].sessiondata['session_id'][0]),format='png',dpi=300,bbox_inches='tight')
+fig.savefig(os.path.join(figdir,'ReducedRank_FitRF_example_neurons_arealabel_%s.png' % sessions[sesidx].sessiondata['session_id'][0]),format='png',dpi=300,bbox_inches='tight')
 
 #%% Compute pairwise correlations matrix of the cRF:
 cRF_reshape             = np.reshape(cRF, (np.shape(cRF)[0]*np.shape(cRF)[1],np.shape(cRF)[2]))
@@ -188,7 +188,7 @@ for i,idx in enumerate(zip(idx_corr[0],idx_corr[1])):
     ax[i,1].set_title(sessions[sesidx].celldata['cell_id'][idx[1]],fontsize=8)
     ax[i,0].text(0.9,0.6,'RF corr: %.2f' % corrmat_triu[idx],fontsize=8,transform=ax[i,0].transAxes)
 fig.tight_layout()
-fig.savefig(os.path.join(savedir,'ReducedRank_FitRF_example_RF_corr_%s.png' % sessions[sesidx].sessiondata['session_id'][0]),format='png',dpi=300,bbox_inches='tight')
+fig.savefig(os.path.join(figdir,'ReducedRank_FitRF_example_RF_corr_%s.png' % sessions[sesidx].sessiondata['session_id'][0]),format='png',dpi=300,bbox_inches='tight')
 
 #%% 
 
@@ -276,7 +276,7 @@ for datatype in ['sig_corr','resid_corr','resp_corr']:
     ax.set_ylim([-0.2,0.6])
     sns.despine(offset=3,top=True,right=True)
     fig.tight_layout()
-    plt.savefig(os.path.join(savedir,'ReducedRank_FitRF_%s_%s.png' % (datatype,sessions[sesidx].sessiondata['session_id'][0])),format='png',dpi=300,bbox_inches='tight')
+    plt.savefig(os.path.join(figdir,'ReducedRank_FitRF_%s_%s.png' % (datatype,sessions[sesidx].sessiondata['session_id'][0])),format='png',dpi=300,bbox_inches='tight')
 
 #%%
 
@@ -398,7 +398,7 @@ ax.set_ylim([-0.2,0.6])
 # ax.set_ylim([-0.02,0.05])
 sns.despine(fig=fig, top=True, right=True,offset=3)
 fig.tight_layout()
-fig.savefig(os.path.join(savedir,'RRR_FitRF_corr_dRF_%s_%s.png' % (datatype,sessions[sesidx].sessiondata['session_id'][0])),format='png',dpi=300,bbox_inches='tight')
+fig.savefig(os.path.join(figdir,'RRR_FitRF_corr_dRF_%s_%s.png' % (datatype,sessions[sesidx].sessiondata['session_id'][0])),format='png',dpi=300,bbox_inches='tight')
 
 
 
@@ -562,7 +562,7 @@ sns.despine(fig=fig, top=True, right=True, offset = 3)
 for ax in axes:
     ax.set_xticklabels(arealabelpairs,rotation=90,fontsize=6)
 
-my_savefig(fig,savedir,'LinearRF_PairwiseCorrelations_Arealabelpairs_Slopes_%d' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'LinearRF_PairwiseCorrelations_Arealabelpairs_Slopes_%d' % nSessions,formats=['png'])
 
 
 #%% 
@@ -591,7 +591,7 @@ sns.despine(fig=fig, top=True, right=True, offset = 3)
 # for ax in axes:
 ax.set_xticklabels(arealabelpairs,rotation=90,fontsize=6)
 
-my_savefig(fig,savedir,'LinearRF_PairwiseCorrelation_Arealabelpairs_%d' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'LinearRF_PairwiseCorrelation_Arealabelpairs_%d' % nSessions,formats=['png'])
 
 
 
@@ -734,7 +734,7 @@ for ial,arealabel in enumerate(arealabels):
         ax.set_title(arealabel + sessions[sesidx].celldata['cell_id'][iN],fontsize=8)
 
 fig.tight_layout()
-my_savefig(fig,savedir,sessions[sesidx].sessiondata['session_id'][0] + '_RFs')
+my_savefig(fig,figdir,sessions[sesidx].sessiondata['session_id'][0] + '_RFs')
 
 #%% Reconstruct images from the RF:
 
@@ -795,7 +795,7 @@ for iIM,IM in enumerate(eximages):
     ax.axis('off')
     if iIM==0: 
         ax.set_title('Reconstruction')
-plt.savefig(os.path.join(savedir,'BestReconstructions_%s_%s.png' % (arealabel,sessions[sesidx].sessiondata['session_id'][0])),format='png',dpi=300,bbox_inches='tight')
+plt.savefig(os.path.join(figdir,'BestReconstructions_%s_%s.png' % (arealabel,sessions[sesidx].sessiondata['session_id'][0])),format='png',dpi=300,bbox_inches='tight')
 
 #%% 
 IMdata_mean_hp = np.zeros(IMdata_mean.shape)
@@ -872,7 +872,7 @@ plt.ylim([0,0.8])
 plt.ylabel('R2 per trial')
 plt.title('Reconstruction')
 sns.despine(offset=3,top=True,right=True,trim=True)
-plt.savefig(os.path.join(savedir,'R2_pertrial_session_%s.png' % (sessions[sesidx].sessiondata['session_id'][0])),format='png',dpi=300,bbox_inches='tight')
+plt.savefig(os.path.join(figdir,'R2_pertrial_session_%s.png' % (sessions[sesidx].sessiondata['session_id'][0])),format='png',dpi=300,bbox_inches='tight')
 
 #%% Is reconstruction correlated to different variables: 
 from scipy.stats import pearsonr, binned_statistic
@@ -909,7 +909,7 @@ for ivar,var in enumerate(varlabels):
 
 fig.tight_layout()
 sns.despine(offset=3,top=True,right=True,trim=True)
-my_savefig(fig,savedir,'R2_pertrial_vs_variables_%s.png' % (sessions[sesidx].sessiondata['session_id'][0]))
+my_savefig(fig,figdir,'R2_pertrial_vs_variables_%s.png' % (sessions[sesidx].sessiondata['session_id'][0]))
 
 #%% 
 sessions[sesidx].celldata = fit_2dgauss_cRF(cRF, nsub=nsub,celldata=sessions[sesidx].celldata)
@@ -1000,7 +1000,7 @@ for iqrpopcoupling in range(npopcouplingquantiles):
 
 plt.suptitle('RFs for neurons with different population coupling levels',fontsize=11)
 plt.tight_layout()
-my_savefig(fig,savedir,'RFs_by_popcoupling_%s' % sessions[sesidx].session_id, formats = ['png'])
+my_savefig(fig,figdir,'RFs_by_popcoupling_%s' % sessions[sesidx].session_id, formats = ['png'])
 
 #%% 
 fields = np.array(['RF_R2','rf_az_RRR','rf_el_RRR','rf_sx_RRR','rf_sy_RRR','rf_r2_RRR'])
@@ -1023,7 +1023,7 @@ for ifield in range(nfields):
             transform=ax.transAxes)
 sns.despine(trim=False,top=True,right=True,offset=3)
 plt.tight_layout()
-my_savefig(fig,savedir,'PopCouplingBy_RF_params_%s' % sessions[sesidx].session_id, formats = ['png'])
+my_savefig(fig,figdir,'PopCouplingBy_RF_params_%s' % sessions[sesidx].session_id, formats = ['png'])
 
 #%% 
 x = ses.celldata['pop_coupling']
@@ -1076,7 +1076,7 @@ ax.text(0.7,0.9,'r = %.2f' % r,
             transform=ax.transAxes)
 sns.despine(trim=False,top=True,right=True,offset=3)
 plt.tight_layout()
-# my_savefig(fig,savedir,'PopCouplingBy_RF_params_%s' % sessions[sesidx].session_id, formats = ['png'])
+# my_savefig(fig,figdir,'PopCouplingBy_RF_params_%s' % sessions[sesidx].session_id, formats = ['png'])
 
 
 #%% 
@@ -1149,7 +1149,7 @@ for iqr in range(nquantiles):
         # ax.imshow(cRF[:,:,icell+iqrpopcoupling*nexamplecells],vmin=-0.5,vmax=0.5,cmap='RdBu')
 plt.suptitle('RFs estimated from trials with different population rates\n (same neurons)',fontsize=11)
 plt.tight_layout()
-my_savefig(fig,savedir,'RFs_by_poprate_%s' % sessions[sesidx].session_id, formats = ['png'])
+my_savefig(fig,figdir,'RFs_by_poprate_%s' % sessions[sesidx].session_id, formats = ['png'])
 
 #%% 
 fig,axes = plt.subplots(1,1,figsize=(3,3),sharey=True,sharex=True)
@@ -1166,7 +1166,7 @@ ax.set_ylabel('RF R2')
 # plt.suptitle('RFs estimated from trials with different population rates\n (same neurons)',fontsize=11)
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True,offset=3)
-my_savefig(fig,savedir,'RFs_quant_by_poprate_%s' % sessions[sesidx].session_id, formats = ['png'])
+my_savefig(fig,figdir,'RFs_quant_by_poprate_%s' % sessions[sesidx].session_id, formats = ['png'])
 
 
 
@@ -1327,7 +1327,7 @@ for iax,ises in enumerate(idx_ses):
 
 plt.tight_layout()
 sns.despine(top=True,right=True,offset=3,trim=False)
-my_savefig(fig,savedir,'Scatter_ReconR2_vs_poprate_sameIM_%dsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'Scatter_ReconR2_vs_poprate_sameIM_%dsessions' % (nSessions),formats=['png'])
 
 #%% Show the coefficients of the linear regression fits across sessions and coupling bins
 df = pd.DataFrame(coefdata.reshape((nSessions*ncouplingbins,len(coeflabels))),
@@ -1345,7 +1345,7 @@ for icoef,coef in enumerate(coeflabels):
     # ax.set_ylim([0,1])
 plt.tight_layout()
 sns.despine(top=True,right=True,offset=3,trim=True)
-my_savefig(fig,savedir,'ReconR2_vs_popcoupling_sameIM_%dsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'ReconR2_vs_popcoupling_sameIM_%dsessions' % (nSessions),formats=['png'])
 
 #%% Compute correlation between population rate and reconstruction R2 for each image
 # to select a good example
@@ -1418,7 +1418,7 @@ ax.imshow(IMdata[:,:,idx_T[0]],cmap='gray')
 ax.set_title('Image %d' % IM)
 ax.set_xticks([])
 ax.set_yticks([])
-my_savefig(fig,savedir,'ExampleImage_%d' % (IM),formats=['png'])
+my_savefig(fig,figdir,'ExampleImage_%d' % (IM),formats=['png'])
 
 fig,axes = plt.subplots(ncouplingbins,10,figsize=(10,5),sharex=True,sharey=True)
 for icp in range(ncouplingbins):
@@ -1441,7 +1441,7 @@ for icp in range(ncouplingbins):
         # ax.imshow(IMdata_hat[:,:,idx_T[imrep]],cmap='gray',vmin=0,vmax=1)
         ax.set_xticks([])
         ax.set_yticks([])
-my_savefig(fig,savedir,'ExampleImage_couplingbins_reconstruction_%d_%s' % (IM,ses.session_id),formats=['png'])
+my_savefig(fig,figdir,'ExampleImage_couplingbins_reconstruction_%d_%s' % (IM,ses.session_id),formats=['png'])
 
 #%% 
 

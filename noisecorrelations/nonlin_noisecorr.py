@@ -25,7 +25,7 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.tuning import *
 from utils.nonlin_lib import *
 
-savedir =  os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\TransferFunctions')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%%
 cm = 1/2.54  # centimeters in inches
@@ -84,8 +84,8 @@ cm = 1/2.54  # centimeters in inches
 #     ax.grid()
 # plt.tight_layout()
 # sns.despine()
-# my_savefig(plt.gcf(),savedir,f'{nonlinearity_names[i]}_Nonlinearity_TransferFunction')
-# my_savefig(fig,savedir,f'Tranfer_functions_overview')
+# my_savefig(plt.gcf(),figdir,f'{nonlinearity_names[i]}_Nonlinearity_TransferFunction')
+# my_savefig(fig,figdir,f'Tranfer_functions_overview')
 
 
 
@@ -417,7 +417,7 @@ random_cell = np.random.choice(len(sourcecells))
 sourcecell,targetcell = sourcecells[random_cell],targetcells[random_cell]
 
 fig = plot_noise_pair(sessions[ises],sourcecell,targetcell)
-# my_savefig(fig, os.path.join(savedir,'NoiseCorrelations'), 'NC_example_isotuning_%s_cell%d_%d' % (sessions[ises].session_id,sourcecell,targetcell), formats = ['png']) 
+# my_savefig(fig, os.path.join(figdir,'NoiseCorrelations'), 'NC_example_isotuning_%s_cell%d_%d' % (sessions[ises].session_id,sourcecell,targetcell), formats = ['png']) 
 
 #%% Find a neuron pair that is strongly tuned, has opposite tuning pref and has negative correlation
 ises = 0
@@ -433,7 +433,7 @@ random_cell = np.random.choice(len(sourcecells))
 sourcecell,targetcell = sourcecells[random_cell],targetcells[random_cell]
 
 fig = plot_noise_pair(sessions[ises],sourcecell,targetcell)
-# my_savefig(fig, os.path.join(savedir,'NoiseCorrelations'), 'NC_example_orthotuning_%s_cell%d_%d' % (sessions[ises].session_id,sourcecell,targetcell), formats = ['png']) 
+# my_savefig(fig, os.path.join(figdir,'NoiseCorrelations'), 'NC_example_orthotuning_%s_cell%d_%d' % (sessions[ises].session_id,sourcecell,targetcell), formats = ['png']) 
 
 #%% Prediction is the noise correlation is strongest for stimuli that are both preferred
 # Show that for a given pair of neurons the product of their response is correlated with
@@ -503,7 +503,7 @@ sns.despine(trim=True, offset=3)
 
 plt.suptitle('Nonlinearities at p0 initialization', fontsize=10, y=1.02)
 plt.tight_layout()
-# my_savefig(fig, savedir, 'NL_p0_shapes', formats=['png'])
+# my_savefig(fig, figdir, 'NL_p0_shapes', formats=['png'])
 
 #%% Pick two example neurons: well-tuned with moderate–high pop coupling
 ises     = 0

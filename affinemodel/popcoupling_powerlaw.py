@@ -23,7 +23,7 @@ from utils.gain_lib import *
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
 
-savedir =  os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list            = np.array([['LPE10919_2023_11_06']])
@@ -220,8 +220,8 @@ ax_nticks(ax,3)
 
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True,offset=3)
-# my_savefig(fig,savedir,'Evoked_Activity_vs_Modulation_%dGRsessions_V1' % (nSessions))
-# my_savefig(fig,savedir,'Evoked_Activity_vs_Modulation_%dGRsessions_PM' % (nSessions))
+# my_savefig(fig,figdir,'Evoked_Activity_vs_Modulation_%dGRsessions_V1' % (nSessions))
+# my_savefig(fig,figdir,'Evoked_Activity_vs_Modulation_%dGRsessions_PM' % (nSessions))
 
 
 #%% Is modulation by population rate dependent on activity levels,
@@ -305,8 +305,8 @@ for iPopCouplingBin in range(nPopCouplingBins):
 
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True,offset=3)
-# my_savefig(fig,savedir,'Evoked_Activity_vs_Modulation_%dGRsessions_V1' % (nSessions))
-# my_savefig(fig,savedir,'Evoked_Activity_vs_Modulation_%dGRsessions_PM' % (nSessions))
+# my_savefig(fig,figdir,'Evoked_Activity_vs_Modulation_%dGRsessions_V1' % (nSessions))
+# my_savefig(fig,figdir,'Evoked_Activity_vs_Modulation_%dGRsessions_PM' % (nSessions))
 
 #%%
 
@@ -431,7 +431,7 @@ axes[1].set_title('Tuned')
 for i in range(nmodels):
     axes[i+2].imshow(Y_hat[idx_N,:,i],aspect='auto',vmin=-0.5,vmax=0.5)
     axes[i+2].set_title(modelversions[i])
-my_savefig(fig,savedir,'Heatmap_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
+my_savefig(fig,figdir,'Heatmap_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
 
 #%% 
 idx_N = ses.celldata['tuning_var'] > 0.01
@@ -447,7 +447,7 @@ ax.set_xticks(range(nmodels))
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
 ax.set_xticklabels([v if i != np.argmax(np.nanmean(model_R2[:,idx_N],axis=1)) else '*'+v for i,v in enumerate(modelversions)],
                    rotation=45,ha='right',fontsize=9)
-my_savefig(fig,savedir,'R2_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
+my_savefig(fig,figdir,'R2_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
 
 print('Mean R2 for:')
 for i in range(nmodels):
@@ -584,7 +584,7 @@ sns.histplot(data=sessions[ises].celldata,x='aff_beta_grsplit',color='blue',elem
              common_norm=False,ax=axes[1],stat="density",hue='arealabel')
 axes[0].set_title('Mult')
 axes[1].set_title('Add')
-my_savefig(fig,savedir,'AffineModelCoefHist_SingleNeuron_GR_%ssession' % sessions[ises].session_id,formats=['png'])
+my_savefig(fig,figdir,'AffineModelCoefHist_SingleNeuron_GR_%ssession' % sessions[ises].session_id,formats=['png'])
 
 #%% 
 celldata = pd.concat([ses.celldata for ses in sessions]).reset_index(drop=True)

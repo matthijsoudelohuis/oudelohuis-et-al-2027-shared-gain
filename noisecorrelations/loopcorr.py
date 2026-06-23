@@ -29,7 +29,7 @@ from utils.explorefigs import plot_excerpt
 from utils.shuffle_lib import my_shuffle, corr_shuffle
 from utils.gain_lib import * 
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 # First plot the mean and the std. This could already indicate some things. For each dataset make a scatter of the mean 
 # and std with color the V1-PM and within area datasets as well.
@@ -138,8 +138,8 @@ for corr_type in ['noise_corr']:
 
     #Make the figure per protocol:
     fig = plot_bin_corr_distance(sessions,binmean,binedges,areapairs,corr_type=corr_type)
-    # fig.savefig(os.path.join(savedir,'Corr_anatomicaldist_Protocols_' % (corr_type) + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'Corr_anatomicaldist_Protocols_' % (corr_type) + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'Corr_anatomicaldist_Protocols_' % (corr_type) + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'Corr_anatomicaldist_Protocols_' % (corr_type) + '.pdf'), format = 'pdf')
 
 #%% #########################################################################################
 protocols           = ['GR','GN']
@@ -182,8 +182,8 @@ for iap,areapair in enumerate(['V1','PM']):
     ax.set_xlim([-10,500])
     ax.set_ylim([0.0,0.023])
 plt.tight_layout()
-# fig.savefig(os.path.join(savedir,'MeanCorr','DistXY_MeanCorr_WithinArea_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
-fig.savefig(os.path.join(savedir,'MeanCorr','DistXY_MeanCorr_WithinArea_%s_PCA1_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'MeanCorr','DistXY_MeanCorr_WithinArea_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'MeanCorr','DistXY_MeanCorr_WithinArea_%s_PCA1_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
 
 #%% ########################################################################################################
 # ##################### Noise correlations within and across areas: ########################################
@@ -258,7 +258,7 @@ for iarea,area in enumerate(['V1','PM']):
         # ax.set_ylim([0,my_ceil(df.max(axis=None)*1.2,2)])
     ax.set_title('%s' % (area),fontsize=12)
 plt.tight_layout()
-# fig.savefig(os.path.join(savedir,'MeanCorr','MeanCorr_WithinArea_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'MeanCorr','MeanCorr_WithinArea_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
 
 #%% Plot distribution of pairwise correlations across sessions conditioned on area pairs:
 protocols           = ['GR','GN']
@@ -304,7 +304,7 @@ if df.any(axis=None):
     ax.set_title('%s' % '_'.join(protocols),fontsize=12)
     ax.set_ylim([my_floor(df.min(axis=None)*0.95,3),my_ceil(df.max(axis=None)*1.4,2)])
 plt.tight_layout()
-# fig.savefig(os.path.join(savedir,'MeanCorr','MeanCorr_InterArea_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'MeanCorr','MeanCorr_InterArea_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
 
 #%% 
 dfses = mean_corr_areas_labeling([sessions[0]],corr_type='trace_corr',absolute=True,minNcells=1000)[0]
@@ -339,7 +339,7 @@ for isign,sign in enumerate(['pos','neg']):
         ax.set_ylim([my_floor(df.min(axis=None)*0.9,1),my_ceil(df.max(axis=None)*1.4,1)])
     ax.set_title('%s' % (sign),fontsize=12)
 plt.tight_layout()
-# fig.savefig(os.path.join(savedir,'MeanCorr','FracCorr_PosNeg_InterArea_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'MeanCorr','FracCorr_PosNeg_InterArea_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
 
 #%%  Find session with largest effect:
 # areapairs           = ['V1-PM']
@@ -390,7 +390,7 @@ ax.set_xticks([]); ax.set_yticks([])
 cb = fig.colorbar(pcm, ax=ax,shrink=0.3)
 cb.set_label('Correlation',fontsize=10,loc='center')
 cb.set_ticks([cb.vmin,0,cb.vmax])
-fig.savefig(os.path.join(savedir,'CorrMat','CorrMat_%s_%s' % (corr_type,sessions[sesidx].sessiondata['session_id'][0]) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'CorrMat','CorrMat_%s_%s' % (corr_type,sessions[sesidx].sessiondata['session_id'][0]) + '.png'), format = 'png')
 
 
 #%% Plot distribution of pairwise correlations across sessions conditioned on area pairs:
@@ -553,10 +553,10 @@ for corr_type in ['noise_corr']:
         
         # plt.suptitle('%s %s' % (areapair,corr_type),fontsize=12)
         plt.tight_layout()
-        # fig.savefig(os.path.join(savedir,'HistCorr','Histcorr_Proj_PCA1_L5L23_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.png'), format = 'png')
-        # fig.savefig(os.path.join(savedir,'HistCorr','Histcorr_Proj_L23L5_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.png'), format = 'png')
-        # fig.savefig(os.path.join(savedir,'HistCorr','Histcorr_MatchOSI_Proj_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.png'), format = 'png')
-        # fig.savefig(os.path.join(savedir,'HistCorr','Histcorr_Proj_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.pdf'), format = 'pdf')
+        # fig.savefig(os.path.join(figdir,'HistCorr','Histcorr_Proj_PCA1_L5L23_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+        # fig.savefig(os.path.join(figdir,'HistCorr','Histcorr_Proj_L23L5_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+        # fig.savefig(os.path.join(figdir,'HistCorr','Histcorr_MatchOSI_Proj_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+        # fig.savefig(os.path.join(figdir,'HistCorr','Histcorr_Proj_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.pdf'), format = 'pdf')
 
 
 
@@ -687,8 +687,8 @@ for corr_type in ['noise_corr']:
         
         # plt.suptitle('%s %s' % (areapair,corr_type),fontsize=12)
         plt.tight_layout()
-        # fig.savefig(os.path.join(savedir,'HistCorr','Histcorr_Layer_PCA1_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.png'), format = 'png')
-        # fig.savefig(os.path.join(savedir,'HistCorr','Histcorr_Layer_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.pdf'), format = 'pdf')
+        # fig.savefig(os.path.join(figdir,'HistCorr','Histcorr_Layer_PCA1_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+        # fig.savefig(os.path.join(figdir,'HistCorr','Histcorr_Layer_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.pdf'), format = 'pdf')
 
 #%% Plot mean vs standard deviation for labeling across areapairs:
 # Umakantha et al. 2023: might signal different population activity fluctuations that are shared
@@ -732,10 +732,10 @@ for corr_type in ['noise_corr']:
         # ax0.set_xlim([-0.5,0.5])
         # ax0.set_ylim([0,1.1])
     plt.tight_layout()
-    # fig.savefig(os.path.join(savedir,'MeanCorr','MeanStdScatter_Z_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','MeanStdMean_Z_PCA1_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','MeanStdScatter_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.pdf'), format = 'pdf')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','MeanStdScatter_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','MeanStdScatter_Z_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','MeanStdMean_Z_PCA1_%s_%s' % (corr_type,'_'.join(protocols)) + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','MeanStdScatter_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','MeanStdScatter_%s_%s_%s' % (areapair,corr_type,'_'.join(protocols)) + '.pdf'), format = 'pdf')
         
 # clrs_areapairs      = get_clr_area_pairs(areapairs)
 # clrs_layerpairs     = get_clr_layerpairs(layerpairs)
@@ -769,10 +769,10 @@ for corr_type in ['trace_corr','sig_corr','noise_corr']:
         ax.set_title('%s' % '_'.join(protocols),fontsize=12)
     plt.suptitle('%s' % (corr_type),fontsize=12)
     plt.tight_layout()
-    # fig.savefig(os.path.join(savedir,'MeanCorr','AbsCorr_sigOnly_dF_stationary_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','AbsCorr_sigOnly_dF_stationary_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.pdf'), format = 'pdf')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','AbsCorr_dF_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','AbsCorr_dF_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','AbsCorr_sigOnly_dF_stationary_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','AbsCorr_sigOnly_dF_stationary_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','AbsCorr_dF_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','AbsCorr_dF_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.pdf'), format = 'pdf')
 
 #%% Plot mean correlation across sessions conditioned on area pairs for pos and neg separately:
 sessiondata    = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
@@ -812,10 +812,10 @@ for corr_type in ['trace_corr','sig_corr','noise_corr']:
     plt.suptitle('%s' % (corr_type),fontsize=12)
     plt.tight_layout()
 
-    # fig.savefig(os.path.join(savedir,'MeanCorr','PosNegCorr_sigOnly_dF_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','PosNegCorr_sigOnly_dF_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.pdf'), format = 'pdf')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','PosNegCorr_sigOnly_dF_stationary_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','PosNegCorr_sigOnly_dF_stationary_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','PosNegCorr_sigOnly_dF_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','PosNegCorr_sigOnly_dF_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','PosNegCorr_sigOnly_dF_stationary_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','PosNegCorr_sigOnly_dF_stationary_Labeling_Areas_%s_%s' % ('_'.join(protocols),corr_type) + '.pdf'), format = 'pdf')
     
 #%% Plot mean absolute correlation across sessions conditioned on area pairs and per protocol:
 sessiondata    = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
@@ -844,10 +844,10 @@ for corr_type in ['trace_corr','sig_corr','noise_corr']:
             ax.set_title('%s' %(prot),fontsize=12)
     plt.suptitle('%s' % (corr_type),fontsize=12)
     plt.tight_layout()
-    # fig.savefig(os.path.join(savedir,'MeanCorr','AbsCorr_dF_stationary_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','AbsCorr_dF_stationary_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','AbsCorr_sigOnly_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','AbsCorr_sigOnly_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','AbsCorr_dF_stationary_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','AbsCorr_dF_stationary_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','AbsCorr_sigOnly_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','AbsCorr_sigOnly_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
 
 #%% Plot mean correlation across sessions conditioned on area pairs and per protocol for pos and neg separately:
 sessiondata    = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
@@ -883,10 +883,10 @@ for corr_type in ['trace_corr','sig_corr','noise_corr']:
                 ax.set_title('%s' %(prot),fontsize=12)
     plt.suptitle('%s' % (corr_type),fontsize=12)
     plt.tight_layout()
-    # fig.savefig(os.path.join(savedir,'MeanCorr','MeanCorr_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','MeanCorr_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','MeanCorr_sigOnly_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','MeanCorr_sigOnly_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','MeanCorr_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','MeanCorr_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','MeanCorr_sigOnly_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','MeanCorr_sigOnly_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
 
 #%% Plot fraction of correlated units across sessions conditioned on area pairs and per protocol:
 sessiondata    = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
@@ -918,7 +918,7 @@ for corr_type in ['trace_corr','sig_corr','noise_corr']:
             # ax.set_ylim([0,1])
     plt.suptitle('%s' % (corr_type),fontsize=12)
     plt.tight_layout()
-    # fig.savefig(os.path.join(savedir,'MeanCorr','FracCorr_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
-    # fig.savefig(os.path.join(savedir,'MeanCorr','FracCorr_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
-    fig.savefig(os.path.join(savedir,'MeanCorr','FracCorr_dF_stationary_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
-    fig.savefig(os.path.join(savedir,'MeanCorr','FracCorr_dF_stationary_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','FracCorr_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'MeanCorr','FracCorr_dF_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')
+    fig.savefig(os.path.join(figdir,'MeanCorr','FracCorr_dF_stationary_Labeling_Areas_perProtocol_%s' % corr_type + '.png'), format = 'png')
+    fig.savefig(os.path.join(figdir,'MeanCorr','FracCorr_dF_stationary_Labeling_Areas_perProtocol_%s' % corr_type + '.pdf'), format = 'pdf')

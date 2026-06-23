@@ -13,7 +13,7 @@ from utils.gain_lib import *
 from utils.tuning import *
 from utils.pair_lib import compute_pairwise_anatomical_distance
 
-savedir = 'E:\\OneDrive\\PostDoc\\Figures\\SharedGain'
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 
@@ -91,7 +91,7 @@ ax.legend(['0-20%','20-40%','40-60%','60-80%','80-100%'],
                     reverse=True,fontsize=7,frameon=False,title='pop. coupling',bbox_to_anchor=(1.05,1), loc='upper left')
 
 sns.despine(fig=fig,trim=True,top=True,right=True,offset=3)
-# my_savefig(fig,savedir,'Popcoupling_tuning_%dGRsessions' % nSessions,formats=['png'])
+# my_savefig(fig,figdir,'Popcoupling_tuning_%dGRsessions' % nSessions,formats=['png'])
 
 #%% 
 fig, ax = plt.subplots(1,1,figsize=(4,4),subplot_kw={'projection': 'polar'})
@@ -118,7 +118,7 @@ ax.set_title('Count',pad=10)
 ax.legend(['0-20%','20-40%','40-60%','60-80%','80-100%'],
                     reverse=True,fontsize=7,frameon=False,bbox_to_anchor=(1.25,0.9), 
                     title='pop. coupling',loc='upper center')
-my_savefig(fig,savedir,'Polar_Popcoupling_tuning_%dGRsessions' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'Polar_Popcoupling_tuning_%dGRsessions' % nSessions,formats=['png'])
 
 #%% 
 #######  #####  ### 
@@ -162,7 +162,7 @@ ax.set_ylabel(tuning_metric)
 # ax.legend(['0-10%','10-20%','20-30%','30-40%','40-50%','50-60%','60-70%','70-80%','80-90%','90-100%'],
 #                     reverse=True,fontsize=7,frameon=False,title='pop. coupling',bbox_to_anchor=(1.05,1), loc='upper left')
 sns.despine(fig=fig,trim=True,top=True,right=True,offset=3)
-my_savefig(fig,savedir,'Popcoupling_%s_tuning_%dGRsessions' % (tuning_metric,nSessions),formats=['png'])
+my_savefig(fig,figdir,'Popcoupling_%s_tuning_%dGRsessions' % (tuning_metric,nSessions),formats=['png'])
 
 
 #%% 
@@ -462,7 +462,7 @@ ax.text(0.6,0.6,'r=%1.2f, p=%1.2e' % (r_value,p_value),transform=plt.gca().trans
 ax.set_ylim([0,25])
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,top=True,right=True,offset= 5)
-my_savefig(fig,savedir,'PO_change_poprate_vs_popcoupling_%dGRsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'PO_change_poprate_vs_popcoupling_%dGRsessions' % (nSessions),formats=['png'])
 
 #%%
 idx_N_low = np.all((celldata['noise_level']<20,
@@ -498,7 +498,7 @@ ax.legend(['low coupling - low pop. rate','low coupling - high pop. rate',
 ax.set_xscale('log')
 ax.set_xlabel('Kappa (tuning narrowness)')
 sns.despine(fig=fig,trim=True,offset=5,ax=ax)
-my_savefig(fig,savedir,'Tuningwidth_poprate_vs_popcoupling_%dGRsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'Tuningwidth_poprate_vs_popcoupling_%dGRsessions' % (nSessions),formats=['png'])
 
 
 
@@ -583,7 +583,7 @@ for icbin in range(len(binedges_popcoupling)-1):
 # ax.set_ylim(ylims)
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,top=True,right=True,offset=3)
-my_savefig(fig,savedir,'Popcoupling_tensor_resp_tuning_%dGRsessions' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'Popcoupling_tensor_resp_tuning_%dGRsessions' % nSessions,formats=['png'])
 
 #%% 
 fig, ax = plt.subplots(1,1,figsize=(3,2),sharex=True,sharey=True)
@@ -609,7 +609,7 @@ ax.set_xticks(np.arange(0,360+22.5,45))
 ax.set_xlabel('Preferred orientation')
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,top=True,right=True,offset=3)
-my_savefig(fig,savedir,'Popcoupling_tuning_%dGRsessions' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'Popcoupling_tuning_%dGRsessions' % nSessions,formats=['png'])
 
 
 
@@ -689,7 +689,7 @@ for iPopCouplingBin in range(nPopCouplingBins):
     # ax.set_ylabel('Neuron',fontsize=9)
     ax.tick_params(axis='x', labelrotation=45)
 sns.despine(fig=fig, top=True, right=True, offset=1,trim=True)
-# my_savefig(fig,savedir,'SP_coupling_vs_GR_tunedresp_%s' % (sessions[ises].session_id), formats = ['png'])
+# my_savefig(fig,figdir,'SP_coupling_vs_GR_tunedresp_%s' % (sessions[ises].session_id), formats = ['png'])
 
 #%% 
 sessions[ises].poprate = np.nanmean(zscore(sessions[ises].respmat.T, axis=0),axis=1)
@@ -805,7 +805,7 @@ ax.set_ylabel('Response',fontsize=10)
 ax.set_xlabel('Population rate',fontsize=10)
 # ax.tick_params(axis='x', labelrotation=45)
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-# my_savefig(fig,savedir,'Example_cell_%s' % (sessions[ises].celldata['cell_id'][example_cell]), formats = ['png'])
+# my_savefig(fig,figdir,'Example_cell_%s' % (sessions[ises].celldata['cell_id'][example_cell]), formats = ['png'])
 
 #%%
 # example_cell      = np.random.choice(sessions[ises].celldata['cell_id'][idx_examples])
@@ -855,7 +855,7 @@ ax.set_ylim(np.percentile(sessions[ises].poprate,[0.1,99.5]))
 ax.set_zlim(np.percentile(resp[:,idx_N],[0.1,99]))
 fig.tight_layout()
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-# my_savefig(fig,savedir,'Example_cell_3D_Ori_PopRate_Response_%s' % (example_cell), formats = ['png'])
+# my_savefig(fig,figdir,'Example_cell_3D_Ori_PopRate_Response_%s' % (example_cell), formats = ['png'])
 
 
 
@@ -977,7 +977,7 @@ cbar.set_ticks(range(ori_dist.max() + 1))
 
 sns.despine(fig=fig, trim=False, top=True, right=True, offset=2)
 plt.tight_layout()
-# my_savefig(fig, savedir, 'InvertedU_modulation_%s' % ex_cellid, formats=['png'])
+# my_savefig(fig, figdir, 'InvertedU_modulation_%s' % ex_cellid, formats=['png'])
 
 #%% Merge celldata from all sessions
 celldata = pd.concat([sessions[ises].celldata for ises in range(nSessions)]).reset_index(drop=True)
@@ -1006,7 +1006,7 @@ b = linregress(celldata['aff_alpha_grsplit'][idx_N], celldata['aff_beta_grsplit'
 ax.text(0.6,0.6,'r=%1.2f, p=%s' % (b[2],get_sig_asterisks(b[3])),transform=plt.gca().transAxes)
 
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-# my_savefig(fig,savedir,'Corr_Alpha_Beta_GR_RateSplit_%d' % nSessions, formats = ['png'])
+# my_savefig(fig,figdir,'Corr_Alpha_Beta_GR_RateSplit_%d' % nSessions, formats = ['png'])
 
 #%%
 # sns.scatterplot(data=celldata[idx_N],x='aff_beta_grsplit',y= 'minresp',
@@ -1064,5 +1064,5 @@ ax_nticks(ax,5)
 ax.set_xlabel('Low population rate',fontsize=10)
 ax.set_ylabel('High population rate',fontsize=10)
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-# my_savefig(fig,savedir,'Example_cell_GR_RateSplit_%s' % (example_cell), formats = ['png'])
+# my_savefig(fig,figdir,'Example_cell_GR_RateSplit_%s' % (example_cell), formats = ['png'])
 

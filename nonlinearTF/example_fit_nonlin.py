@@ -25,7 +25,7 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.tuning import *
 from utils.nonlin_lib import *
 
-savedir =  os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\TransferFunctions')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 
 #%% 
@@ -139,7 +139,7 @@ sns.despine(trim=True, offset=3)
 
 plt.suptitle('Nonlinearities at p0 initialization', fontsize=10, y=1.02)
 plt.tight_layout()
-# my_savefig(fig, savedir, 'NL_p0_shapes', formats=['png'])
+# my_savefig(fig, figdir, 'NL_p0_shapes', formats=['png'])
 
 
 #%% Pick example neuron: well-tuned with moderate–high pop coupling
@@ -329,7 +329,7 @@ sns.despine(ax=ax, trim=True, offset=3)
 
 plt.suptitle(f'NL model fits — {ex_cid}', fontsize=12, y=1.01)
 plt.tight_layout()
-# my_savefig(fig, savedir, f'NLfit_diagnostics_{ex_cid}', formats=['png'])
+# my_savefig(fig, figdir, f'NLfit_diagnostics_{ex_cid}', formats=['png'])
 
 
 #%%
@@ -373,7 +373,7 @@ ax.axhline(0, color='k', lw=0.5, ls=':')
 sns.despine(ax=ax, trim=True, offset=3)
 
 plt.tight_layout()
-# my_savefig(fig, savedir, f'NLfit_R2_distributions_{nSessions}sessions', formats=['png'])
+# my_savefig(fig, figdir, f'NLfit_R2_distributions_{nSessions}sessions', formats=['png'])
 
 #%% Scatter: pop_coupling vs fitted gamma across models
 # from utils.corr_lib import filter_sharednan
@@ -411,7 +411,7 @@ for i, name in enumerate(nl_names):
 
 plt.suptitle('Population coupling vs fitted γ  (pop-rate scaling)', fontsize=10, y=1.02)
 plt.tight_layout()
-# my_savefig(fig, savedir, f'PopCoupling_vs_gamma_{nSessions}sessions', formats=['png'])
+# my_savefig(fig, figdir, f'PopCoupling_vs_gamma_{nSessions}sessions', formats=['png'])
 
 #%% Scatter of linear vs. best model R2
 fig, axes = plt.subplots(1, len(nl_names)-1, figsize=((len(nl_names)-1) * 2, 2),
@@ -432,7 +432,7 @@ for i, name in enumerate(nl_names[1:]):
 sns.despine(trim=True, offset=3)
 
 plt.tight_layout()
-# my_savefig(fig, savedir, f'NLfit_R2_scatter_{nSessions}sessions', formats=['png'])
+# my_savefig(fig, figdir, f'NLfit_R2_scatter_{nSessions}sessions', formats=['png'])
 
 #%% =====================================================================
 # FISHER INFORMATION ANALYSIS
@@ -631,7 +631,7 @@ ax.set_title('MAI by TF type and drive level\n(solid = high r̄_pref,  dashed = 
 sns.despine(ax=ax, trim=True, offset=3)
 
 plt.tight_layout()
-my_savefig(fig, savedir, f'MAI_vs_rPref_{nSessions}sessions', formats=['png'])
+my_savefig(fig, figdir, f'MAI_vs_rPref_{nSessions}sessions', formats=['png'])
 
 #%% --- Plot 2: ΔI_F profile across orientation distance, grouped by TF and drive level ---
 
@@ -708,6 +708,6 @@ ax.legend(fontsize=7, frameon=False, markerscale=3)
 sns.despine(ax=ax, trim=True, offset=3)
 
 plt.tight_layout()
-# my_savefig(fig, savedir, f'dIF_profile_{nSessions}sessions', formats=['png'])
+# my_savefig(fig, figdir, f'dIF_profile_{nSessions}sessions', formats=['png'])
 
 #%%

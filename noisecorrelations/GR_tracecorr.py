@@ -27,7 +27,7 @@ from utils.RRRlib import regress_out_behavior_modulation
 from utils.corr_lib import *
 from utils.rf_lib import smooth_rf, filter_nearlabeled
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Neural - Gratings\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919','2023_11_06']])
@@ -96,7 +96,7 @@ def plot_corr_NC_var(sessions,vartoplot):
     plt.xlabel(vartoplot)
     plt.ylabel('Avg. NC')
     plt.text(x=np.percentile(ses.celldata[vartoplot],25),y=0.12,s='Mean correlation: %1.3f +- %1.3f' % (np.mean(cdata),np.std(cdata)))
-    plt.savefig(os.path.join(savedir,'NoiseCorrelations','%s_vs_NC' % vartoplot + '.png'), format = 'png')
+    plt.savefig(os.path.join(figdir,'NoiseCorrelations','%s_vs_NC' % vartoplot + '.png'), format = 'png')
 
 #%%  Scatter plot of average noise correlations versus skew:
 plot_corr_NC_var(sessions,vartoplot = 'skew')

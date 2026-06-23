@@ -21,7 +21,7 @@ from utils.gain_lib import *
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
 
-savedir = 'E:\\OneDrive\\PostDoc\\Figures\\SharedGain'
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list            = np.array([['LPE10919_2023_11_06']])
@@ -154,7 +154,7 @@ axes[1].set_title('Tuned')
 for i in range(nmodels):
     axes[i+2].imshow(Y_hat[idx_N,:,i],aspect='auto',vmin=-0.5,vmax=0.5)
     axes[i+2].set_title(modelversions[i])
-my_savefig(fig,savedir,'Heatmap_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
+my_savefig(fig,figdir,'Heatmap_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
 
 #%% 
 idx_N = ses.celldata['tuning_var'] > 0.01
@@ -170,7 +170,7 @@ ax.set_xticks(range(nmodels))
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
 ax.set_xticklabels([v if i != np.argmax(np.nanmean(model_R2[:,idx_N],axis=1)) else '*'+v for i,v in enumerate(modelversions)],
                    rotation=45,ha='right',fontsize=9)
-my_savefig(fig,savedir,'R2_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
+my_savefig(fig,figdir,'R2_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
 
 print('Mean R2 for:')
 for i in range(nmodels):
@@ -307,7 +307,7 @@ sns.histplot(data=sessions[ises].celldata,x='aff_beta_grsplit',color='blue',elem
              common_norm=False,ax=axes[1],stat="density",hue='arealabel')
 axes[0].set_title('Mult')
 axes[1].set_title('Add')
-my_savefig(fig,savedir,'AffineModelCoefHist_SingleNeuron_GR_%ssession' % sessions[ises].session_id,formats=['png'])
+my_savefig(fig,figdir,'AffineModelCoefHist_SingleNeuron_GR_%ssession' % sessions[ises].session_id,formats=['png'])
 
 #%% 
 celldata = pd.concat([ses.celldata for ses in sessions]).reset_index(drop=True)
@@ -347,7 +347,7 @@ for imod,mod in enumerate(['alpha','beta']):
     ax.text(0.75,0.5,'p=%1.4f' % (pval),ha='center',va='center',transform=ax.transAxes)
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-my_savefig(fig,savedir,'AffineModel_Areas_CoefHist_SingleNeuron_GR_%d' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'AffineModel_Areas_CoefHist_SingleNeuron_GR_%d' % nSessions,formats=['png'])
 
 #%% Show histograms of the coefficients for each area
 arealabels      = ['V1unl','V1lab','PMunl','PMlab']
@@ -385,7 +385,7 @@ for ialp,alp in enumerate(arealabelpairs):
         ax.text(0.75,0.5,'p=%1.4f' % (pval),ha='center',va='center',transform=ax.transAxes)
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-my_savefig(fig,savedir,'AffineModel_Labeled_CoefHist_SingleNeuron_GR_%d' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'AffineModel_Labeled_CoefHist_SingleNeuron_GR_%d' % nSessions,formats=['png'])
 
 
 #%% 
@@ -410,7 +410,7 @@ for iy,yvar in enumerate(yvars):
                     x_bins=np.nanpercentile(celldata[xvar], np.linspace(0, 100, nbins)),
                     scatter_kws={'s': 5, 'alpha':0.5,'edgecolor': 'blue'})
                     # scatter_kws={'s': 1, 'alpha':0.1,'facecolor': 'w'})
-my_savefig(fig,savedir,'AffineModel_VarCorrs_GR_%d' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'AffineModel_VarCorrs_GR_%d' % nSessions,formats=['png'])
 
 #%%
 
@@ -477,7 +477,7 @@ for itab in range(2):
              colLabels=result_beta.summary().tables[itab].columns.tolist(),
              loc="center",fontsize=8)
 fig.tight_layout()
-# my_savefig(fig,savedir,'AffineModel_table_%s_GR_%dsessions' % (area,nSessions),formats=['png'])
+# my_savefig(fig,figdir,'AffineModel_table_%s_GR_%dsessions' % (area,nSessions),formats=['png'])
 
 
 #%% 
@@ -515,7 +515,7 @@ ax.set_ylim([0,500])
 ax.invert_yaxis()
 ax_nticks(ax,5)
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-my_savefig(fig,savedir,'AffineModel_depth_GR_%dsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'AffineModel_depth_GR_%dsessions' % (nSessions),formats=['png'])
 
 #%% Show histograms of the coefficients for each area
 
@@ -550,7 +550,7 @@ for ialp,alp in enumerate(arealabelpairs):
     ax.text(0.75,0.5,'p=%1.4f' % (pval),ha='center',va='center',transform=ax.transAxes)
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-my_savefig(fig,savedir,'Pop_Coupling_Labeled_CumHist_SingleNeuron_GR_%dsessions' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'Pop_Coupling_Labeled_CumHist_SingleNeuron_GR_%dsessions' % nSessions,formats=['png'])
 
 
 #%% 

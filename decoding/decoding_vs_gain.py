@@ -17,7 +17,7 @@ from utils.plot_lib import shaded_error
 from utils.regress_lib import *
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 
-savedir = 'E:\\OneDrive\\PostDoc\\Figures\\SharedGain'
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919','2023_11_06']])
@@ -87,7 +87,7 @@ for ax in axes:
     ax.zaxis.pane.set_edgecolor('w')
 
 plt.tight_layout()
-# fig.savefig(os.path.join(savedir,'Example_Cone_3D_V1_PM_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Example_Cone_3D_V1_PM_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 #%% 
 
@@ -141,12 +141,12 @@ axes = fig.get_axes()
 # for ax in axes:
     # ax.view_init(elev=-45, azim=25, roll=10)
 # axes[0].view_init(azim=25)
-fig.savefig(os.path.join(savedir,'Example_Cone_3D_V1_traces_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Example_Cone_3D_V1_traces_%s' % sessions[ises].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 # print("Making animation")
 # rot_animation = animation.FuncAnimation(
 #     fig, rotate, frames=np.arange(0, 364, 4), interval=100)
-# rot_animation.save(os.path.join(savedir, 'rotation_%s.gif' % sessions[ises].sessiondata['session_id'][0]), dpi=80, writer='imagemagick')
+# rot_animation.save(os.path.join(figdir, 'rotation_%s.gif' % sessions[ises].sessiondata['session_id'][0]), dpi=80, writer='imagemagick')
 
 #%% 
 ises = 0
@@ -318,8 +318,8 @@ ax.text(0.5,0.15,'Chance',transform=ax.transAxes,ha='center',va='center',fontsiz
 ax.legend(['mean+-sem\nn=%d sessions' % nSessions],loc='center right',frameon=False)
 sns.despine(fig=fig,trim=True,top=True,right=True)
 
-my_savefig(fig,savedir,'Decoding_Orientation_LOGR_ActBins_baseline_%d' % nSessions, formats = ['png'])
-# fig.savefig(os.path.join(savedir,'Decoding_Orientation_LDA_ActBins_%d' % nSessions + '.png'), format = 'png')
+my_savefig(fig,figdir,'Decoding_Orientation_LOGR_ActBins_baseline_%d' % nSessions, formats = ['png'])
+# fig.savefig(os.path.join(figdir,'Decoding_Orientation_LDA_ActBins_%d' % nSessions + '.png'), format = 'png')
 
 
 #%% Plot error as a function of population rate: 
@@ -336,8 +336,8 @@ ax.set_ylim([15,30])
 ax.legend(['mean+-sem\nn=%d sessions' % nSessions],loc='best',frameon=False)
 sns.despine(fig=fig,trim=True,top=True,right=True)
 
-my_savefig(fig,savedir,'Ori_Decoding_Error_%s_ActBins_%dsessions' % (model_name,nSessions), formats = ['png'])
-# fig.savefig(os.path.join(savedir,'Decoding_Orientation_LDA_ActBins_%d' % nSessions + '.png'), format = 'png')
+my_savefig(fig,figdir,'Ori_Decoding_Error_%s_ActBins_%dsessions' % (model_name,nSessions), formats = ['png'])
+# fig.savefig(os.path.join(figdir,'Decoding_Orientation_LDA_ActBins_%d' % nSessions + '.png'), format = 'png')
 
 #%% Decoding performance as a function of population rate for differently coupled neurons
 nActBins = 10
@@ -417,7 +417,7 @@ ax.legend(['Weak/Negative','','','','','Intermediate','','','','Strong'],
 # ax.legend(['mean+-sem\nn=%d sessions' % nSessions],loc='center right',frameon=False)
 sns.despine(fig=fig,trim=True,top=True,right=True)
 
-my_savefig(fig,savedir,'Decoding_Ori_LOGR_ActBins_PopCoupling_%dsessions' % nSessions, formats = ['png'])
+my_savefig(fig,figdir,'Decoding_Ori_LOGR_ActBins_PopCoupling_%dsessions' % nSessions, formats = ['png'])
 
 
 #%% 
@@ -532,7 +532,7 @@ ax.legend(['0-10%','10-20%','20-30%','30-40%','40-50%','50-60%','60-70%','70-80%
           reverse=True,fontsize=7,frameon=False,title='pop. rate bins',bbox_to_anchor=(0.9,1), loc='upper left')
 sns.despine(fig=fig,trim=True,offset=3,top=True,right=True)
 plt.tight_layout()
-my_savefig(fig,savedir,'FanoFactor_ActBins_baseline_%dsessions_%1.3ftuning' % (nSessions,min_tuned), formats = ['png'])
+my_savefig(fig,figdir,'FanoFactor_ActBins_baseline_%dsessions_%1.3ftuning' % (nSessions,min_tuned), formats = ['png'])
 
 
 

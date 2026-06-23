@@ -31,7 +31,7 @@ from utils.RRRlib import *
 
 
 #%% 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE12013_2024_05_02']])
@@ -247,7 +247,7 @@ for iapl, arealabelpair in enumerate(arealabelpairs):
 ax.set_ylim([0,0.25])
 sns.despine(top=True,right=True,offset=3)
 plt.tight_layout()
-# my_savefig(fig,savedir,'RRR_R2_MatchMismatch_RF_%dsessions' % (nSessions),formats = ['png'])
+# my_savefig(fig,figdir,'RRR_R2_MatchMismatch_RF_%dsessions' % (nSessions),formats = ['png'])
 
 #%% Plot the results: 
 fig,axes = plt.subplots(1,narealabelpairs,figsize=(narealabelpairs*1.3,3),sharey=True,sharex=True)
@@ -273,7 +273,7 @@ for iapl, arealabelpair in enumerate(arealabelpairs):
 axes[0].set_ylabel('Rank')
 sns.despine(top=True,right=True,offset=3)
 plt.tight_layout()
-my_savefig(fig,savedir,'RRR_Rank_MatchMismatch_RF_%dsessions' % (nSessions),formats = ['png'])
+my_savefig(fig,figdir,'RRR_Rank_MatchMismatch_RF_%dsessions' % (nSessions),formats = ['png'])
 
 
 #%%  Show percentage difference between match and mismatch:
@@ -292,7 +292,7 @@ ax_nticks(ax,4)
 sns.despine(top=True,right=True,offset=3)	
 ax.set_xticks(range(narealabelpairs))
 ax.set_xticklabels(arealabelpairs,rotation=45,ha='right',fontsize=8)
-my_savefig(fig,savedir,'R2_Ratio_MatchMismatch_RF_%dsessions' % (nSessions),formats = ['png'])
+my_savefig(fig,figdir,'R2_Ratio_MatchMismatch_RF_%dsessions' % (nSessions),formats = ['png'])
 
 
 #%% 
@@ -465,9 +465,9 @@ for iap,areapair in enumerate(areapairs):
             ax.add_patch(circle)
 
 plt.tight_layout()
-# fig.savefig(os.path.join(savedir,'DeltaRF_2D_%s_GR_Collinear' % (corr_type) + '.png'), format = 'png')
-# fig.savefig(os.path.join(savedir,'DeltaRF_2D_%s_GR_Collinear_labeled' % (corr_type) + '.png'), format = 'png')
-# fig.savefig(os.path.join(savedir,'DeltaRF_2D_%s_GR_Orthogonal' % (corr_type) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'DeltaRF_2D_%s_GR_Collinear' % (corr_type) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'DeltaRF_2D_%s_GR_Collinear_labeled' % (corr_type) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'DeltaRF_2D_%s_GR_Orthogonal' % (corr_type) + '.png'), format = 'png')
 
 #%% Average correlation values based on circular tuning:
 polarbinres         = 45
@@ -510,9 +510,9 @@ for iap,areapair in enumerate(areapairs):
             ax.legend(frameon=False,fontsize=8,loc='upper right')
 
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'DeltaRF_1D_Polar_%s_GR_Collinear_labeled' % (corr_type) + '.png'), format = 'png')
-# fig.savefig(os.path.join(savedir,'DeltaRF_1D_Polar_%s_GR_Collinear' % (corr_type) + '.png'), format = 'png')
-# fig.savefig(os.path.join(savedir,'DeltaRF_2D_%s_GR_Orthogonal' % (corr_type) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'DeltaRF_1D_Polar_%s_GR_Collinear_labeled' % (corr_type) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'DeltaRF_1D_Polar_%s_GR_Collinear' % (corr_type) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'DeltaRF_2D_%s_GR_Orthogonal' % (corr_type) + '.png'), format = 'png')
 
 #%% 
 fig,axes = plt.subplots(len(projpairs),len(areapairs),figsize=(10,5))
@@ -550,8 +550,8 @@ for i in range(4):
                          vmax=np.nanpercentile(noiseRFmat_mean[i,j,:,:],99),cmap="hot",interpolation="none",extent=np.flipud(binrange).flatten())
         axes[i,j].set_title(legendlabels[i,j])
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'2D_NC_smooth_Map_Area_Proj_AllProt_%dsessions' %nSessions  + '.png'), format = 'png')
-# plt.savefig(os.path.join(savedir,'2D_NC_smooth_Map_Area_Proj_GN_F_%dsessions' %nSessions  + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'2D_NC_smooth_Map_Area_Proj_AllProt_%dsessions' %nSessions  + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'2D_NC_smooth_Map_Area_Proj_GN_F_%dsessions' %nSessions  + '.png'), format = 'png')
 
 fig,axes = plt.subplots(4,4,figsize=(10,7))
 for i in range(4):
@@ -559,7 +559,7 @@ for i in range(4):
         axes[i,j].imshow(np.log10(countsRFmat[i,j,:,:]),vmax=np.nanpercentile(np.log10(countsRFmat),99.9),cmap="hot",interpolation="none",extent=np.flipud(binrange).flatten())
         axes[i,j].set_title(legendlabels[i,j])
 plt.tight_layout()
-plt.savefig(os.path.join(savedir,'2D_NC_Map_smooth_Area_Proj_Counts_%dsessions' %nSessions  + '.png'), format = 'png')
+plt.savefig(os.path.join(figdir,'2D_NC_Map_smooth_Area_Proj_Counts_%dsessions' %nSessions  + '.png'), format = 'png')
 
 
 

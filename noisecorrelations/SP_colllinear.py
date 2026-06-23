@@ -25,7 +25,7 @@ from utils.tuning import *
 from utils.gain_lib import * 
 from preprocessing.preprocesslib import assign_layer,assign_layer2
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\Collinear\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 calciumversion = 'dF'
 
 colors = [(0, 0, 0), (1, 0, 0), (1, 1, 1)] # first color is black, last is red
@@ -182,8 +182,8 @@ ax.set_xticks(bincenters[::2],bincenters[::2].astype(int),rotation=45)
 ax.set_ylim([0,0.05])
 ax.set_xlim([0,np.max(bincenters)])
 plt.tight_layout()
-# my_savefig(fig, savedir, 'NC_deltaOri_tuningperc_SP', formats = ['png'])
-# plt.savefig(os.path.join(savedir,'PairwiseCorrelations','NC_deltaOri_V1_tuningperc' + '.png'), format = 'png')
+# my_savefig(fig, figdir, 'NC_deltaOri_tuningperc_SP', formats = ['png'])
+# plt.savefig(os.path.join(figdir,'PairwiseCorrelations','NC_deltaOri_V1_tuningperc' + '.png'), format = 'png')
 
 
 #%% #########################################################################################
@@ -290,8 +290,8 @@ ax.set_xticks(np.arange(0,1000,100),np.arange(0,1000,100),rotation=45)
 ax.set_ylim([0,0.05])
 ax.set_xlim([0,np.max(bincenters)])
 plt.tight_layout()
-# my_savefig(fig, savedir, 'NC_deltaXY_deltaOri_tuningperc_SP_%s' % (tuning_metric), formats = ['png'])
-# plt.savefig(os.path.join(savedir,'PairwiseCorrelations','NC_deltaOri_V1_tuningperc' + '.png'), format = 'png')
+# my_savefig(fig, figdir, 'NC_deltaXY_deltaOri_tuningperc_SP_%s' % (tuning_metric), formats = ['png'])
+# plt.savefig(os.path.join(figdir,'PairwiseCorrelations','NC_deltaOri_V1_tuningperc' + '.png'), format = 'png')
 
 
 #%% #########################################################################################
@@ -325,11 +325,11 @@ bin_angle_surr_count_ses,binsangle] = bin_corr_deltarf_ses(sessions,rf_type=rf_t
 fig = plot_corr_radial_tuning_areas_sessions(binsdRF,bin_dist_count_ses,bin_dist_mean_ses,
                                              areapairs,layerpairs,projpairs,min_counts=500)
 
-# my_savefig(fig,savedir,'RadialTuning_Areas_SP_%s' % (corr_type),formats = ['png'])
+# my_savefig(fig,figdir,'RadialTuning_Areas_SP_%s' % (corr_type),formats = ['png'])
 
 
 #%% 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\Collinear\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 
 #%% Loop over all delta preferred orientations and store mean correlations as well as distribution of pos and neg correlations:
@@ -490,7 +490,7 @@ for iap,areapair in enumerate(areapairs):
         ax.text(0.4,0.2-0.05*itest,'%s (F=%2.2f,p=%1.3f)' % (test,result.loc[test,'F'],pval),ha='center',va='center',
                 transform=ax.transAxes,fontsize=5)
 
-my_savefig(fig,savedir,'Collinear_Radial_Tuning_areas_%s_mean_SP' % (corr_type), formats = ['png'])
+my_savefig(fig,figdir,'Collinear_Radial_Tuning_areas_%s_mean_SP' % (corr_type), formats = ['png'])
 
 #%% Show radial tuning for each delta ori:
 fig = plot_corr_radial_tuning_dori(bincenters_dist,bin_dist_count_oris,bin_dist_posf_oris,deltaoris,	
@@ -508,17 +508,17 @@ centerthr           = [20,20,20,20]
 ilp = 0
 fig = plot_2D_mean_corr_dori(bin_2d_mean_oris[:,:,:,:,[ilp],:],bin_2d_count_oris[:,:,:,:,[ilp],:],bincenters_2d,deltaoris,areapairs=areapairs,layerpairs=layerpairs,
                         projpairs=projpairs,centerthr=centerthr,min_counts=min_counts,gaussian_sigma=gaussian_sigma,cmap='magma')
-my_savefig(fig,savedir,'Collinear_DeltaRF_2D_areas_%s_mean_SP' % (corr_type), formats = ['png'])
+my_savefig(fig,figdir,'Collinear_DeltaRF_2D_areas_%s_mean_SP' % (corr_type), formats = ['png'])
 
 #%% Show spatial maps per delta ori for the mean correlation
 fig = plot_2D_mean_corr_dori(bin_2d_posf_oris,bin_2d_count_oris,bincenters_2d,deltaoris,areapairs=areapairs,layerpairs=layerpairs,
                         projpairs=projpairs,centerthr=centerthr,min_counts=min_counts,gaussian_sigma=gaussian_sigma,cmap=cm_red)
-my_savefig(fig,savedir,'Collinear_DeltaRF_2D_areas_%s_posf_SP' % (corr_type), formats = ['png'])
+my_savefig(fig,figdir,'Collinear_DeltaRF_2D_areas_%s_posf_SP' % (corr_type), formats = ['png'])
 
 #%% Show spatial maps per delta ori for the mean correlation
 fig = plot_2D_mean_corr_dori(bin_2d_negf_oris,bin_2d_count_oris,bincenters_2d,deltaoris,areapairs=areapairs,layerpairs=layerpairs,
                         projpairs=projpairs,centerthr=centerthr,min_counts=min_counts,gaussian_sigma=gaussian_sigma,cmap=cm_blue)
-my_savefig(fig,savedir,'Collinear_DeltaRF_2D_areas_%s_negf_SP' % (corr_type), formats = ['png'])
+my_savefig(fig,figdir,'Collinear_DeltaRF_2D_areas_%s_negf_SP' % (corr_type), formats = ['png'])
 
 #%% Compute collinear selectivity index:
 # csi_cent_mean_oris =  collinear_selectivity_index(bin_angle_cent_mean_oris_ses,bincenters_angle)
@@ -534,7 +534,7 @@ csi_surr_negf_oris =  collinear_selectivity_index(bin_angle_surr_negf_oris_ses,b
 
 # Plot the CSI values as function of delta ori for the three different areapairs
 fig = plot_csi_deltaori_areas_ses(csi_surr_mean_oris,csi_surr_posf_oris,csi_surr_negf_oris,deltaoris,areapairs)
-my_savefig(fig,savedir,'Collinear_CSI_Surr_areas_%s_SP' % (corr_type), formats = ['png'])
+my_savefig(fig,figdir,'Collinear_CSI_Surr_areas_%s_SP' % (corr_type), formats = ['png'])
 
 #%%
 ilp = 0
@@ -542,7 +542,7 @@ rai_mean_oris_ses  = retinotopic_alignment_index(bin_dist_mean_oris_ses[:,:,:,:,
 rai_posf_oris_ses  = retinotopic_alignment_index(bin_dist_posf_oris_ses[:,:,:,:,[ilp],:],bincenters_dist,centerthr=20)
 rai_negf_oris_ses  = retinotopic_alignment_index(bin_dist_negf_oris_ses[:,:,:,:,[ilp],:],bincenters_dist,centerthr=20)
 fig = plot_csi_deltaori_areas_ses(rai_mean_oris_ses,rai_posf_oris_ses,rai_negf_oris_ses,deltaoris,areapairs)
-my_savefig(fig,savedir,'RAI_areapairs_%s_SP' % (corr_type), formats = ['png'])
+my_savefig(fig,figdir,'RAI_areapairs_%s_SP' % (corr_type), formats = ['png'])
 
 #%%
 rai_mean_oris_ses  = retinotopic_alignment_index(bin_dist_mean_oris_ses,bincenters_dist,centerthr=20)
@@ -555,7 +555,7 @@ rai_mean_oris  = retinotopic_alignment_index(bin_dist_mean_oris,bincenters_dist,
 rai_posf_oris  = retinotopic_alignment_index(bin_dist_posf_oris,bincenters_dist,centerthr=20)
 rai_negf_oris  = retinotopic_alignment_index(bin_dist_negf_oris,bincenters_dist,centerthr=20)
 fig = plot_csi_deltaori_areas(rai_mean_oris,rai_posf_oris,rai_negf_oris,deltaoris,areapairs)
-# fig.savefig(os.path.join(savedir,'Radial_RAI_areas_%s_SP' % (corr_type) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Radial_RAI_areas_%s_SP' % (corr_type) + '.png'), format = 'png')
 
 #%%
 idx_areapair = 3
@@ -702,74 +702,74 @@ fig = plot_2D_mean_corr_projs_dori(bin_2d_mean_oris[:,:,:,[iap],:,:],bin_2d_coun
                                    areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs,cmap='magma',
                                    centerthr=centerthr,min_counts=min_counts,gaussian_sigma=gaussian_sigma)
 fig.suptitle(areapairs[iap])
-fig.savefig(os.path.join(savedir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_%s_mean' % (protocol,corr_type,areapairs[iap]) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_%s_mean' % (protocol,corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 #%% Show angular tuning of center area (matched RF) for each delta ori:
 # fig = plot_corr_angular_tuning_projs_dori(bin_angle_cent_mean_oris[:,:,[iap],:,:],bin_angle_cent_count_oris[:,:,[iap],:,:],bincenters_angle,
 #             deltaoris,areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
 # fig.suptitle(areapairs[iap])
-# fig.savefig(os.path.join(savedir,'Projs','Collinear_Tuning_Cent_projs_%s_%s_mean' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Projs','Collinear_Tuning_Cent_projs_%s_%s_mean' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 #%% Show angular tuning of surround area (mismatched RF) for each delta ori:
 fig = plot_corr_angular_tuning_projs_dori(bin_angle_surr_mean_oris[:,:,[iap],:,:],bin_angle_surr_count_oris[:,:,[iap],:,:],bincenters_angle,
             deltaoris,areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
 fig.suptitle(areapairs[iap])
-fig.savefig(os.path.join(savedir,'Projs','Collinear_Tuning_Surr_projs_%s_%s_%s_mean' % (protocol,corr_type,areapairs[iap]) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Projs','Collinear_Tuning_Surr_projs_%s_%s_%s_mean' % (protocol,corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 #%% Show radial tuning for each delta ori:
 fig = plot_corr_radial_tuning_projs_dori(bincenters_dist,bin_dist_count_oris,bin_dist_mean_oris,deltaoris,	
                            areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
-fig.savefig(os.path.join(savedir,'Projs','Collinear_Radial_Tuning_projs_%s_%s_%s_mean' % (protocol,corr_type,areapairs[iap]) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Projs','Collinear_Radial_Tuning_projs_%s_%s_%s_mean' % (protocol,corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 # %% Show spatial maps per delta ori for the fraction positive 
 # fig = plot_2D_mean_corr_projs_dori(bin_2d_posf_oris[:,:,:,[iap],:,:],bin_2d_count_oris[:,:,:,[iap],:,:],bincenters_2d,deltaoris,areapairs=areapairs,layerpairs=layerpairs,
 #                         projpairs=projpairs,centerthr=centerthr,min_counts=min_counts,gaussian_sigma=gaussian_sigma,cmap=cm_red)
 # fig.suptitle(areapairs[iap])
-# fig.savefig(os.path.join(savedir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_posf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_posf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 # #%% Show angular tuning of center area (matched RF) for each delta ori:
 # fig = plot_corr_angular_tuning_projs_dori(bin_angle_cent_posf_oris[:,:,[iap],:,:],bin_angle_cent_count_oris[:,:,[iap],:,:],bincenters_angle,
 #             deltaoris,areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
 # fig.suptitle(areapairs[iap])
-# fig.savefig(os.path.join(savedir,'Projs','Collinear_Tuning_Cent_projs_%s_%s_posf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Projs','Collinear_Tuning_Cent_projs_%s_%s_posf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 # #%% Show angular tuning of surround area (mismatched RF) for each delta ori:
 # fig = plot_corr_angular_tuning_projs_dori(bin_angle_surr_posf_oris[:,:,[iap],:,:],bin_angle_surr_count_oris[:,:,[iap],:,:],bincenters_angle,
 #             deltaoris,areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
 # fig.suptitle(areapairs[iap])
-# fig.savefig(os.path.join(savedir,'Projs','Collinear_Tuning_Surr_projs_%s_%s_posf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Projs','Collinear_Tuning_Surr_projs_%s_%s_posf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 # #%% Show radial tuning for each delta ori:
 # fig = plot_corr_radial_tuning_projs_dori(bincenters_dist,bin_dist_count_oris,bin_dist_posf_oris,deltaoris,	
 #                            areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
-# fig.savefig(os.path.join(savedir,'Projs','Collinear_Radial_Tuning_projs_%s_posf' % (corr_type) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Projs','Collinear_Radial_Tuning_projs_%s_posf' % (corr_type) + '.png'), format = 'png')
 
 # #%% Show spatial maps per delta ori for the fraction negative 
 # fig = plot_2D_mean_corr_projs_dori(bin_2d_negf_oris[:,:,:,[iap],:,:],bin_2d_count_oris[:,:,:,[iap],:,:],bincenters_2d,deltaoris,areapairs=areapairs,layerpairs=layerpairs,
 #                         projpairs=projpairs,centerthr=centerthr,min_counts=min_counts,gaussian_sigma=gaussian_sigma,cmap=cm_blue)
 # fig.suptitle(areapairs[iap])
-# fig.savefig(os.path.join(savedir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_negf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Projs','Collinear_DeltaRF_2D_projs_%s_%s_negf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 # #%% Show angular tuning of center area (matched RF) for each delta ori:
 # fig = plot_corr_angular_tuning_projs_dori(bin_angle_cent_negf_oris[:,:,[iap],:,:],bin_angle_cent_count_oris[:,:,[iap],:,:],bincenters_angle,
 #             deltaoris,areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
 # fig.suptitle(areapairs[iap])
-# fig.savefig(os.path.join(savedir,'Projs','Collinear_Tuning_Cent_projs_%s_%s_negf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Projs','Collinear_Tuning_Cent_projs_%s_%s_negf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 # #%% Show angular tuning of surround area (mismatched RF) for each delta ori:
 # fig = plot_corr_angular_tuning_projs_dori(bin_angle_surr_negf_oris[:,:,[iap],:,:],bin_angle_surr_count_oris[:,:,[iap],:,:],bincenters_angle,
 #             deltaoris,areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
 # fig.suptitle(areapairs[iap])
-# fig.savefig(os.path.join(savedir,'Projs','Collinear_Tuning_Surr_projs_%s_%s_negf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Projs','Collinear_Tuning_Surr_projs_%s_%s_negf' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 # #%% Show radial tuning for each delta ori:
 # fig = plot_corr_radial_tuning_projs_dori(bincenters_dist,bin_dist_count_oris,bin_dist_negf_oris,deltaoris,	
 #                            areapairs=areapairs,layerpairs=layerpairs,projpairs=projpairs)
-# fig.savefig(os.path.join(savedir,'Projs','Collinear_Radial_Tuning_projs_%s_negf' % (corr_type) + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Projs','Collinear_Radial_Tuning_projs_%s_negf' % (corr_type) + '.png'), format = 'png')
 
 # #%% Plot the CSI values as function of delta ori for the three different areapairs
 # # fig = plot_csi_deltaori_projs(csi_cent_mean_oris[:,[iap],:,:],csi_cent_posf_oris[:,[iap],:,:],csi_cent_negf_oris[:,[iap],:,:],deltaoris,projpairs)
-# # fig.savefig(os.path.join(savedir,'Projs','Collinear_CSI_Cent_projs_%s_%s' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
+# # fig.savefig(os.path.join(figdir,'Projs','Collinear_CSI_Cent_projs_%s_%s' % (corr_type,areapairs[iap]) + '.png'), format = 'png')
 
 #%% Compute collinear selectivity index:
 # csi_cent_mean_oris =  collinear_selectivity_index(bin_angle_cent_mean_oris_ses,bincenters_angle)
@@ -785,6 +785,6 @@ csi_surr_negf_oris =  collinear_selectivity_index(bin_angle_surr_negf_oris_ses,b
 # Plot the CSI values as function of delta ori for the three different areapairs
 fig = plot_csi_deltaori_projs_ses(csi_surr_mean_oris,csi_surr_posf_oris,csi_surr_negf_oris,deltaoris,projpairs)
 fig.suptitle(areapairs[iap])
-my_savefig(fig,savedir,'Collinear_CSI_Surr_areas_projs_%s_%s' % (corr_type,areapairs[iap]), formats = ['png'])
+my_savefig(fig,figdir,'Collinear_CSI_Surr_areas_projs_%s_%s' % (corr_type,areapairs[iap]), formats = ['png'])
 
 

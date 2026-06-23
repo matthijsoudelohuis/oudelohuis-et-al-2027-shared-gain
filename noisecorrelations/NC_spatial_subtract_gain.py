@@ -19,7 +19,7 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.corr_lib import *
 from utils.rf_lib import smooth_rf,exclude_outlier_rf,filter_nearlabeled,replace_smooth_with_Fsig
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\PairwiseCorrelations\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919','2023_11_06']])
@@ -67,7 +67,7 @@ for iap,areapair in enumerate(areapairs):
         ax.plot(binedges[:-1],binmean_nogain[ises,iap,:].squeeze(),linewidth=0.25,color=clrs_conditions[1])
     handles.append(shaded_error(ax=ax,x=binedges[:-1],y=binmean_orig[:,iap,:].squeeze(),error='sem',color=clrs_conditions[0]))
     handles.append(shaded_error(ax=ax,x=binedges[:-1],y=binmean_nogain[:,iap,:].squeeze(),error='sem',color=clrs_conditions[1]))
-    # plt.savefig(os.path.join(savedir,'NoiseCorr_distRF_RegressOut_' + areapair + '_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
+    # plt.savefig(os.path.join(figdir,'NoiseCorr_distRF_RegressOut_' + areapair + '_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
     ax.legend(handles,['Original','Gain Removed'],loc='upper right',frameon=False)	
     ax.set_xlabel('Anatomical distance ($\mu$m)')

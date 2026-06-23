@@ -30,8 +30,8 @@ from utils.regress_lib import *
 from utils.gain_lib import *
 from utils.RRRlib import estimate_dimensionality
 
-# savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Interarea\\CCA\\')
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\PCA\\')
+# figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Interarea\\CCA\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% Load an example session: 
 session_list        = np.array(['LPE12223_2024_06_10']) #GR
@@ -155,7 +155,7 @@ add_stat_annotation(ax, dimthr, n_components, -0.15, pval, h=0.0, color='blue')
 
 ax.axhline(y=0, color='k', linestyle='--', linewidth=1)
 sns.despine(fig=fig, top=True, right=True, offset = 3)
-# my_savefig(fig,savedir,'Corr_PopCoupling_PCA_weights_%dsessions' % nSessions,formats=['png'])
+# my_savefig(fig,figdir,'Corr_PopCoupling_PCA_weights_%dsessions' % nSessions,formats=['png'])
 
 #%% Is dimensionality different for soloists and choristers
 n_components        = 50
@@ -246,7 +246,7 @@ ax.set_xticks(np.arange(0,n_components+5,5),np.arange(0,n_components+5,5)+1)
 ax.set_xlabel('PCA Dimension')
 axes[0].set_ylabel('Explained Variance')
 sns.despine(fig=fig, top=True, right=True, offset = 3)
-my_savefig(fig,savedir,'PCA_ev_PopCoupling_%dsessions' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'PCA_ev_PopCoupling_%dsessions' % nSessions,formats=['png'])
 
 #%% 
 fig,axes = plt.subplots(1,2,figsize=(6,2.5),sharey=True,sharex=True)
@@ -264,7 +264,7 @@ for iarea,area in enumerate(areas):
     if iarea==0:
         ax.set_ylabel('Dimensionality (%s)' % dim_metric)
 sns.despine(fig=fig, top=True, right=True, offset = 3)
-my_savefig(fig,savedir,'PCA_dim_PopCoupling_%dsessions' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'PCA_dim_PopCoupling_%dsessions' % nSessions,formats=['png'])
 
 
 #%% 
@@ -346,7 +346,7 @@ for icomponent in range(n_components_toplot):
     if icomponent==0: 
         ax.set_ylabel('CCA Weight')
 sns.despine(fig=fig, top=True, right=True, offset = 3)
-my_savefig(fig,savedir,'Corr_PopCoupling_CCA_weights_Scatter_%dsessions' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'Corr_PopCoupling_CCA_weights_Scatter_%dsessions' % nSessions,formats=['png'])
 
 #%% 
 corrmat = np.full((len(areas),n_components,nSessions,nStim,nmodelfits),np.nan)
@@ -377,7 +377,7 @@ ax.legend(handles,areas,loc='upper right',fontsize=12)
 my_legend_strip(ax)
 ax.set_title('Correlation between \npop. coupling and CCA weights',fontsize=11)
 sns.despine(fig=fig, top=True, right=True, offset = 3)
-my_savefig(fig,savedir,'Corr_PopCoupling_CCA_weights_%dsessions' % nSessions,formats=['png'])
+my_savefig(fig,figdir,'Corr_PopCoupling_CCA_weights_%dsessions' % nSessions,formats=['png'])
 
 
 #%% 
@@ -462,7 +462,7 @@ ax.set_xlabel('CCA Dimension')
 ax.set_ylabel('Correlation')
 ax.legend(handles,couplinglabels,loc='upper right',reverse=True,fontsize=7,frameon=True,title='pop. coupling')
 sns.despine(top=True,right=True,offset=1,trim=True)
-my_savefig(fig,savedir,'CCA_V1PM_PopCoupling_BothAreas_testcorr_%dsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'CCA_V1PM_PopCoupling_BothAreas_testcorr_%dsessions' % (nSessions),formats=['png'])
 
 
 #%% Are the CCA correlations higher for choristers or soloists to random population of neurons in the other area?
@@ -537,7 +537,7 @@ for iarea in range(nareas):
     ax.legend(handles,couplinglabels,loc='upper right',reverse=True,fontsize=7,frameon=True,title='Pop. coupling in %s' % areas[iarea])
 plt.tight_layout()
 sns.despine(top=True,right=True,offset=1,trim=True)
-my_savefig(fig,savedir,'CCA_V1PM_PopCoupling_OneArea_testcorr_%dsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'CCA_V1PM_PopCoupling_OneArea_testcorr_%dsessions' % (nSessions),formats=['png'])
 
 
 
@@ -623,6 +623,6 @@ for iorder,order in enumerate(orders):
     ax.legend(handles,couplinglabels,loc='upper right',reverse=True,fontsize=7,frameon=True,title='pop. coupling')
 plt.tight_layout()
 sns.despine(top=True,right=True,offset=1,trim=True)
-my_savefig(fig,savedir,'CCA_V1PM_PopCoupling_BothAreas_rateordered_%dsessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'CCA_V1PM_PopCoupling_BothAreas_rateordered_%dsessions' % (nSessions),formats=['png'])
 
 

@@ -23,7 +23,7 @@ from utils.corr_lib import compute_signal_noise_correlation
 from utils.gain_lib import *
 from utils.imagelib import * 
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Images\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 
 #%% ############################## Some individual sessions: ###################
@@ -215,7 +215,7 @@ ax.set_ylim(np.percentile(sameIM_response,[0,100])*1.1)
 ax.set_xlabel('Low Pop. Rate')
 ax.set_ylabel('High Pop. Rate')
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-my_savefig(fig,savedir,'Example_cell_affine_naturalimages_%s' % (example_neuron), formats = ['png'])
+my_savefig(fig,figdir,'Example_cell_affine_naturalimages_%s' % (example_neuron), formats = ['png'])
 
 #%% Concatenate data:
 celldata = pd.concat([ses.celldata for ses in sessions]).reset_index(drop=True)
@@ -250,7 +250,7 @@ sns.histplot(celldata['aff_beta_imreps'][idx_N],color='blue',element="step",stat
 ax.set_title('Additive offset')
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,offset=5,ax=ax)
-my_savefig(fig,savedir,'IM_affine_imreps_naturalimages_%d_sessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'IM_affine_imreps_naturalimages_%d_sessions' % (nSessions),formats=['png'])
 
 
 #%% 
@@ -263,7 +263,7 @@ sns.histplot(data=celldata[idx_N],x='pop_coupling',ax=ax,color='green')
 ax.set_xlim(np.percentile(celldata['pop_coupling'],[1,99]))
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,offset=5)
-my_savefig(fig,savedir,'IM_popcoupling_hist_%d_sessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'IM_popcoupling_hist_%d_sessions' % (nSessions),formats=['png'])
 
 
 #%% 
@@ -283,7 +283,7 @@ sns.regplot(data=celldata[idx_N],x='pop_coupling',y='aff_beta_imreps',ax=ax,mark
             color='purple',robust=False)
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,offset=5)
-my_savefig(fig,savedir,'IM_affine_naturalimages_vs_popcoupling_%d_sessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'IM_affine_naturalimages_vs_popcoupling_%d_sessions' % (nSessions),formats=['png'])
 
 #%% 
 
@@ -466,7 +466,7 @@ sns.histplot(celldata['aff_beta_rfsplit'][idx_N],color='blue',element="step",sta
 ax.set_title('Additive offset')
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,offset=5,ax=ax)
-my_savefig(fig,savedir,'IM_affine_imsplit_naturalimages_%d_sessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'IM_affine_imsplit_naturalimages_%d_sessions' % (nSessions),formats=['png'])
 
 #%%
 r2_thr = 0
@@ -487,7 +487,7 @@ ax = axes[2]
 sns.scatterplot(data=celldata[idx_N],x='aff_alpha_imreps',y='aff_alpha_rffull',ax=ax,marker='.',color='black',alpha=0.1)
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,offset=5,ax=ax)
-my_savefig(fig,savedir,'IM_affine_consistency_models_%d_sessions' % (nSessions),formats=['png'])
+my_savefig(fig,figdir,'IM_affine_consistency_models_%d_sessions' % (nSessions),formats=['png'])
 
 #%% Show which model has the best R2 - not comparable though, because R2 of RFFull is explainging trial to trial variability,
 # not the response during high activiy
@@ -528,6 +528,6 @@ sns.histplot(celldata['aff_beta_rffull'][idx_N],color='blue',element="step",stat
 ax.set_title('Additive offset')
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,offset=5,ax=ax)
-# my_savefig(fig,savedir,'IM_affine_imreps_naturalimages_%d_sessions' % (nSessions),formats=['png'])
+# my_savefig(fig,figdir,'IM_affine_imreps_naturalimages_%d_sessions' % (nSessions),formats=['png'])
 
 

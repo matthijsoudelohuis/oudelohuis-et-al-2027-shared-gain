@@ -21,7 +21,7 @@ from utils.tuning import *
 from utils.psth import compute_tensor
 from utils.explorefigs import plot_excerpt
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Labeling\\CalciumTracesComparison\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE09665','2023_03_21'], #GR
@@ -103,7 +103,7 @@ plt.xlabel('Frequency')
 plt.ylabel('Power')
 plt.legend(frameon=False)
 plt.title('Power Spectrum dF/F %s' % ses.sessiondata['session_id'][0])
-fig.savefig(os.path.join(savedir,'PSD_lab_unl_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
+fig.savefig(os.path.join(figdir,'PSD_lab_unl_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
 
 #%% 
 
@@ -114,7 +114,7 @@ df = ses.celldata[['LF_power','redcell','noise_level']]
 
 fig = sns.pairplot(df,hue='redcell',diag_kind='hist',diag_kws={'histtype': 'stepfilled', 'alpha': 0.5})
 fig = sns.pairplot(df,hue='redcell',diag_kind='kde',diag_kws={'density': True, 'shade': True, 'alpha': 0.5})
-fig.savefig(os.path.join(savedir,'Corr_LF_noise_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
+fig.savefig(os.path.join(figdir,'Corr_LF_noise_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
 
 #%% 
 from scipy.signal import butter, filtfilt
@@ -168,7 +168,7 @@ plt.ylim([0,1e6])
 plt.legend(frameon=False)
 plt.title('Power Spectrum dF/F %s' % ses.sessiondata['session_id'][0])
 plt.show()
-fig.savefig(os.path.join(savedir,'PSD_Filtering_loglog_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
+fig.savefig(os.path.join(figdir,'PSD_Filtering_loglog_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
 
 #%% 
 for ises in range(nSessions):
@@ -242,7 +242,7 @@ example_cells   = [3,100,58,62,70]
 fig             = plot_excerpt(ses,plot_behavioral=False,trialsel=[1,len(sessions[ises].trialdata)],neuronsel=example_cells)
 
 fig             = plot_excerpt(ses,neural_version='raster',trialsel=[1,len(sessions[ises].trialdata)])
-fig.savefig(os.path.join(savedir,'Rasterplot_deconv_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
+fig.savefig(os.path.join(figdir,'Rasterplot_deconv_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
 
 #%% Show average trace
 ises = 1
@@ -267,7 +267,7 @@ for ises,ses in enumerate(sessions):
     ax[0].set_ylim([0,0.5])
     fig.suptitle(ses.sessiondata['session_id'][0])
     plt.tight_layout()
-    fig.savefig(os.path.join(savedir,'Averaged_response_dF_tuned_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
+    fig.savefig(os.path.join(figdir,'Averaged_response_dF_tuned_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
 
 
 
@@ -286,7 +286,7 @@ for ises,ses in enumerate(sessions):
     ax.set_xlim([0,1])
     ax.legend(frameon=False,loc='lower right',ncol=4)
     fig.tight_layout()
-    fig.savefig(os.path.join(savedir,'SessionWideTrace','SessionTrace_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
+    fig.savefig(os.path.join(figdir,'SessionWideTrace','SessionTrace_%s.png' % ses.sessiondata['session_id'][0]), format = 'png')
 
 #%% 
 
@@ -350,7 +350,7 @@ plt.scatter(sessions[ises].celldata['meanF_chan2'][sessions[ises].celldata['redc
 
 g = sessions[ises].celldata['cell_id'][sessions[ises].celldata['meanF_chan2']>1000]
 g.head(50)
-# plt.savefig(os.path.join(savedir,'Deconvolution','Resp_dF_deconv' + '.png'), format = 'png')
+# plt.savefig(os.path.join(figdir,'Deconvolution','Resp_dF_deconv' + '.png'), format = 'png')
 
 #%% #########################################################################################
 # Contrast: across areas, layers and projection pairs:

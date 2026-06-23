@@ -30,7 +30,7 @@ from utils.tuning import compute_tuning_wrapper
 from utils.regress_lib import *
 from utils.gain_lib import *
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Interarea\\CCA\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% 
 #        #####     #    ######     ######     #    #######    #    
@@ -63,7 +63,7 @@ fig = plot_PCA_gratings_3D(sessions[0],thr_tuning=0)
 axes = fig.get_axes()
 axes[0].view_init(elev=-45, azim=0, roll=-10)
 axes[0].set_zlim([-5,45])
-# fig.savefig(os.path.join(savedir,'Cone_3D_V1_Original_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
+# fig.savefig(os.path.join(figdir,'Cone_3D_V1_Original_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 #%% Load Monkey Data: 
@@ -122,7 +122,7 @@ fig = plot_PCA_gratings_3D(sessions[1],size='uniform',thr_tuning=0)
 axes = fig.get_axes()
 axes[0].view_init(elev=-45, azim=0, roll=-10)
 axes[0].set_zlim([-5,45])
-my_savefig(fig,savedir,'Cone_3D_V1_V2_KohnData_%s' % sessions[1].session_id,formats=['png'])
+my_savefig(fig,figdir,'Cone_3D_V1_V2_KohnData_%s' % sessions[1].session_id,formats=['png'])
 
 
 #%% 
@@ -306,10 +306,10 @@ for ises, (plottitle,ccaproj) in enumerate(zip(['V1-Mouse','V1-Monkey'],[Xp,Yp])
     ax.zaxis.pane.set_edgecolor('w')
     # ax.view_init(elev=0, azim=0, roll=0)
 
-# my_savefig(fig,savedir,'CCA_highdim_GR_AcrossSpecies_%ssort_V1_%s_with_%s' % (sortmethod,sessions[ises1].session_id,
+# my_savefig(fig,figdir,'CCA_highdim_GR_AcrossSpecies_%ssort_V1_%s_with_%s' % (sortmethod,sessions[ises1].session_id,
                                                                 # sessions[ises2].session_id),formats=['png'])
 
-my_savefig(fig,savedir,'CCA_GR_AcrossSpecies_%ssort_V1_%s_with_%s' % (sortmethod,sessions[ises1].session_id,
+my_savefig(fig,figdir,'CCA_GR_AcrossSpecies_%ssort_V1_%s_with_%s' % (sortmethod,sessions[ises1].session_id,
                                                                 sessions[ises2].session_id),formats=['png'])
 
 #%% 

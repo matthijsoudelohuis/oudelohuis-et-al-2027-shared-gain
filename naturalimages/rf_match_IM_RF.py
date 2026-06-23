@@ -22,7 +22,7 @@ from loaddata.get_data_folder import get_local_drive
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.rf_lib import *
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Neural - RF\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 # %% Load IM session with receptive field mapping ################################################
 session_list = np.array([['LPE10885', '2023_10_20']])
@@ -106,7 +106,7 @@ for iarea,area in enumerate(areas):
         # axes[iarea,ispat_dim].text(x=0,y=0.1,s='r = ' + str(np.round(np.corrcoef(x,y)[0,1],3),))
         axes[iarea,ispat_dim].text(x=10,y=30,s='r = ' + str(np.round(np.corrcoef(x,y)[0,1],3),))
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Alignment_TwinGaussMean_RF_%s_%s' % (rf_type,sessions[0].sessiondata['session_id'][0]) + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Alignment_TwinGaussMean_RF_%s_%s' % (rf_type,sessions[0].sessiondata['session_id'][0]) + '.png'), format = 'png')
 
 #%% Save session rf cell data as a copy to preserve estimated rf from sparse noise mapping
 old_celldata    = pd.DataFrame({'rf_az_F': sessions[0].celldata['rf_az_F'],
@@ -156,7 +156,7 @@ for iarea,area in enumerate(areas):
         y =  y[idx]
         axes[iarea,ispat_dim].text(x=0,y=-10,s='r = ' + str(np.round(np.corrcoef(x,y)[0,1],3),))
 plt.tight_layout()
-fig.savefig(os.path.join(savedir,'Alignment_IM_RF_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
+fig.savefig(os.path.join(figdir,'Alignment_IM_RF_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 # %%
 
@@ -185,7 +185,7 @@ sig_thr = 0.001
 rf_type = 'Ftwin'
 for ises in range(nSessions):
     fig = plot_rf_plane(sessions[ises].celldata,sig_thr=sig_thr,rf_type=rf_type) 
-    fig.savefig(os.path.join(savedir,'V1_PM_plane_TwinModel_%s_%s' % (rf_type,sessions[ises].sessiondata['session_id'][0]) + '.png'), format = 'png')
+    fig.savefig(os.path.join(figdir,'V1_PM_plane_TwinModel_%s_%s' % (rf_type,sessions[ises].sessiondata['session_id'][0]) + '.png'), format = 'png')
 
 
 #%% ########### Plot locations of receptive fields as on the screen ##############################
@@ -193,4 +193,4 @@ rf_type = 'Fneu'
 # rf_type = 'Ftwin'
 for ises in range(nSessions):
     fig = plot_rf_screen(sessions[ises].celldata,sig_thr=sig_thr,rf_type=rf_type) 
-    # fig.savefig(os.path.join(savedir,'RF_planes','V1_PM_rf_screen_' + sessions[ises].sessiondata['session_id'][0] +  rf_type + '_smooth.png'), format = 'png')
+    # fig.savefig(os.path.join(figdir,'RF_planes','V1_PM_rf_screen_' + sessions[ises].sessiondata['session_id'][0] +  rf_type + '_smooth.png'), format = 'png')

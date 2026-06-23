@@ -19,7 +19,7 @@ from utils.regress_lib import *
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from utils.rf_lib import filter_nearlabeled
 
-savedir = 'E:\\OneDrive\\PostDoc\\Figures\\SharedGain'
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919','2023_11_06']])
@@ -137,7 +137,7 @@ ax.legend(['Weak','','Intermediate','','Strong'],
 
 sns.despine(fig=fig,trim=True,top=True,right=True)
 
-my_savefig(fig,savedir,'Decoding_Ori_LOGR_ActBins_%s_%dsessions' % (cellvar,nSessions), formats = ['png'])
+my_savefig(fig,figdir,'Decoding_Ori_LOGR_ActBins_%s_%dsessions' % (cellvar,nSessions), formats = ['png'])
 
 
 
@@ -248,8 +248,8 @@ ax.legend(handles,arealabels,fontsize=7,frameon=False,bbox_to_anchor=(0.92,0.6),
 
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,top=True,right=True)
-# my_savefig(fig,savedir,'Decoding_Dir_LOGR_ActBins_LabeledPops_%dsessions' % nSessions, formats = ['png'])
-my_savefig(fig,savedir,'Decoding_Ori_LOGR_ActBins_LabeledPops_%dsessions' % nSessions, formats = ['png'])
+# my_savefig(fig,figdir,'Decoding_Dir_LOGR_ActBins_LabeledPops_%dsessions' % nSessions, formats = ['png'])
+my_savefig(fig,figdir,'Decoding_Ori_LOGR_ActBins_LabeledPops_%dsessions' % nSessions, formats = ['png'])
 
 #%% Plot error as a function of population rate and for different populations with coupling
 # clrs = sns.color_palette('colorblind',n_colors=nPopCouplingBins)
@@ -282,8 +282,8 @@ ax.set_xticks(np.arange(nActBins)+1)
 # ax.legend(handles,arealabels,fontsize=7,frameon=False,bbox_to_anchor=(0.92,0.6), loc='center left')
 plt.tight_layout()
 sns.despine(fig=fig,trim=True,top=True,right=True)
-# my_savefig(fig,savedir,'Decoding_Dir_LOGR_ActBins_LabeledPops_%dsessions' % nSessions, formats = ['png'])
-my_savefig(fig,savedir,'Decoding_Ori_LOGR_ActBins_LabeledPops_Diff_%dsessions' % nSessions, formats = ['png'])
+# my_savefig(fig,figdir,'Decoding_Dir_LOGR_ActBins_LabeledPops_%dsessions' % nSessions, formats = ['png'])
+my_savefig(fig,figdir,'Decoding_Ori_LOGR_ActBins_LabeledPops_Diff_%dsessions' % nSessions, formats = ['png'])
 
 
 df_V1 = pd.DataFrame({'perf': datatoplot_V1.flatten(),

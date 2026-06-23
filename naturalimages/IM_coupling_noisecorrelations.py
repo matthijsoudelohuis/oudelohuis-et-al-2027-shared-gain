@@ -22,7 +22,7 @@ from utils.tuning import *
 from utils.corr_lib import compute_signal_noise_correlation
 from utils.gain_lib import *
 
-savedir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Images\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
 
 #%% ################################################
@@ -167,7 +167,7 @@ cb = fig.colorbar(ax.images[0], ax=ax, shrink=0.5)
 cb.set_label('Noise correlation',fontsize=10,loc='center')
 sns.despine(fig=fig, top=True, right=True,offset=3)
 fig.tight_layout()
-my_savefig(fig,savedir,'IM_Signal_Coupling_Noise_correlation_%s' % (sessions[ises].session_id), formats = ['png'])
+my_savefig(fig,figdir,'IM_Signal_Coupling_Noise_correlation_%s' % (sessions[ises].session_id), formats = ['png'])
 
 
 
@@ -251,5 +251,5 @@ my_savefig(fig,savedir,'IM_Signal_Coupling_Noise_correlation_%s' % (sessions[ise
 #         # cb.set_label('Noise correlation',fontsize=6,loc='center')
 # sns.despine(fig=fig, top=True, right=True,offset=3)
 # fig.tight_layout()
-# my_savefig(fig,savedir,'IM_Signal_Coupling_NC_Areapairs_%dsessions' % (nSessions), formats = ['png'])
+# my_savefig(fig,figdir,'IM_Signal_Coupling_NC_Areapairs_%dsessions' % (nSessions), formats = ['png'])
 
