@@ -6,3 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "sharedgain"
 version = "0.1.0"
 requires-python = ">=3.8"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["affinemodel*", "decoding*", "fct_stat*", "interarea*", "loaddata*", "naturalimages*", "noisecorrelations*", "nonlinearTF*", "popgeometry*", "poprate*", "tuning*", "utils*"]

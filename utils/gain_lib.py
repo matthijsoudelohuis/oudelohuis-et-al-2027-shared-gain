@@ -161,7 +161,7 @@ def compute_pop_coupling(sessions,version='allfast'):
         resp        = zscore(ses.respmat,axis=1)
 
         if not hasattr(ses,'popratemat'):
-            ses = comp_poprate(ses,version=version)
+            [ses] = comp_poprate([ses],version=version)
 
         ses.celldata['pop_coupling']   = [np.corrcoef(resp[i,:],ses.popratemat[i,:])[0,1] for i in range(len(ses.celldata))]
     

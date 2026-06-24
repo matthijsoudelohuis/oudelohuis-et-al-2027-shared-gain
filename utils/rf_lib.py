@@ -25,8 +25,6 @@ from utils.pair_lib import *
 from utils.tuning import mean_resp_image
 from utils.plot_lib import * #get all the fixed color schemes
 
-from utils.RRRlib import *
-
 def plot_rf_plane(celldata,r2_thr=0,rf_type='Fneu'):
     
     areas           = np.sort(celldata['roi_name'].unique())[::-1]

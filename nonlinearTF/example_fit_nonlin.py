@@ -28,10 +28,10 @@ for ises in range(nSessions):
                                 calciumversion='deconv',keepraw=False)
 
 #%% Add how neurons are coupled to the population rate: 
-sessions = compute_pop_coupling(sessions)
 sessions = ori_remapping(sessions)
 sessions = compute_tuning_wrapper(sessions)
 sessions = compute_pairwise_anatomical_distance(sessions)
+sessions = compute_pop_coupling(sessions)
 
 #%% ###########################################################################
 # NONLINEAR TRANSFER FUNCTION FITTING PIPELINE
@@ -316,7 +316,6 @@ sns.despine(ax=ax, trim=True, offset=3)
 plt.suptitle(f'NL model fits — {ex_cid}', fontsize=12, y=1.01)
 plt.tight_layout()
 # my_savefig(fig, figdir, f'NLfit_diagnostics_{ex_cid}', formats=['png'])
-
 
 #%%
 
