@@ -1,0 +1,27 @@
+name: sharedgain
+channels:
+  - defaults
+dependencies:
+  - python
+  - pip
+  - ipykernel
+  - ipython
+  - jedi
+  - jupyter_client
+  - jupyter_core
+  - pip:
+    - matplotlib
+    - numpy
+    - pandas
+    - scipy
+    - seaborn
+    - scikit-learn
+    - statsmodels
+    - torch
+    - mvlearn
+    - natsort
+    - rastermap
+    - scikit-image
+    - statannotations
+    - tqdm
+    - -e .
