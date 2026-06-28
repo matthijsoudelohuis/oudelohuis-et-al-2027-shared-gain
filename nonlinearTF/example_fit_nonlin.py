@@ -42,65 +42,6 @@ sessions = compute_pop_coupling(sessions)
 #   f(·) : nonlinearity (with model-specific free parameters)
 ###########################################################################
 
-#%% Redefine nonlinearities with fittable parameters
-def nl_linear(u):
-    return u
-
-def nl_relu(u):
-    return np.maximum(0.0, u)
-
-def nl_softplus(u, beta):
-    # f(u) = (1/β) log(1 + exp(β·u)); β controls sharpness (→ReLU as β→∞)
-    b = np.abs(beta) + 1e-4
-    bu = b * u
-    return np.where(bu > 30.0, u, np.log1p(np.exp(np.clip(bu, -500.0, 30.0))) / b)
-
-def nl_sigmoid(u, a):
-    # maps sigmoid to [0, a]: f(u) = a · σ(u)
-    return np.abs(a) / (1.0 + np.exp(5*-np.clip(u, -100.0, 100.0)))
-
-def nl_tanh(u, a):
-    # maps tanh's [-1,1] to [0, a]: f(u) = a · (1 + tanh(u)) / 2
-    return np.abs(a) * 0.5 * (1.0 + np.tanh(u))
-
-def nl_powerlaw(u, p):
-    # f(u) = max(0,u)^p; p is the free exponent
-    return np.power(np.maximum(0.0, u), np.abs(p) + 1e-4)
-
-def nl_exp(u):
-    # max(0, exp(u)-1), shifted so f(0)=0; output gain a is universal
-    return np.maximum(0.0, np.expm1(np.clip(u, -500.0, 10.0)))
-
-# def softplus(x, beta=1.0):
-#     return np.log1p(np.exp(beta * x)) / beta
-
-# def sigmoid(x):
-#     return 1 / (1 + np.exp(-x))
-
-# def exp(x):
-#     return np.maximum(0, np.exp(x) - 1)  # Shifted to be zero at x=0
-
-# def tanh(x):
-#     return np.tanh((x))+1  # Shifted to be zero at x=0
-
-# def powerlaw(x, p=2):
-#     return np.maximum(0, x) ** p
-
-# Format: (name, nl_func, n_shape, p0_shape, bounds_shape)
-# Responses are min-max normalised to [0,1] before fitting, so all nonlinearities
-# operate in the same output regime without per-model gain/offset parameters.
-NL_CONFIGS = [
-    ('Linear',          nl_linear,   0, [],      []),
-    ('ReLU',            nl_relu,     0, [],      []),
-    ('Softplus',        nl_softplus, 1, [5.0],   [(0.01, 50.0)]),
-    # ('Tanh',            nl_tanh,     1, [1.0],   [(0.0, None)]),
-    ('Exp',             nl_exp,      0, [],      []),
-    ('Power-law (p=2)', nl_powerlaw, 1, [2.0],   [(0.1,  4.0)]),
-    ('Sigmoid',         nl_sigmoid,  1, [1],   [(0.0, None)]),
-]
-
-nl_names = [c[0] for c in NL_CONFIGS]
-nNL      = len(NL_CONFIGS)
 clrs_nl  = sns.color_palette('tab10', nNL)
 
 #%% Show nonlinearities at p0 initialization

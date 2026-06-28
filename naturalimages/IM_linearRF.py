@@ -18,12 +18,10 @@ from scipy import stats
 from sklearn.metrics import r2_score
 from statannotations.Annotator import Annotator
 
-from preprocessing.locate_rf import *
 from loaddata.session_info import filter_sessions
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.imagelib import * 
 from utils.tuning import *
-from utils.RRRlib import *
 from utils.corr_lib import compute_signal_noise_correlation
 from utils.gain_lib import *
 
@@ -38,7 +36,6 @@ figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\
 # fit RF for a subset of trials and reconstruct with held out test trial, 
 # compute R^2 of reconstruction for test data
 # do RF 2D gaussian fit for each session
-# 
 
 # Insights so far: 
 # variability in sessions how well RF fits are
@@ -46,8 +43,6 @@ figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\
 # PM and PM labeled is poor
 # dividing by population mean does not help a lot for fitting RF
 # best reconstruction with optimal state: intermediate population size, medium pupil etc.
-
-
 
 
 #%% ################################################
