@@ -7,8 +7,6 @@ Matthijs Oude Lohuis, 2023-2025, Champalimaud Center
 
 #%% 
 import os
-from loaddata.get_data_folder import get_local_drive
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -18,6 +16,7 @@ from scipy import stats
 from sklearn.metrics import r2_score
 from statannotations.Annotator import Annotator
 
+from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.imagelib import * 

@@ -18,8 +18,8 @@ from scipy.stats import zscore,ttest_rel,multivariate_normal
 from scipy.sparse.linalg import svds
 from sklearn.metrics import r2_score
 from tqdm import tqdm
+from sklearn.model_selection import KFold
 
-from utils.rf_lib import *
 from utils.imagelib import load_natural_images
 from utils.pair_lib import *
 from utils.tuning import mean_resp_image

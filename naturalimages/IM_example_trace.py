@@ -5,6 +5,7 @@ dataset with labeled projection neurons. The visual stimuli are natural images.
 Matthijs Oude Lohuis, 2023, Champalimaud Center
 """
 
+#%% 
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,13 +18,12 @@ from utils.explorefigs import *
 from utils.psth import compute_respmat, construct_behav_matrix_ts_F
 from loaddata.get_data_folder import get_local_drive
 from utils.corr_lib import mean_resp_image
-from utils.RRRlib import *
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
-#################################################
+#%% ################################################
 # session_list        = np.array([['LPE09665','2023_03_15']])
-session_list        = np.array([['LPE11086','2023_12_16']])
+session_list        = np.array([['LPE11086_2023_12_16']])
 sessions,nSessions            = load_sessions(protocol = 'IM',session_list=session_list,load_behaviordata=True, 
                                     load_calciumdata=True, load_videodata=True, calciumversion='deconv')
 
@@ -159,84 +159,8 @@ for area in areas:
     plt.tight_layout(rect=[0, 0, 1, 1])
     fig.savefig(os.path.join(figdir,'ResponseTriggeredAverageImage_%s' % area + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
 
-
 #%% ##################### Plot control figure of signal corrs ##############################
 sesidx = 0
 fig = plt.subplots(figsize=(8,5))
 plt.imshow(sessions[sesidx].sig_corr, cmap='coolwarm',vmin=-0.02,vmax=0.04)
 plt.savefig(os.path.join(figdir,'SignalCorrelations','Signal_Correlation_Images_Mat_' + sessions[sesidx].sessiondata['session_id'][0] + '.png'), format = 'png')
-
-
-#%% ###### Regress out behavioral state related activity  #################################
-
-X = np.column_stack((sessions[sesidx].respmat_runspeed,sessions[sesidx].respmat_videome))
-Y = sessions[sesidx].respmat.T
-
-fig = plot_PCA_images(sessions[sesidx])
-
-sessions[sesidx].respmat = regress_out_behavior_modulation(sessions[sesidx],X,Y,nvideoPCs = 30,rank=2).T
-
-sessions[sesidx].respmat[sessions[sesidx].respmat>np.percentile(sessions[sesidx].respmat,99.5)] = np.percentile(sessions[sesidx].respmat,99.5)
-sessions[sesidx].respmat[sessions[sesidx].respmat<np.percentile(sessions[sesidx].respmat,0.5)] = np.percentile(sessions[sesidx].respmat,0.5)
-EV(sessions[sesidx].calciumdata,sessions[sesidx].calciumdata2)
-fig = plot_PCA_images(sessions[sesidx])
-
-# sessions[sesidx].respmat = regress_out_behavior_modulation(sessions[sesidx],X,Y,nvideoPCs = 30,rank=2).T
-sessions[sesidx].respmat = regress_out_behavior_modulation(sessions[sesidx],nvideoPCs = 30,rank=5).T
-
-
-sessions[sesidx].calciumdata2 = regress_out_behavior_modulation(sessions[sesidx],nvideoPCs = 30,rank=15)
-#Compute average response per trial:
-for ises in range(nSessions):
-    sessions[ises].respmat         = compute_respmat(sessions[ises].calciumdata2, sessions[ises].ts_F, sessions[ises].trialdata['tOnset'],
-                                  t_resp_start=0,t_resp_stop=1,method='mean',subtr_baseline=False)
-
-fig = plot_PCA_images(sessions[sesidx])
-
-
-
-####
-
-
-
-respmean = mean_resp_image(sessions[sesidx])
-
-
-
-# %% LM model run
-B_hat = LM(Y=D, X=S, lam=10)
-# B_hat = LM(X, Y, lam=0.01)
-D_hat = S @ B_hat
-
-B_hat_lr = RRR(D, S, B_hat, r=2, mode='left')
-B_hat_lr = RRR(D, S, B_hat, r=2, mode='right')
-D_hat_lr = S @ B_hat_lr
-
-fig,(ax1,ax2,ax3) = plt.subplots(1,3,figsize=(8,4))
-ax1.imshow(D[:1000,:100].T,vmin=0,vmax=1000,aspect='auto')
-ax2.imshow(D_hat[:1000,:100].T,vmin=0,vmax=1000,aspect='auto')
-ax3.imshow(D_hat_lr[:1000,:100].T,vmin=0,vmax=1000,aspect='auto')
-
-# %% xval lambda
-n = 1000
-k = 5
-lam = xval_ridge_reg_lambda(Y[:n,:], X[:n,:], k)
-
-
-
-
-# %% cheat
-lam = 35
-
-# %% LM model run
-B_hat = LM(Y, X, lam=lam)
-Y_hat = X @ B_hat
-
-print("LM model error:")
-print("LM: %5.3f " % Rss(Y,Y_hat))
-
-
-S,Slabels = construct_behav_matrix_ts_F(sessions[sesidx],nvideoPCs=nvideoPCs)
-
-sns.heatmap(np.corrcoef(S,rowvar=False),xticklabels=Slabels,yticklabels=Slabels)
-
