@@ -7,17 +7,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import zscore
 from sklearn.decomposition import PCA
+from scipy.optimize import curve_fit
 
+from loaddata.get_data_folder import get_local_drive
 from utils.explorefigs import plot_PCA_gratings_3D
 from loaddata.session_info import filter_sessions,load_sessions
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\PopulationGeometry\\')
+
+#%%
+cm = 1/2.54  # centimeters in inches
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919_2023_11_06']])
-session_list        = np.array([['LPE12223_2024_06_10']])
+# session_list        = np.array([['LPE12223_2024_06_10']])
 
 sessions,nSessions   = filter_sessions(protocols = ['GR'],only_session_id=session_list)
 sessiondata = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
@@ -26,57 +31,11 @@ sessiondata = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=
 sessions[0].load_respmat(load_behaviordata=True, load_calciumdata=True,load_videodata=True,
                                 calciumversion='deconv',keepraw=True)
 
-
 #%% ########################### Compute tuning metrics: ###################################
 sessions = compute_tuning_wrapper(sessions)
 
 #%% 
 sessions = compute_pop_coupling(sessions)
-
-#%% Make the 3D figure:
-# fig = plot_PCA_gratings_3D(sessions[0],thr_tuning=0.05,plotgainaxis=True)
-fig = plot_PCA_gratings_3D(sessions[0],idx_N=sessions[0].celldata['tuning_var'] > 0.05,
-                           size='poprate',
-                           plotgainaxis=True)
-axes = fig.get_axes()
-axes[0].view_init(elev=-30, azim=25, roll=40)
-axes[1].view_init(elev=15, azim=0, roll=-10)
-axes[0].set_xlim([-2,35])
-axes[0].set_ylim([-2,35])
-axes[1].set_zlim([-5,45])
-for ax in axes:
-    ax.grid(False)
-    ax.set_facecolor('white')
-    ax.set_xticks([])
-    ax.set_yticks([])
-    ax.set_zticks([])
-
-    # Get rid of colored axes planes, remove fill
-    ax.xaxis.pane.fill = False
-    ax.yaxis.pane.fill = False
-    ax.zaxis.pane.fill = False
-
-    # Now set color to white (or whatever is "invisible")
-    ax.xaxis.pane.set_edgecolor('w')
-    ax.yaxis.pane.set_edgecolor('w')
-    ax.zaxis.pane.set_edgecolor('w')
-
-plt.tight_layout()
-fig.savefig(os.path.join(figdir,'Example_Cone_3D_V1_PM_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
-
-#%% SHOW AL as well: #############################################################################
-
-session_list        = np.array([['LPE12223','2024_06_10']])
-
-# load sessions lazy: 
-sessions,nSessions   = load_sessions(protocol = 'GR',session_list=session_list,filter_areas=['AL'])
-
-# Load proper data and compute average trial responses:                      
-sessions[0].load_respmat(load_behaviordata=True, load_calciumdata=True,load_videodata=True,
-                                calciumversion='deconv',keepraw=True)
-
-#%% ########################### Compute tuning metrics: ###################################
-sessions = compute_tuning_wrapper(sessions)
 
 #%% 
 ises = 0
@@ -101,6 +60,8 @@ sizes = (poprate- np.percentile(poprate, minperc)) / \
     (np.percentile(poprate, maxperc) -
         np.percentile(poprate, minperc))
 
+plotgainaxis = True
+
 fig = plt.figure(figsize=[6,6])
 # fig,axes = plt.figure(1, len(areas), figsize=[len(areas)*3, 3])
 # 
@@ -111,6 +72,13 @@ pca = PCA(n_components=3)
 Xp = pca.fit_transform(respmat_zsc.T).T
 # dimensionality is now reduced from N by K to ncomp by K
 ax = fig.add_subplot(111, projection='3d')
+
+
+if plotgainaxis:
+    # gain_weights        = np.array([np.corrcoef(poprate,respmat_zsc[n,:])[0,1] for n in range(respmat_zsc.shape[0])])
+    # g = np.outer([0,10],gain_weights)
+    g = np.outer(np.percentile(poprate,[0,100]),np.ones(np.sum(idx_N)))
+    Xg = pca.transform(g).T
 
 # plot orientation separately with diff colors
 for t, t_type in enumerate(oris):
@@ -129,6 +97,10 @@ for t, t_type in enumerate(oris):
 
     ax.scatter(x, y, z, c=clrs, s=sizes[ori_ind[t]]*5, alpha=0.5)
     # ax.scatter(x, y, z, color=pal[t], s=sizes[ori_ind[t]]*6, alpha=0.4)
+
+
+if plotgainaxis:
+    ax.plot(Xg[0,:],Xg[1,:],Xg[2,:],color='k',linewidth=2)
 
 ax.set_xlabel('PC 1')  # give labels to axes
 ax.set_ylabel('PC 2')
@@ -156,8 +128,9 @@ ax.xaxis.pane.fill = False
 ax.yaxis.pane.fill = False
 ax.zaxis.pane.fill = False
 
-# plt.tight_layout()
-fig.savefig(os.path.join(figdir,'Example_Cone_3D_V1_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
+plt.tight_layout()
+my_savefig(fig,figdir,'Example_Cone_3D_V1_%s' % sessions[0].session_id)
+# fig.savefig(os.path.join(figdir,'Example_Cone_3D_V1_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 
@@ -169,11 +142,12 @@ colormap = "magma"
 ########### PCA on trial-averaged responses ############
 ######### plot result as scatter by orientation ########
 idx_N = np.all((ses.celldata['roi_name']=='V1',
-                ses.celldata['noise_level']<100,
+                ses.celldata['noise_level']<20,
                 ses.celldata['tuning_var']>0.01),axis=0)
 
-ori = np.mod(ses.trialdata['Orientation'],180)
-oris = np.sort(np.unique(ori))
+oris = np.mod(ses.trialdata['Orientation'],180)
+uoris = np.sort(np.unique(oris))
+noris = len(uoris)
 
 fig = plt.figure(figsize=[4, 4])
  
@@ -181,7 +155,7 @@ fig = plt.figure(figsize=[4, 4])
 respmat_zsc = zscore(ses.respmat[idx_N, :], axis=1)
 poprate             = np.nanmean(respmat_zsc,axis=0)
 
-plotgainaxis = False
+plotgainaxis = True
 
 # construct PCA object with specified number of components
 pca = PCA(n_components=3)
@@ -216,13 +190,13 @@ c = c/np.max(c)
 g = cmap(c)
 
 for iPopRateBin in range(nPopRateBins):
-    meandata = np.empty([len(oris),3])
+    meandata = np.empty([len(uoris),3])
 
-    for istim,stim in enumerate(oris):
-        idx_T = np.all((ori == stim,
+    for iori,ori in enumerate(uoris):
+        idx_T = np.all((oris == ori,
                     poprate>binedges_poprate[iPopRateBin],
                     poprate<=binedges_poprate[iPopRateBin+1]),axis=0)
-        meandata[istim,:] = np.mean(Xp[:,idx_T],axis=1)
+        meandata[iori,:] = np.mean(Xp[:,idx_T],axis=1)
     meandata = np.concatenate((meandata,meandata[:1,:]),axis=0)
     
     ax.plot(meandata[:,0],meandata[:,1],meandata[:,2],
@@ -249,118 +223,6 @@ ax.set_zticks([])
 
 axes = fig.get_axes()
 ax.view_init(elev=-15, azim=25, roll=15)
-# ax.set_title(plottitle)
-nticks = 5
-ax.grid(True)
-ax.set_facecolor('white')
-ax.set_xticks(np.linspace(np.percentile(Xp[0,:],1),np.percentile(Xp[0],99),nticks))
-ax.set_yticks(np.linspace(np.percentile(Xp[1],1),np.percentile(Xp[1],99),nticks))
-ax.set_zticks(np.linspace(np.percentile(Xp[2],1),np.percentile(Xp[2],99),nticks))
-
-# Get rid of colored axes planes, remove fill
-ax.xaxis.pane.fill = False
-ax.yaxis.pane.fill = False
-ax.zaxis.pane.fill = False
-
-# Now set color to white (or whatever is "invisible")
-ax.xaxis.pane.set_edgecolor('w')
-ax.yaxis.pane.set_edgecolor('w')
-ax.zaxis.pane.set_edgecolor('w')
-
-print('Variance Explained by first 3 components: %2.2f' %
-        (pca.explained_variance_ratio_.cumsum()[2]))
-# my_savefig(fig,figdir,'Example_Cone_3D_PopRate_%s' % sessions[0].session_id,formats=['png','pdf'])
-
-
-#%% Make a 3D cone where coloring is based on population rate: 
-
-ses = sessions[0]
-colormap = "magma"
-
-########### PCA on trial-averaged responses ############
-######### plot result as scatter by orientation ########
-idx_N = np.all((ses.celldata['roi_name']=='V1',
-                ses.celldata['noise_level']<100,
-                ses.celldata['tuning_var']>0.01),axis=0)
-
-ori = np.mod(ses.trialdata['Orientation'],180)
-oris = np.sort(np.unique(ori))
-
-fig = plt.figure(figsize=[4, 4])
- 
-# zscore for each neuron across trial responses
-respmat_zsc = zscore(ses.respmat[idx_N, :], axis=1)
-poprate             = np.nanmean(respmat_zsc,axis=0)
-
-plotgainaxis = False
-
-# construct PCA object with specified number of components
-pca = PCA(n_components=3)
-# fit pca to response matrix (n_samples by n_features)
-Xp = pca.fit_transform(respmat_zsc.T).T
-# dimensionality is now reduced from N by K to ncomp by K
-
-if plotgainaxis:
-    gain_weights        = np.array([np.corrcoef(poprate,respmat_zsc[n,:])[0,1] for n in range(respmat_zsc.shape[0])])
-    gain_trials         = poprate - np.nanmean(respmat_zsc,axis=None)
-    # g = np.outer(np.percentile(gain_trials,[0,100]),gain_weights)
-    g = np.outer([0,10],gain_weights)
-    # g = np.outer(np.percentile(gain_trials,[0,100])*np.percentile(poprate,[0,100]),gain_weights)
-    Xg = pca.transform(g).T
-
-ax = fig.add_subplot(111, projection='3d')
-
-c = np.clip(poprate,np.percentile(poprate,1),np.percentile(poprate,99))
-c = c-np.min(c)
-c = c/np.max(c)
-cmap = matplotlib.cm.get_cmap(colormap)
-g = np.squeeze(cmap([c]))
-
-ax.scatter(Xp[0,:], Xp[1,:], Xp[2,:], c=g , s=1, alpha=0.7)
-
-nPopRateBins = 10
-
-binedges_poprate    = np.percentile(poprate,np.linspace(1,99,nPopRateBins+1))
-c = np.mean(np.column_stack((binedges_poprate[:-1],binedges_poprate[1:])),axis=1)
-c = c-np.min(c)
-c = c/np.max(c)
-g = cmap(c)
-
-for iPopRateBin in range(nPopRateBins):
-    meandata = np.empty([len(oris),3])
-
-    for istim,stim in enumerate(oris):
-        idx_T = np.all((ori == stim,
-                    poprate>binedges_poprate[iPopRateBin],
-                    poprate<=binedges_poprate[iPopRateBin+1]),axis=0)
-        meandata[istim,:] = np.mean(Xp[:,idx_T],axis=1)
-    meandata = np.concatenate((meandata,meandata[:1,:]),axis=0)
-    
-    ax.plot(meandata[:,0],meandata[:,1],meandata[:,2],
-            color=g[iPopRateBin],linewidth=2)
-
-ax.set_xlim(np.percentile(Xp[0,:],[1,99.5]))
-ax.set_ylim(np.percentile(Xp[1,:],[1,99.5]))
-ax.set_zlim(np.percentile(Xp[2,:],[1,99.5]))
-
-if plotgainaxis:
-    ax.plot(Xg[0,:],Xg[1,:],Xg[2,:],color='k',linewidth=1)
-ax.set_xlabel('PC 1')  # give labels to axes
-ax.set_ylabel('PC 2')
-ax.set_zlabel('PC 3')
-ax.set_xticklabels([])
-ax.set_yticklabels([])
-ax.set_zticklabels([])
-
-ax.grid(False)
-ax.set_facecolor('white')
-ax.set_xticks([])
-ax.set_yticks([])
-ax.set_zticks([])
-
-axes = fig.get_axes()
-ax.view_init(elev=-15, azim=25, roll=15)
-
 # ax.set_title(plottitle)
 nticks = 5
 ax.grid(True)
@@ -384,6 +246,115 @@ print('Variance Explained by first 3 components: %2.2f' %
 # my_savefig(fig,figdir,'Example_Cone_3D_PopRate_%s' % sessions[0].session_id,formats=['png','pdf'])
 
 #%% 
+
+ses = sessions[0]
+
+########### PCA on trial-averaged responses ############
+######### plot result as scatter by orientation ########
+idx_N = np.all((ses.celldata['roi_name']=='V1',
+                ses.celldata['noise_level']<20,
+                # ses.celldata['gOSI']>0.4,
+                ),axis=0)
+
+# zscore for each neuron across trial responses
+respmat_zsc         = zscore(ses.respmat[idx_N, :], axis=1)
+poprate             = np.nanmean(respmat_zsc,axis=0)
+
+#Get the population rate / gain axis:
+G        = np.ones(np.sum(idx_N)) #np.clip(gain_weights,0,1)
+
+ex_ori = 135
+
+#Get the population vector for a specific orientation:
+W_ori = np.nanmean(respmat_zsc[:,oris==ex_ori],axis=1)
+
+# Make W_ori orthogonal to G with QR decomposition
+Q, R = np.linalg.qr(np.column_stack([G, W_ori]))
+W_ori = Q[:, 1] * R[1, 1]
+
+#Show that the weight vector for this specific orientation is aligned with the preferred orientation of neurons:
+# plt.scatter(ses.celldata['pref_ori'][idx_N],W_ori)
+
+#Get the projection of the population data onto the gain axis and the orientation axis:
+X_gain = G @ respmat_zsc[:,oris==ex_ori]
+Y_ori = W_ori @ respmat_zsc[:,oris==ex_ori]
+
+fig,axes = plt.subplots(1,1,figsize=[4*cm, 4*cm])
+ax = axes
+ax.scatter(X_gain,Y_ori,s=1,alpha=0.5,color='k')
+ax.set_xlabel('projection onto\npop. rate axis')
+ax.set_ylabel('orientation axis')
+
+# Fit linear curve
+z_lin = np.polyfit(X_gain, Y_ori, 1)
+p_lin = np.poly1d(z_lin)
+X_sort = np.sort(X_gain)
+y_lin_pred = p_lin(X_sort)
+ss_res_lin = np.sum((Y_ori - p_lin(X_gain))**2)
+ss_tot = np.sum((Y_ori - np.mean(Y_ori))**2)
+r2_lin = 1 - (ss_res_lin / ss_tot)
+
+# Fit exponential curve
+def exp_func(x, a, b, c):
+    return a * np.exp(b * x) + c
+
+try:
+    x_range = np.max(X_gain) - np.min(X_gain)
+    p0 = [np.max(Y_ori) - np.min(Y_ori), -2.0 / x_range, np.min(Y_ori)]
+    popt, _ = curve_fit(exp_func, X_gain, Y_ori, p0=p0, maxfev=5000)
+    y_exp_pred = exp_func(X_sort, *popt)
+    ss_res_exp = np.sum((Y_ori - exp_func(X_gain, *popt))**2)
+    r2_exp = 1 - (ss_res_exp / ss_tot)
+    ax.plot(X_sort, y_exp_pred, 'r-', linewidth=1, label=f'Exp (R² = {r2_exp:.3f})')
+except:
+    r2_exp = np.nan
+
+ax.plot(X_sort, y_lin_pred, 'b-', linewidth=1, label=f'Linear (R² = {r2_lin:.3f})')
+ax.legend(fontsize=7,frameon=False,bbox_to_anchor=(0.55, 0.45))
+
+sns.despine(fig=fig,top=True,right=True,offset=2)
+my_savefig(fig,figdir,'Cone_Slice_V1_%s_ori_%d' % (sessions[ises].session_id, ex_ori))
+
+
+#%% 
+
+fig,axes = plt.subplots(1,noris,figsize=[3*noris*cm, 3*cm],sharex=True,sharey=True)
+
+for iori,ori in enumerate(uoris):
+    ax = axes[iori]
+    #Get the population vector for a specific orientation:
+    W_ori = np.nanmean(respmat_zsc[:,oris==ori],axis=1)
+
+    #Get the projection of the population data onto the gain axis and the orientation axis:
+    X_gain = G @ respmat_zsc[:,oris==ori]
+    Y_ori = W_ori @ respmat_zsc[:,oris==ori]
+
+    ax.scatter(X_gain,Y_ori,s=1,alpha=0.5,color=pal[iori])
+    if iori == noris//2:
+        ax.set_xlabel('projection onto pop. rate axis')
+    if iori == 0:
+        ax.set_ylabel('projection onto\norientation axis')
+        
+    try:
+        x_range = np.max(X_gain) - np.min(X_gain)
+        p0 = [np.max(Y_ori) - np.min(Y_ori), -2.0 / x_range, np.min(Y_ori)]
+        popt, _ = curve_fit(exp_func, X_gain, Y_ori, p0=p0, maxfev=5000)
+        y_exp_pred = exp_func(X_sort, *popt)
+        ss_res_exp = np.sum((Y_ori - exp_func(X_gain, *popt))**2)
+        r2_exp = 1 - (ss_res_exp / ss_tot)
+        ax.plot(X_sort, y_exp_pred, 'k-', linewidth=1)
+    except:
+        r2_exp = np.nan
+                                                   
+    ax.set_title('%.1f (deg)' % ori,fontsize=7)
+sns.despine(fig=fig,top=True,right=True,offset=2)
+my_savefig(fig,figdir,'Cone_Slice_V1_%s_alloris' % (sessions[ises].session_id))
+
+
+#%% 
+
+
+
 
 
 
@@ -566,7 +537,7 @@ my_savefig(fig,figdir,'Cone_Affine_Pops_%s' % (sessions[ises].session_id),format
 #%% 
 # plt.scatter(sessions[ises].celldata['Affine_Mult'],sessions[ises].celldata['Affine_Add'])
 
-#%% PCA for differen subsets of trials with little or a lot of variance: 
+#%% PCA for different subsets of trials with little or a lot of variance: 
 nPopRateVarianceBins    = 2
 
 idx_N   = np.all((
@@ -599,7 +570,7 @@ ax.legend(['All','Low Variance','High Variance'],frameon=False,
 idx_T_both = np.column_stack((idx_T_low,idx_T_high))
 my_savefig(fig,figdir,'Hist_High_Low_PopRateVariance_%s' % (sessions[ises].session_id),formats=['png'])
 
-#%% Show PCA for differen subsets of trials with little or a lot of variance:
+#%% Show PCA for different subsets of trials with little or a lot of variance:
 fig = plt.figure(figsize=(6,2.5))
 for iPopRateVarianceBin in range(nPopRateVarianceBins):
     ax = fig.add_subplot(1, nPopRateVarianceBins, iPopRateVarianceBin+1, projection='3d')
@@ -728,7 +699,7 @@ for t, t_type in enumerate(oris):
 
 ax_3d_makeup(ax,Xp.T)
 ax.set_title('No locomotion')
-my_savefig(fig,figdir,'Cone_NoLocomotion_%s' % (sessions[ises].session_id),formats=['png'])
+# my_savefig(fig,figdir,'Cone_NoLocomotion_%s' % (sessions[ises].session_id),formats=['png'])
 
 
 

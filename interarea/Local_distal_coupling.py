@@ -31,12 +31,6 @@ sessions,nSessions   = filter_sessions(protocols = 'GR',only_session_id=session_
 #%% Load all GR sessions: 
 sessions,nSessions   = filter_sessions(protocols = 'GR')
 
-#%% Remove two sessions with too much drift in them:
-sessiondata         = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
-sessions_in_list    = np.where(~sessiondata['session_id'].isin(['LPE12013_2024_05_02','LPE10884_2023_10_20','LPE09830_2023_04_12']))[0]
-sessions            = [sessions[i] for i in sessions_in_list]
-nSessions           = len(sessions)
-
 #%%  Load data properly:        
 calciumversion = 'deconv'
 for ises in tqdm(range(nSessions),total=nSessions,desc='Loading data'):

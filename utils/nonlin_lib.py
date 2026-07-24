@@ -22,21 +22,21 @@ def nl_linear(u):
 def nl_relu(u):
     return np.maximum(0.0, u)
 
-def nl_softplus(u, beta):
+def nl_softplus(u, beta=5):
     # f(u) = (1/β) log(1 + exp(β·u)); β controls sharpness (→ReLU as β→∞)
     b = np.abs(beta) + 1e-4
     bu = b * u
     return np.where(bu > 30.0, u, np.log1p(np.exp(np.clip(bu, -500.0, 30.0))) / b)
 
-def nl_sigmoid(u, a):
+def nl_sigmoid(u, a=1):
     # maps sigmoid to [0, a]: f(u) = a · σ(u)
     return np.abs(a) / (1.0 + np.exp(5*-np.clip(u, -100.0, 100.0)))
 
-def nl_tanh(u, a):
+def nl_tanh(u, a=1):
     # maps tanh's [-1,1] to [0, a]: f(u) = a · (1 + tanh(u)) / 2
     return np.abs(a) * 0.5 * (1.0 + np.tanh(u))
 
-def nl_powerlaw(u, p):
+def nl_powerlaw(u, p=2):
     # f(u) = max(0,u)^p; p is the free exponent
     return np.power(np.maximum(0.0, u), np.abs(p) + 1e-4)
 
@@ -59,6 +59,25 @@ NL_CONFIGS = [
 
 nl_names = [c[0] for c in NL_CONFIGS]
 nNL      = len(NL_CONFIGS)
+
+#%%
+def tuning_input(stim, pref=0.0, width=1.0, gain=1.0):
+    return gain * np.exp(-(stim - pref)**2 / (2 * width**2))
+
+
+#%%
+def simulate_responses(
+    x,
+    nonlinearity,
+    noise_std=0.2,
+    n_trials=1000
+):
+    responses = []
+    for _ in range(n_trials):
+        noisy_x = x + np.random.normal(0, noise_std, size=x.shape)
+        y = nonlinearity(noisy_x)
+        responses.append(y)
+    return np.array(responses)
 
 #%% Core fitting function
 

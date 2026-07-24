@@ -15,14 +15,14 @@ from utils.nonlin_lib import *
 params = dict(
                 figdir          = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain'),
                 resultdir       = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Analysis\\SharedGain'),
-                calciumversion = 'deconv', #deconv or dF
-                t_pre       = -1,         #pre s
-                t_post      = 2,        #post s
-                maxnoiselevel = 20, #maximum noise level to include cell
+                calciumversion  = 'deconv', #deconv or dF
+                t_pre           = -1,         #pre s
+                t_post          = 2,        #post s
+                maxnoiselevel   = 20, #maximum noise level to include cell
                 )
 
 #%% Load parameters and settings:
-version = 'allGR_sessions'
+version             = 'allGR_sessions'
 session_list        = None
 
 # version = 'LPE12223_2024_06_10'
