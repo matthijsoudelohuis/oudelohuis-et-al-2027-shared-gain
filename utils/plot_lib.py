@@ -21,7 +21,7 @@ cm = 1/2.54  # centimeters in inches
 
 plt.rcParams.update({'font.size': 6, 
                     'font.family': 'sans-serif', 
-                    'font.sans-serif': 'DejaVu Sans',
+                    'font.sans-serif': 'Arial',
                     
                     'xtick.labelsize': 5,
                     'ytick.labelsize': 5, 
