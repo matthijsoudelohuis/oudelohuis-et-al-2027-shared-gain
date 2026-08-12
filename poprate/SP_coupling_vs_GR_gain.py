@@ -5,10 +5,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-from loaddata.session_info import filter_sessions
 from scipy.stats import zscore
 from scipy.stats import linregress
+
+from loaddata.session_info import filter_sessions
+from loaddata.get_data_folder import get_local_drive
 
 figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
 
