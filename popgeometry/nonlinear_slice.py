@@ -178,7 +178,7 @@ oris_allses     = [np.mod(ses.trialdata['Orientation'],180) for ses in sessions]
 uoris           = np.unique(np.round(np.concatenate(oris_allses),3))
 nStim           = len(uoris)
 
-r2_mat          = np.full((3,nSessions,nStim),np.nan) #dim0: 0=linear, 1=exponential
+r2_mat          = np.full((3,nSessions,nStim),np.nan) #dim0: 0=linear, 1=exponential, 2=log
 
 for ises,ses in enumerate(sessions):
     # No cell subselection: use every neuron in the session.
@@ -238,6 +238,7 @@ for ises,ses in enumerate(sessions):
 #%% Show paired R2 of linear vs exponential fit as an xy scatterplot with a paired Wilcoxon test:
 r2_lin = r2_mat[0].flatten()
 r2_exp = r2_mat[1].flatten()
+# r2_exp = r2_mat[2].flatten()
 idx_valid = ~np.isnan(r2_lin) & ~np.isnan(r2_exp)
 r2_lin = r2_lin[idx_valid]
 r2_exp = r2_exp[idx_valid]
@@ -266,7 +267,8 @@ ax.text(0.05, 0.95, ptext, transform=ax.transAxes,
 ax.set_xlabel('Linear fit R²')
 ax.set_ylabel('Exponential fit R²')
 sns.despine(fig=fig,top=True,right=True,offset=2)
-my_savefig(fig,figdir,'R2_Linear_vs_Exponential_V1_%dsessions' % nSessions)
+# my_savefig(fig,figdir,'R2_Linear_vs_Exponential_V1_%dsessions' % nSessions)
+my_savefig(fig,figdir,'R2_Linear_vs_Logarithmic_V1_%dsessions' % nSessions)
 
 #%% Recompute fits for the bottom and top 20%% population-coupled neurons:
 def compute_group_r2(percentile,top=False):
@@ -294,15 +296,28 @@ def compute_group_r2(percentile,top=False):
                 continue
             p_lin = np.poly1d(np.polyfit(X_gain,Y_ori,1))
             group_r2[0,ises,iori] = 1-np.sum((Y_ori-p_lin(X_gain))**2)/ss_tot
+
+            # try:
+            #     x_range = np.ptp(X_gain)
+            #     if x_range == 0:
+            #         continue
+            #     p0 = [np.ptp(Y_ori),-2.0/x_range,np.min(Y_ori)]
+            #     popt,_ = curve_fit(exp_func,X_gain,Y_ori,p0=p0,maxfev=5000)
+            #     group_r2[1,ises,iori] = 1-np.sum((Y_ori-exp_func(X_gain,*popt))**2)/ss_tot
+            # except Exception:
+            #     pass
+
             try:
                 x_range = np.ptp(X_gain)
-                if x_range == 0:
-                    continue
-                p0 = [np.ptp(Y_ori),-2.0/x_range,np.min(Y_ori)]
-                popt,_ = curve_fit(exp_func,X_gain,Y_ori,p0=p0,maxfev=5000)
-                group_r2[1,ises,iori] = 1-np.sum((Y_ori-exp_func(X_gain,*popt))**2)/ss_tot
+                x_offset = np.max([x_range * 0.1, 1e-3])
+                p0 = [np.max(Y_ori) - np.min(Y_ori), x_offset, np.min(Y_ori)]
+                popt, _ = curve_fit(log_func, X_gain, Y_ori, p0=p0, maxfev=5000)
+                # y_log_pred = log_func(X_sort, *popt)
+                group_r2[1,ises,iori] = 1-np.sum((Y_ori-log_func(X_gain,*popt))**2)/ss_tot
+                # r2_mat[2,ises,iori] = 1 - (ss_res_log / ss_tot)
             except Exception:
                 pass
+                
     return group_r2
 
 r2_bottom = compute_group_r2(20,top=False)
@@ -310,6 +325,7 @@ r2_top = compute_group_r2(80,top=True)
 fig,ax = plt.subplots(1,1,figsize=[3.5*cm,3.5*cm])
 for group,color,label in ((r2_bottom,'b','bottom 20%'),(r2_top,'r','top 20%')):
     x,y = group[0].flatten(),group[1].flatten()
+    # x,y = group[0].flatten(),group[2].flatten()
     valid = ~np.isnan(x) & ~np.isnan(y)
     ax.scatter(x[valid],y[valid],s=6,alpha=0.6,color=color,edgecolor=None,marker='.',label=label)
 plot_min = my_floor(np.nanmin(r2_bottom[0]),-1)
@@ -319,4 +335,5 @@ ax_nticks(ax,4); ax.set_aspect('equal',adjustable='box')
 ax.set_xlabel('Linear fit R²'); ax.set_ylabel('Exponential fit R²')
 ax.legend(frameon=False,fontsize=5,loc='upper left',title='pop. coupling')
 sns.despine(fig=fig,top=True,right=True,offset=2)
-my_savefig(fig,figdir,'R2_Linear_vs_Exponential_Top_Bottom20_%dsessions' % nSessions)
+my_savefig(fig,figdir,'R2_Linear_vs_Logarithmic_Top_Bottom20_%dsessions' % nSessions)
+# my_savefig(fig,figdir,'R2_Linear_vs_Exponential_Top_Bottom20_%dsessions' % nSessions)
