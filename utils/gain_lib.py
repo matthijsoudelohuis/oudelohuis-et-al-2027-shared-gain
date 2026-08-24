@@ -112,7 +112,7 @@ def comp_poprate(sessions,version='allfast'):
 
         ses.popratemat      = np.full_like(resp, np.nan)
 
-        if not hasattr(ses,'distmat_xyz'):
+        if not hasattr(ses,'distmat_xyz') and 'xloc' in ses.celldata:
             # ses = compute_pairwise_anatomical_distance([ses])
             [ses] = compute_pairwise_anatomical_distance([sessions[ises]])
     
@@ -160,7 +160,7 @@ def compute_pop_coupling(sessions,version='allfast'):
     for ises,ses in enumerate(sessions):
         resp        = zscore(ses.respmat,axis=1)
 
-        if not hasattr(ses,'popratemat'):
+        if not hasattr(ses,'popratemat') or np.all(np.isnan(ses.popratemat)):
             [ses] = comp_poprate([ses],version=version)
 
         ses.celldata['pop_coupling']   = [np.corrcoef(resp[i,:],ses.popratemat[i,:])[0,1] for i in range(len(ses.celldata))]

@@ -11,7 +11,7 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.nonlin_lib import * 
 from utils.params import params
 
-figdir = os.path.join(params['figdir'],'popgeometry')
+figdir = os.path.join(params['figdir'],'popgeometry','nonlinearTF')
 
 #%%
 ######   #####     #       ####### #     #    #     # ####### ######  ####### #       

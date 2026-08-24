@@ -109,6 +109,38 @@ e.g. `tuning`, `noisecorrelations`, `affinemodel`, ...) rather than duplicating 
   and exports the finished PDF. A figure script should not itself contain long-running computation —
   that belongs in `run_xxx`/`ana_xxx` upstream.
 
+### Panel functions: keep exploration free, promote only once a panel is final
+
+Manuscript figures get reorganized across revisions (a panel drawn for a main figure in v1 may
+move to a supplementary figure in v3, or vice versa). To make that a one-line change instead of a
+rewrite, panel-drawing code and figure-composition code stay in different places:
+
+- **Explore freely, unwrapped, in the topic `#%%` script.** Don't wrap a panel in a function while
+  still developing it — work directly on local variables in the interactive kernel (VSCode
+  Python Interactive / Jupyter), exactly as today. Wrapping too early just adds a function
+  signature you have to keep editing while the plot itself is still changing.
+- **Promote to a function only once the panel is done.** Once a cell produces the panel you want,
+  copy that cell's body into a `plot_xxx(ax, data, **kwargs)` function in a new, side-effect-free
+  `plots.py` module inside the same topic folder (e.g. `noisecorrelations/plots.py`), analogous to
+  `utils/plot_lib.py`. This module must contain **only function definitions** — no top-level data
+  loading or computation — because `figures/fig_*.py` scripts import from it directly; importing a
+  `#%%` exploration script instead would re-run all of its top-level loading code as a side effect.
+  Keep the function signature narrow and stable: one pre-built data object (DataFrame/array) plus
+  `ax`, not a growing list of loose variables, so later panel reassignment doesn't also force a
+  signature change.
+- **Get interactivity back after promotion with autoreload.** `%load_ext autoreload` +
+  `%autoreload 2` in the interactive kernel picks up edits to `plots.py` on the next cell run — no
+  kernel restart — so a promoted panel function can still be tweaked live from the topic script's
+  `#%%` cells.
+- **`figures/fig_<n>.py` only composes:** it creates axes at the desired grid position (via
+  `figures/fig_utils.py`) and calls the already-promoted `plot_xxx(ax, data)` functions into them —
+  no plotting logic lives in the `fig_*.py` scripts themselves. Moving a panel from one figure to
+  another is then just moving its `plot_xxx(ax, ...)` call from one `fig_*.py` file to another.
+- **Standalone export for PowerPoint/Illustrator during exploration:** save any panel worth keeping
+  as both PDF (vector, editable in Illustrator/Affinity) and PNG (for quick use in slides) via a
+  shared `save_panel(fig, name)` helper in `figures/fig_utils.py`, independent of whether/where it
+  ends up composed into a final figure.
+
 ### Print specification (Cell Press / Nature-style guidelines)
 
 Build every figure at **final print size**, not scaled up in Illustrator/Affinity afterward:

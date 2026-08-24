@@ -61,56 +61,6 @@ axes[0].set_zlim([-5,45])
 # fig.savefig(os.path.join(figdir,'Cone_3D_V1_Original_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
-#%% Load Monkey Data: 
-# import functions 
-import scipy.io
-import utils.fct_data as dat
-
-#%% ### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### 
-#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### 
-### Open data
-ii_session = 2
-
-path = 'E:\\Python\\AminData\\'
-data = scipy.io.loadmat(path+'MatlabData/mat_neural_data/'+dat.session_names[ii_session]+'.mat')['neuralData'][0][0]
-
-# Import the data:
-spikesV1_array, spikesV2_array, stimID, trialID = dat.GetData(ii_session, 'Stim', '')
-
-#%% Show some of the data: #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### 
-#Show two example neurons: 
-fig,axes = plt.subplots(1,2,figsize=(10,10))
-axes[0].imshow(spikesV1_array[0,:,:],vmin=0,vmax=.1)
-axes[1].imshow(spikesV2_array[3,:,:],vmin=0,vmax=.1)
-
-#%% Make a session object to directly relate to mouse data: 
-ses         = Session(protocol='GR', animal_id=dat.session_names[ii_session], sessiondate=dat.session_names[ii_session])
-
-Nstimuli    = 8
-oris        = np.arange(0,180,180/Nstimuli)
-NV1         = np.shape(spikesV1_array)[0]
-NV2         = np.shape(spikesV2_array)[0]
-Nrepet      = int(spikesV1_array.shape[1]/Nstimuli)
-Ntrials     = spikesV1_array.shape[1]
-
-ses.celldata  = pd.DataFrame({'roi_name': np.concatenate((np.tile(['V1'],NV1),np.tile(['V2'],NV2))),
-                              'tuning_var': np.zeros(NV1+NV2)
-                              })
-                            #    'area':np.tile(['V1'],NV1), 'area':['V1','V2']})
-
-ses.trialdata = pd.DataFrame({'Orientation': oris[stimID[::2]-1]})
-# ses.trialdata['Orientation'] = oris[stimID[::2]-1]
-
-idx_time = np.arange(0,spikesV1_array.shape[2],1)
-idx_time = (idx_time>100) & (idx_time<1000)
-
-V1resp                  = np.mean(spikesV1_array[:,:,idx_time], axis=2)
-V2resp                  = np.mean(spikesV2_array[:,:,idx_time], axis=2)
-ses.respmat             = np.concatenate((V1resp,V2resp),axis=0)
-
-ses.respmat_videome     = np.ones(Ntrials)
-ses.respmat_runspeed    = np.ones(Ntrials)
-sessions.append(ses)
 
 #%% Make the 3D figure for original data:
 fig = plot_PCA_gratings_3D(sessions[1],size='uniform',thr_tuning=0)

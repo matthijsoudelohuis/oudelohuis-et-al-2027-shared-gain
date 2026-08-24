@@ -6,6 +6,7 @@ dependencies:
   - pip
   - ipykernel
   - ipython
+  - ipywidgets
   - jedi
   - jupyter_client
   - jupyter_core

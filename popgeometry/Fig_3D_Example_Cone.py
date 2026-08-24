@@ -13,39 +13,38 @@ from utils.explorefigs import plot_PCA_gratings_3D
 from loaddata.session_info import filter_sessions,load_sessions
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
+from utils.plot_lib import * 
 from utils.params import params
 
-figdir = os.path.join(params['figdir'],'popgeometry')
+figdir = os.path.join(params['figdir'],'popgeometry','example')
 
-#%%
-cm = 1/2.54  # centimeters in inches
+# #%% #############################################################################
+# session_list        = np.array([['LPE10919_2023_11_06']])
+# # session_list        = np.array([['LPE12223_2024_06_10']])
 
-#%% #############################################################################
-session_list        = np.array([['LPE10919_2023_11_06']])
-# session_list        = np.array([['LPE12223_2024_06_10']])
+# sessions,nSessions   = filter_sessions(protocols = ['GR'],only_session_id=session_list)
+# sessiondata = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
 
-sessions,nSessions   = filter_sessions(protocols = ['GR'],only_session_id=session_list)
-sessiondata = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
+# #   Load proper data and compute average trial responses:                      
+# ses.load_respmat(load_behaviordata=True, load_calciumdata=True,load_videodata=True,
+#                                 calciumversion='deconv',keepraw=True)
 
-#   Load proper data and compute average trial responses:                      
-sessions[0].load_respmat(load_behaviordata=True, load_calciumdata=True,load_videodata=True,
-                                calciumversion='deconv',keepraw=True)
+#%% Load an example session: 
+data = np.load(os.path.join(os.getcwd(),'datasets','dataset_A_1_exampleses' + '.npz'),allow_pickle=True)
+sessions = data['sessions']
 
 #%% ########################### Compute tuning metrics: ###################################
 sessions = compute_tuning_wrapper(sessions)
-
-#%% 
-sessions = compute_pop_coupling(sessions)
+sessions = compute_pop_coupling(sessions,version='radius_500')
 
 #%% 
 ises = 0
-idx_N = np.all((
-                sessions[0].celldata['roi_name']=='V1',
-                sessions[0].celldata['noise_level']<20,
-                sessions[0].celldata['tuning_var']>0.025
-                ),axis=0)
+ses = sessions[0]
 
-ses = sessions[ises]
+idx_N = np.all((
+                ses.celldata['roi_name']=='V1',
+                ses.celldata['tuning_var']>0.025
+                ),axis=0)
 ori = ses.trialdata['Orientation']
 oris = np.sort(pd.Series.unique(ses.trialdata['Orientation']))
 
@@ -73,7 +72,6 @@ Xp = pca.fit_transform(respmat_zsc.T).T
 # dimensionality is now reduced from N by K to ncomp by K
 ax = fig.add_subplot(111, projection='3d')
 
-
 if plotgainaxis:
     # gain_weights        = np.array([np.corrcoef(poprate,respmat_zsc[n,:])[0,1] for n in range(respmat_zsc.shape[0])])
     # g = np.outer([0,10],gain_weights)
@@ -97,7 +95,6 @@ for t, t_type in enumerate(oris):
 
     ax.scatter(x, y, z, c=clrs, s=sizes[ori_ind[t]]*5, alpha=0.5)
     # ax.scatter(x, y, z, color=pal[t], s=sizes[ori_ind[t]]*6, alpha=0.4)
-
 
 if plotgainaxis:
     ax.plot(Xg[0,:],Xg[1,:],Xg[2,:],color='k',linewidth=2)
@@ -129,28 +126,26 @@ ax.yaxis.pane.fill = False
 ax.zaxis.pane.fill = False
 
 plt.tight_layout()
-my_savefig(fig,figdir,'Example_Cone_3D_V1_%s' % sessions[0].session_id)
-# fig.savefig(os.path.join(figdir,'Example_Cone_3D_V1_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
-
+my_savefig(fig,figdir,'Example_Cone_3D_V1_%s' % ses.session_id)
+# fig.savefig(os.path.join(figdir,'Example_Cone_3D_V1_%s' % ses.sessiondata['session_id'][0] + '.png'), format = 'png')
 
 
 #%% Make a 3D cone where coloring is based on population rate: 
-
-ses = sessions[0]
+ses = ses
 colormap = "magma"
 
 ########### PCA on trial-averaged responses ############
 ######### plot result as scatter by orientation ########
 idx_N = np.all((ses.celldata['roi_name']=='V1',
-                ses.celldata['noise_level']<20,
-                ses.celldata['tuning_var']>0.01),axis=0)
+                ses.celldata['tuning_var']>0.025
+                ),axis=0)
 
 oris = np.mod(ses.trialdata['Orientation'],180)
 uoris = np.sort(np.unique(oris))
 noris = len(uoris)
 
 fig = plt.figure(figsize=[4, 4])
- 
+
 # zscore for each neuron across trial responses
 respmat_zsc = zscore(ses.respmat[idx_N, :], axis=1)
 poprate             = np.nanmean(respmat_zsc,axis=0)
@@ -243,113 +238,7 @@ ax.zaxis.pane.set_edgecolor('w')
 
 print('Variance Explained by first 3 components: %2.2f' %
         (pca.explained_variance_ratio_.cumsum()[2]))
-# my_savefig(fig,figdir,'Example_Cone_3D_PopRate_%s' % sessions[0].session_id,formats=['png','pdf'])
-
-#%% 
-
-ses = sessions[0]
-
-########### PCA on trial-averaged responses ############
-######### plot result as scatter by orientation ########
-idx_N = np.all((ses.celldata['roi_name']=='V1',
-                ses.celldata['noise_level']<20,
-                # ses.celldata['gOSI']>0.4,
-                ),axis=0)
-
-# zscore for each neuron across trial responses
-respmat_zsc         = zscore(ses.respmat[idx_N, :], axis=1)
-poprate             = np.nanmean(respmat_zsc,axis=0)
-
-#Get the population rate / gain axis:
-G        = np.ones(np.sum(idx_N)) #np.clip(gain_weights,0,1)
-
-ex_ori = 135
-
-#Get the population vector for a specific orientation:
-W_ori = np.nanmean(respmat_zsc[:,oris==ex_ori],axis=1)
-
-# Make W_ori orthogonal to G with QR decomposition
-Q, R = np.linalg.qr(np.column_stack([G, W_ori]))
-W_ori = Q[:, 1] * R[1, 1]
-
-#Show that the weight vector for this specific orientation is aligned with the preferred orientation of neurons:
-# plt.scatter(ses.celldata['pref_ori'][idx_N],W_ori)
-
-#Get the projection of the population data onto the gain axis and the orientation axis:
-X_gain = G @ respmat_zsc[:,oris==ex_ori]
-Y_ori = W_ori @ respmat_zsc[:,oris==ex_ori]
-
-fig,axes = plt.subplots(1,1,figsize=[4*cm, 4*cm])
-ax = axes
-ax.scatter(X_gain,Y_ori,s=1,alpha=0.5,color='k')
-ax.set_xlabel('projection onto\npop. rate axis')
-ax.set_ylabel('orientation axis')
-
-# Fit linear curve
-z_lin = np.polyfit(X_gain, Y_ori, 1)
-p_lin = np.poly1d(z_lin)
-X_sort = np.sort(X_gain)
-y_lin_pred = p_lin(X_sort)
-ss_res_lin = np.sum((Y_ori - p_lin(X_gain))**2)
-ss_tot = np.sum((Y_ori - np.mean(Y_ori))**2)
-r2_lin = 1 - (ss_res_lin / ss_tot)
-
-# Fit exponential curve
-def exp_func(x, a, b, c):
-    return a * np.exp(b * x) + c
-
-try:
-    x_range = np.max(X_gain) - np.min(X_gain)
-    p0 = [np.max(Y_ori) - np.min(Y_ori), -2.0 / x_range, np.min(Y_ori)]
-    popt, _ = curve_fit(exp_func, X_gain, Y_ori, p0=p0, maxfev=5000)
-    y_exp_pred = exp_func(X_sort, *popt)
-    ss_res_exp = np.sum((Y_ori - exp_func(X_gain, *popt))**2)
-    r2_exp = 1 - (ss_res_exp / ss_tot)
-    ax.plot(X_sort, y_exp_pred, 'r-', linewidth=1, label=f'Exp (R² = {r2_exp:.3f})')
-except:
-    r2_exp = np.nan
-
-ax.plot(X_sort, y_lin_pred, 'b-', linewidth=1, label=f'Linear (R² = {r2_lin:.3f})')
-ax.legend(fontsize=7,frameon=False,bbox_to_anchor=(0.55, 0.45))
-
-sns.despine(fig=fig,top=True,right=True,offset=2)
-my_savefig(fig,figdir,'Cone_Slice_V1_%s_ori_%d' % (sessions[ises].session_id, ex_ori))
-
-
-#%% 
-
-fig,axes = plt.subplots(1,noris,figsize=[3*noris*cm, 3*cm],sharex=True,sharey=True)
-
-for iori,ori in enumerate(uoris):
-    ax = axes[iori]
-    #Get the population vector for a specific orientation:
-    W_ori = np.nanmean(respmat_zsc[:,oris==ori],axis=1)
-
-    #Get the projection of the population data onto the gain axis and the orientation axis:
-    X_gain = G @ respmat_zsc[:,oris==ori]
-    Y_ori = W_ori @ respmat_zsc[:,oris==ori]
-
-    ax.scatter(X_gain,Y_ori,s=1,alpha=0.5,color=pal[iori])
-    if iori == noris//2:
-        ax.set_xlabel('projection onto pop. rate axis')
-    if iori == 0:
-        ax.set_ylabel('projection onto\norientation axis')
-        
-    try:
-        x_range = np.max(X_gain) - np.min(X_gain)
-        p0 = [np.max(Y_ori) - np.min(Y_ori), -2.0 / x_range, np.min(Y_ori)]
-        popt, _ = curve_fit(exp_func, X_gain, Y_ori, p0=p0, maxfev=5000)
-        y_exp_pred = exp_func(X_sort, *popt)
-        ss_res_exp = np.sum((Y_ori - exp_func(X_gain, *popt))**2)
-        r2_exp = 1 - (ss_res_exp / ss_tot)
-        ax.plot(X_sort, y_exp_pred, 'k-', linewidth=1)
-    except:
-        r2_exp = np.nan
-                                                   
-    ax.set_title('%.1f (deg)' % ori,fontsize=7)
-sns.despine(fig=fig,top=True,right=True,offset=2)
-my_savefig(fig,figdir,'Cone_Slice_V1_%s_alloris' % (sessions[ises].session_id))
-
+my_savefig(fig,figdir,'Example_Cone_3D_PopRate_%s' % ses.session_id)
 
 #%% 
 
@@ -359,55 +248,46 @@ my_savefig(fig,figdir,'Cone_Slice_V1_%s_alloris' % (sessions[ises].session_id))
 
 
 
+# #%% Fit affine model:
+# sessions = fitAffine_singleneuron(sessions,radius=500)
 
 
 
+# #%% Fit population gain model:
+# orientations        = ses.trialdata['Orientation']
+# data                = ses.respmat
+# data_hat_poprate    = pop_rate_gain_model(data, orientations)
 
+# datasets            = (data,data_hat_poprate)
+# fig = plot_respmat(orientations, datasets, ['original','pop rate gain'])
 
+# #%% Make session objects with only gain, or no gain at all:
+# sessions_onlygain   = copy.deepcopy(sessions)
+# sessions_nogain     = copy.deepcopy(sessions)
 
+# sessions_onlygain[0].respmat = data_hat_poprate
+# sessions_nogain[0].respmat = data - data_hat_poprate
 
+# #%% Make the 3D figure for original data:
+# fig = plot_PCA_gratings_3D(ses,thr_tuning=0)
+# axes = fig.get_axes()
+# axes[0].view_init(elev=-45, azim=0, roll=-10)
+# axes[0].set_zlim([-5,45])
+# fig.savefig(os.path.join(figdir,'Cone_3D_V1_Original_%s' % ses.sessiondata['session_id'][0] + '.png'), format = 'png')
 
+# #%% Make the 3D figure for only gain data:
+# fig = plot_PCA_gratings_3D(sessions_onlygain[0],thr_tuning=0)
+# axes = fig.get_axes()
+# axes[0].view_init(elev=-45, azim=-15, roll=-35)
+# fig.savefig(os.path.join(figdir,'Cone_3D_V1_Gainonly_%s' % ses.sessiondata['session_id'][0] + '.png'), format = 'png')
 
-#%% Fit affine model:
-sessions = fitAffine_singleneuron(sessions,radius=500)
+# #%% Make the 3D figure for gain-subtracted data:
+# fig = plot_PCA_gratings_3D(sessions_nogain[0],thr_tuning=0)
+# axes = fig.get_axes()
+# axes[0].view_init(elev=65, azim=-135, roll=0)
+# fig.savefig(os.path.join(figdir,'Cone_3D_V1_Nogain_%s' % ses.sessiondata['session_id'][0] + '.png'), format = 'png')
 
-
-
-#%% Fit population gain model:
-orientations        = sessions[0].trialdata['Orientation']
-data                = sessions[0].respmat
-data_hat_poprate    = pop_rate_gain_model(data, orientations)
-
-datasets            = (data,data_hat_poprate)
-fig = plot_respmat(orientations, datasets, ['original','pop rate gain'])
-
-#%% Make session objects with only gain, or no gain at all:
-sessions_onlygain   = copy.deepcopy(sessions)
-sessions_nogain     = copy.deepcopy(sessions)
-
-sessions_onlygain[0].respmat = data_hat_poprate
-sessions_nogain[0].respmat = data - data_hat_poprate
-
-#%% Make the 3D figure for original data:
-fig = plot_PCA_gratings_3D(sessions[0],thr_tuning=0)
-axes = fig.get_axes()
-axes[0].view_init(elev=-45, azim=0, roll=-10)
-axes[0].set_zlim([-5,45])
-fig.savefig(os.path.join(figdir,'Cone_3D_V1_Original_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
-
-#%% Make the 3D figure for only gain data:
-fig = plot_PCA_gratings_3D(sessions_onlygain[0],thr_tuning=0)
-axes = fig.get_axes()
-axes[0].view_init(elev=-45, azim=-15, roll=-35)
-fig.savefig(os.path.join(figdir,'Cone_3D_V1_Gainonly_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
-
-#%% Make the 3D figure for gain-subtracted data:
-fig = plot_PCA_gratings_3D(sessions_nogain[0],thr_tuning=0)
-axes = fig.get_axes()
-axes[0].view_init(elev=65, azim=-135, roll=0)
-fig.savefig(os.path.join(figdir,'Cone_3D_V1_Nogain_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
-
-# #%% #############################################################################
+# # #%% #############################################################################
 
 
 
@@ -426,8 +306,8 @@ fig = plt.figure(figsize=(nPopCouplingBins*3,2.5))
 for iPopCouplingBin in range(nPopCouplingBins):
     ax = fig.add_subplot(1, nPopCouplingBins, iPopCouplingBin+1, projection='3d')
     idx_N = np.all((
-                        sessions[0].celldata['roi_name']=='V1',
-                        sessions[0].celldata['noise_level']<20,
+                        ses.celldata['roi_name']=='V1',
+                        ses.celldata['noise_level']<20,
                         sessions[ises].celldata['pop_coupling']>binedges_pop_coupling[iPopCouplingBin],
                         sessions[ises].celldata['pop_coupling']<=binedges_pop_coupling[iPopCouplingBin+1]),axis=0)
     
@@ -438,7 +318,7 @@ for iPopCouplingBin in range(nPopCouplingBins):
 
     ori_ind     = [np.argwhere(np.array(ori) == iori)[:, 0] for iori in oris]
 
-    pal         = sns.color_palette('husl', len(oris))
+    # pal         = sns.color_palette('husl', len(oris))
     pal         = np.tile(sns.color_palette('husl', 8), (2, 1))
 
     respmat_zsc = zscore(ses.respmat[idx_N, :], axis=1)
@@ -541,10 +421,10 @@ my_savefig(fig,figdir,'Cone_Affine_Pops_%s' % (sessions[ises].session_id),format
 nPopRateVarianceBins    = 2
 
 idx_N   = np.all((
-                    sessions[0].celldata['roi_name']=='V1',
-                    sessions[0].celldata['noise_level']<20,
-                    # sessions[0].celldata['tuning_var']>0.05,
-                    sessions[0].celldata['gOSI']>0.3,
+                    ses.celldata['roi_name']=='V1',
+                    ses.celldata['noise_level']<20,
+                    # ses.celldata['tuning_var']>0.05,
+                    ses.celldata['gOSI']>0.3,
                     ),axis=0)
 
 ses                 = sessions[ises]
@@ -621,8 +501,8 @@ fig = plt.figure(figsize=(nBins*3,2.5))
 for ibin in range(nBins):
     ax = fig.add_subplot(1, nBins, ibin+1, projection='3d')
     idx_N = np.all((
-                        sessions[0].celldata['roi_name']=='V1',
-                        sessions[0].celldata['noise_level']<20,
+                        ses.celldata['roi_name']=='V1',
+                        ses.celldata['noise_level']<20,
                         sessions[ises].celldata[tunefield]>binedges[ibin],
                         sessions[ises].celldata[tunefield]<=binedges[ibin+1]),axis=0)
     
@@ -661,9 +541,9 @@ my_savefig(fig,figdir,'Cone_High_Low_Tuning_%s' % (sessions[ises].session_id),fo
 fig = plt.figure(figsize=(3,3))
 ax = fig.add_subplot(1, 1, 1, projection='3d')
 idx_N   = np.all((
-                    sessions[0].celldata['roi_name']=='V1',
-                    sessions[0].celldata['noise_level']<20,
-                    # sessions[0].celldata['tuning_var']>0.02,
+                    ses.celldata['roi_name']=='V1',
+                    ses.celldata['noise_level']<20,
+                    # ses.celldata['tuning_var']>0.02,
                     # sessions[ises].celldata['pop_coupling']>binedges_pop_coupling[iPopCouplingBin]
                     ),axis=0)
 

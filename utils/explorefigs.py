@@ -425,7 +425,6 @@ def plot_PCA_gratings(ses,size='runspeed',cellfilter=None,apply_zscore=True,plot
 
     return fig
 
-
 def plot_PCA_gratings_3D(ses, size='runspeed', export_animation=False, figdir=None,idx_N=None,plotgainaxis=False):
 
     ########### PCA on trial-averaged responses ############
@@ -591,8 +590,6 @@ def plot_PCA_images(ses, size='runspeed'):
         # ax.legend(labels=oris)
     plt.tight_layout()
     return fig
-
-
 
 def indices_at_percentiles(data, percentiles):
     data = np.asarray(data)

@@ -25,7 +25,6 @@ stim_period = 160 # in ms
 session_names = ['105l001p16', '106r001p26', '106r002p70', '107l002p67', '107l003p143']
 
 #
-
 def GetData(ii_session, period='All', path='', exclude_silent=False):
 		
 	#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### 

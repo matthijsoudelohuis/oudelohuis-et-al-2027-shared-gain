@@ -129,7 +129,7 @@ class Session():
         # set all nonlabeled cells to 'non'
         self.celldata.loc[self.celldata['redcell'] == 0, 'recombinase'] = 'non'
 
-    def load_respmat(self, load_behaviordata=True, load_calciumdata=True, load_videodata=True, calciumversion='dF',
+    def load_respmat(self, load_behaviordata=True, load_calciumdata=True, load_videodata=True, calciumversion='deconv',
                     keepraw=False, cellfilter=None,filter_hp=None):
         #combination to load data, then compute the average responses to the stimuli and delete the full data afterwards:
 
