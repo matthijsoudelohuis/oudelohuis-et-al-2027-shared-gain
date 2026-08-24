@@ -7,7 +7,6 @@ Matthijs Oude Lohuis, 2022-2026, Champalimaud Center, Lisbon
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
 import pandas as pd
@@ -22,8 +21,9 @@ from utils.plot_lib import shaded_error,my_ceil,my_floor
 from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 # First plot the mean and the std. This could already indicate some things. For each dataset make a scatter of the mean 
 # and std with color the V1-PM and within area datasets as well.

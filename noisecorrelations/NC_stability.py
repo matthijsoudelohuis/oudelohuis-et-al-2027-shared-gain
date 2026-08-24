@@ -3,12 +3,12 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import load_sessions
 from utils.corr_lib import *
 from utils.psth import compute_tensor
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 #%% ###################################################
 

@@ -9,7 +9,6 @@ from scipy.stats import vonmises
 from sklearn.metrics import r2_score
 from tqdm import tqdm
 
-from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions,load_sessions
 from loaddata.session import Session
 from utils.explorefigs import plot_PCA_gratings
@@ -18,8 +17,9 @@ from utils.tuning import compute_tuning_wrapper
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.gain_lib import * 
 from utils.plot_lib import shaded_error
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'affinemodel')
 
 #%% Explore this lib as well for multiplicative gain fit with alternating least squares: 
 # https://github.com/jcbyts/V1Locomotion/tree/main

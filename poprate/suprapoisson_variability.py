@@ -8,12 +8,12 @@ import seaborn as sns
 from scipy.optimize import curve_fit
 
 from loaddata.session_info import filter_sessions
-from loaddata.get_data_folder import get_local_drive
 from utils.gain_lib import compute_pop_coupling
 from utils.plot_lib import *
 from utils.tuning import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'poprate')
 
 #%% 
 session_list        = np.array([['LPE11086_2024_01_05']])

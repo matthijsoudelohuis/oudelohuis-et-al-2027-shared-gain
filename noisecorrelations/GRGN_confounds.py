@@ -14,7 +14,6 @@ Matthijs Oude Lohuis, 2022-2026, Champalimaud Center, Lisbon
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
 import pandas as pd
@@ -27,8 +26,9 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.corr_lib import *
 from utils.rf_lib import filter_nearlabeled
 from utils.tuning import compute_tuning, compute_prefori
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 #%% Load all sessions from certain protocols: 
 sessions,nSessions   = filter_sessions(protocols = ['GR','GN'],filter_areas=['V1','PM']) 

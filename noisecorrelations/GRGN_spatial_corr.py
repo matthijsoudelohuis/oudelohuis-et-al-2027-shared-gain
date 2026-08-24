@@ -7,7 +7,6 @@ Matthijs Oude Lohuis, 2022-2026, Champalimaud Center, Lisbon
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
 import pandas as pd
@@ -21,7 +20,8 @@ from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
 from utils.arrayop_lib import nanweightedaverage
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+from utils.params import params
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 
 #%% #############################################################################

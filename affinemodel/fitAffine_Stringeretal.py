@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 from scipy.linalg import norm
 
 
-from loaddata.get_data_folder import get_local_drive
 
 from utils.explorefigs import plot_PCA_gratings
 from utils.corr_lib import *
 from loaddata.session_info import filter_sessions,load_sessions
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.gain_lib import * 
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'affinemodel')
 
 #%% Based on Stringer et al: 
 # https://github.com/MouseLand/stringer-pachitariu-et-al-2018a/tree/master/stimspont

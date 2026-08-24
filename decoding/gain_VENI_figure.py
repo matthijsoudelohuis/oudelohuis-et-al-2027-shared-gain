@@ -10,7 +10,6 @@ from scipy.stats import zscore
 from scipy.optimize import curve_fit
 
 
-from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
@@ -18,8 +17,9 @@ from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.regress_lib import *
 from sklearn.preprocessing import LabelEncoder
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'decoding')
 
 #%% #############################################################################
 

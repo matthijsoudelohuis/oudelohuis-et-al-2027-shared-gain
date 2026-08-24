@@ -12,12 +12,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import binned_statistic_2d
 
-from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions
 from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper,ori_remapping
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 #%% #############################################################################
 session_list        = np.array([['LPE09665_2023_03_21',

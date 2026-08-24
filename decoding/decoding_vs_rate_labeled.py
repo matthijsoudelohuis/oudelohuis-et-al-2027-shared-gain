@@ -15,8 +15,9 @@ from utils.plot_lib import shaded_error
 from utils.regress_lib import *
 from sklearn.preprocessing import LabelEncoder
 from utils.rf_lib import filter_nearlabeled
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'decoding')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919','2023_11_06']])

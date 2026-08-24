@@ -7,7 +7,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
 import pandas as pd
@@ -24,8 +23,9 @@ from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper
 from utils.regress_lib import *
 from utils.gain_lib import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'popgeometry')
 
 #%% 
 #        #####     #    ######     ######     #    #######    #    

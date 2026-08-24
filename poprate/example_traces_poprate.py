@@ -7,8 +7,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -20,8 +18,9 @@ from utils.tuning import *
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.explorefigs import *
 from utils.gain_lib import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'poprate')
 
 #%% Load an example session: 
 session_list        = np.array(['LPE12223_2024_06_10']) #GR

@@ -22,12 +22,11 @@ from utils.plot_lib import *  # get all the fixed color schemes
 from utils.imagelib import load_natural_images
 from utils.explorefigs import *
 from utils.psth import compute_tensor, compute_respmat, construct_behav_matrix_ts_F
-from loaddata.get_data_folder import get_local_drive
 from utils.corr_lib import mean_resp_image, compute_pairwise_metrics
+from utils.params import params
 
 # Updated by Anastasia Simonoff for her local computer, etc.
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
-), 'Users\\asimo\\Documents\\BCCN\\Lab Rotations\\Petreanu Lab\\Figures\\Images' if os.environ['USERDOMAIN'] == 'ULTINTELLIGENCE' else 'OneDrive\\PostDoc\\Figures\\Images\\')
+figdir = os.path.join(params['figdir'],'naturalimages')
 
 # %% Load one session including raw data: ################################################
 # example session with good responses

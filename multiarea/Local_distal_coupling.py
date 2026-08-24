@@ -19,9 +19,9 @@ from loaddata.session_info import filter_sessions
 from utils.gain_lib import *
 from utils.nonlin_lib import *
 from utils.rf_lib import filter_nearlabeled
+from utils.params import params
 
-# figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\Interarea\\CCA\\')
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'multiarea')
 
 #%% Load an example session: 
 session_list        = np.array(['LPE12223_2024_06_10']) #GR
@@ -36,7 +36,12 @@ calciumversion = 'deconv'
 for ises in tqdm(range(nSessions),total=nSessions,desc='Loading data'):
     sessions[ises].load_respmat(load_behaviordata=True, load_calciumdata=True,load_videodata=True,
                                 calciumversion=calciumversion,keepraw=False)
-    
+#%%   Load proper data and compute average trial responses:                      
+for ises in range(nSessions):    # iterate over sessions
+    # sessions[ises].load_respmat(load_behaviordata=True, load_calciumdata=True,load_videodata=True,calciumversion='deconv')
+    # sessions[ises].load_respmat(calciumversion='dF',keepraw=False)
+    sessions[ises].load_respmat(calciumversion='deconv',keepraw=False)
+
 #%% How are neurons are coupled to the population rate of different areas:
 areas = np.array(['V1', 'PM','AL','RSP'])
 nareas = len(areas)

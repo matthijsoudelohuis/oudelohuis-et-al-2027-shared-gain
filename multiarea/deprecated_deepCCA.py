@@ -13,12 +13,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.cross_decomposition import CCA
 
-from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.CCAlib import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\Multiarea\\Nonlinear')
+figdir = os.path.join(params['figdir'],'multiarea')
 
 #%% Load an example session: 
 session_list        = np.array(['LPE12223_2024_06_10']) #GR

@@ -12,8 +12,9 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.tuning import *
 from utils.nonlin_lib import *
 from utils.corr_lib import filter_sharednan
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'nonlinearTF')
 
 resultdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Analysis\\SharedGain')
 

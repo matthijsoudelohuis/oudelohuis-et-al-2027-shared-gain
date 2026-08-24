@@ -14,14 +14,14 @@ import statsmodels.api as sm
 from sklearn.decomposition import FactorAnalysis as FA
 from statsmodels.formula.api import ols
 
-from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import *
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.corr_lib import *
 from utils.tuning import *
 from utils.gain_lib import * 
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 calciumversion = 'dF'
 
 colors = [(0, 0, 0), (1, 0, 0), (1, 1, 1)] # first color is black, last is red
@@ -315,7 +315,7 @@ fig = plot_corr_radial_tuning_areas_sessions(binsdRF,bin_dist_count_ses,bin_dist
 
 
 #%% 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 
 #%% Loop over all delta preferred orientations and store mean correlations as well as distribution of pos and neg correlations:

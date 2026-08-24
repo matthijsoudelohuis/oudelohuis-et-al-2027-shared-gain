@@ -11,8 +11,9 @@ from scipy.stats import linregress
 from loaddata.session_info import filter_sessions
 from utils.gain_lib import *
 from utils.tuning import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'tuning')
 
 #%% #############################################################################
 

@@ -7,7 +7,6 @@ Matthijs Oude Lohuis, 2022-2026, Champalimaud Center, Lisbon
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,8 +17,9 @@ from utils.corr_lib import *
 from utils.tuning import *
 from utils.psth import compute_tensor
 from utils.explorefigs import plot_excerpt
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 #%% #############################################################################
 session_list        = np.array([['LPE09665','2023_03_21'], #GR

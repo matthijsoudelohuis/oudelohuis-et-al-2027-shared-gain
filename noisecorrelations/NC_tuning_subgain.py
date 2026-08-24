@@ -7,7 +7,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
 
 import copy
 import numpy as np
@@ -21,8 +20,9 @@ from utils.corr_lib import *
 from utils.tuning import *
 from utils.gain_lib import * 
 from scipy.stats import binned_statistic,binned_statistic_2d
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919_2023_11_06']])

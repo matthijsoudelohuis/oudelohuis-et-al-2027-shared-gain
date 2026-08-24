@@ -16,7 +16,6 @@ from scipy import stats
 from sklearn.metrics import r2_score
 from statannotations.Annotator import Annotator
 
-from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.imagelib import * 
@@ -25,8 +24,9 @@ from utils.corr_lib import compute_signal_noise_correlation
 from utils.gain_lib import *
 from utils.rf_lib import *
 from utils.regress_lib import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'naturalimages')
 
 #%% ################################################
 session_list        = np.array([['LPE11086_2023_12_16']])

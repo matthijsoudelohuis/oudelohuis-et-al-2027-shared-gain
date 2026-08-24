@@ -9,9 +9,9 @@ from scipy.stats import zscore
 from scipy.stats import linregress
 
 from loaddata.session_info import filter_sessions
-from loaddata.get_data_folder import get_local_drive
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'poprate')
 
 #%% LPE09665_2023_03_14
 

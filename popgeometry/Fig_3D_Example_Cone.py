@@ -9,13 +9,13 @@ from scipy.stats import zscore
 from sklearn.decomposition import PCA
 from scipy.optimize import curve_fit
 
-from loaddata.get_data_folder import get_local_drive
 from utils.explorefigs import plot_PCA_gratings_3D
 from loaddata.session_info import filter_sessions,load_sessions
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\PopulationGeometry\\')
+figdir = os.path.join(params['figdir'],'popgeometry')
 
 #%%
 cm = 1/2.54  # centimeters in inches

@@ -7,7 +7,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
 import pandas as pd
@@ -23,8 +22,9 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.explorefigs import plot_PCA_gratings, plot_PCA_gratings_3D
 from utils.plot_lib import shaded_error
 from utils.corr_lib import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919','2023_11_06']])
@@ -95,7 +95,7 @@ celldata = pd.concat([ses.celldata for ses in sessions]).reset_index(drop=True)
 
 #%% 
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 
 #%%  Scatter plot of average noise correlations versus skew:

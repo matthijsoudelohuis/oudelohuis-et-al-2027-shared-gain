@@ -7,7 +7,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
 
 import numpy as np
 import pandas as pd
@@ -18,8 +17,9 @@ from loaddata.session_info import filter_sessions
 from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper,ori_remapping
 from preprocessing.preprocesslib import assign_layer2
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 colors = [(0, 0, 0), (1, 0, 0), (1, 1, 1)] # first color is black, last is red
 cm_red = LinearSegmentedColormap.from_list("Custom", colors, N=20)

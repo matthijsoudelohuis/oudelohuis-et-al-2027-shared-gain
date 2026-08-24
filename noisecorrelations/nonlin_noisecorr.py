@@ -17,7 +17,6 @@ from statannotations.Annotator import Annotator
 from sklearn.decomposition import PCA
 
 
-from loaddata.get_data_folder import get_local_drive
 from utils.explorefigs import plot_PCA_gratings_3D,plot_PCA_gratings
 from loaddata.session_info import filter_sessions,load_sessions
 from utils.gain_lib import * 
@@ -25,8 +24,9 @@ from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.tuning import *
 from utils.nonlin_lib import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 #%%
 cm = 1/2.54  # centimeters in inches

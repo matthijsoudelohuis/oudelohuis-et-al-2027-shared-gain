@@ -15,8 +15,9 @@ from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'affinemodel')
 
 #%% #############################################################################
 session_list            = np.array([['LPE10919_2023_11_06']])

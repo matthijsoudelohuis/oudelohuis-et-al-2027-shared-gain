@@ -7,7 +7,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import os
-from loaddata.get_data_folder import get_local_drive
 
 import copy
 import numpy as np
@@ -16,8 +15,9 @@ import matplotlib.pyplot as plt
 from loaddata.session_info import load_sessions
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.corr_lib import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'noisecorrelations')
 
 #%% #############################################################################
 session_list        = np.array([['LPE10919','2023_11_06']])

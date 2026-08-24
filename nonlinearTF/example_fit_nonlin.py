@@ -6,15 +6,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions
 from utils.gain_lib import * 
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.tuning import *
 from utils.nonlin_lib import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'nonlinearTF')
 
 #%% 
 session_list        = np.array([['LPE12223_2024_06_10','LPE11086_2024_01_05','LPE10919_2023_11_06']])

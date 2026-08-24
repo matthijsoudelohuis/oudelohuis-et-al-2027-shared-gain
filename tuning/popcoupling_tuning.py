@@ -12,8 +12,9 @@ from loaddata.session_info import filter_sessions
 from utils.gain_lib import *
 from utils.tuning import *
 from utils.pair_lib import compute_pairwise_anatomical_distance
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'tuning')
 
 #%% #############################################################################
 

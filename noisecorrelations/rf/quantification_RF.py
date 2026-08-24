@@ -12,11 +12,11 @@ import seaborn as sns
 from statannotations.Annotator import Annotator
 from loaddata.session_info import filter_sessions,load_sessions
 from utils.rf_lib import *
-from loaddata.get_data_folder import get_local_drive
 from utils.corr_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'rf')
 
 #%% ################### Loading the data ##############################
 
@@ -83,7 +83,7 @@ rf_type = 'F'
 fig.savefig(os.path.join(figdir,'RF_quantification','RF_fraction_out%s_%s' % (rf_type,sessions[ises].sessiondata['session_id'][0]) + '.png'), format = 'png')
 
 #%% 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'rf')
 
 #%% 
 ises = 22
@@ -104,7 +104,7 @@ sessions = compute_pairwise_delta_rf(sessions,rf_type='F')
 
 #%% Make a figure with each session is one line for each of the areapairs a histogram of distmat_rf:
 areapairs = ['V1-V1','PM-PM','V1-PM']
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'rf')
 # r2_thr = 0.2
 fig = plot_delta_rf_across_sessions(sessions,areapairs,r2_thr=r2_thr,rf_type='F')
 fig.savefig(os.path.join(figdir,'DeltaRF_Areapairs_%dsessions_' % nSessions + '.png'), format = 'png')

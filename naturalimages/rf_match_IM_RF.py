@@ -16,11 +16,11 @@ import matplotlib.pyplot as plt
 # Import personal lib funcs
 from loaddata.session_info import load_sessions
 from utils.plot_lib import *  # get all the fixed color schemes
-from loaddata.get_data_folder import get_local_drive
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.rf_lib import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'naturalimages')
 
 # %% Load IM session with receptive field mapping ################################################
 session_list = np.array([['LPE10885', '2023_10_20']])

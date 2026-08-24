@@ -16,10 +16,10 @@ from utils.plot_lib import * #get all the fixed color schemes
 from utils.imagelib import load_natural_images #
 from utils.explorefigs import *
 from utils.psth import compute_respmat, construct_behav_matrix_ts_F
-from loaddata.get_data_folder import get_local_drive
 from utils.corr_lib import mean_resp_image
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'naturalimages')
 
 #%% ################################################
 # session_list        = np.array([['LPE09665','2023_03_15']])

@@ -15,7 +15,6 @@ from sklearn.decomposition import PCA
 from scipy.stats import zscore
 from sklearn.cross_decomposition import CCA
 
-from loaddata.get_data_folder import get_local_drive
 from loaddata.session_info import filter_sessions
 from utils.plot_lib import * #get all the fixed color schemes
 from utils.explorefigs import *
@@ -24,8 +23,9 @@ from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper
 from utils.regress_lib import *
 from utils.gain_lib import *
+from utils.params import params
 
-figdir = os.path.join(get_local_drive(),'OneDrive\\PostDoc\\Figures\\SharedGain\\')
+figdir = os.path.join(params['figdir'],'popgeometry')
 
 #%% Load an example session: 
 session_list        = np.array(['LPE12223_2024_06_10']) #GR
