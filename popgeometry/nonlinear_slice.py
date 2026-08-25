@@ -33,7 +33,6 @@ idx_N = np.all((
                 # ses.celldata['tuning_var']>0.025
                 ),axis=0)
 
-# zscore for each neuron across trial responses
 respmat         = ses.respmat[idx_N, :]
 poprate         = np.nanmean(respmat,axis=0)
 

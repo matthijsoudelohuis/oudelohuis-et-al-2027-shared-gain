@@ -189,12 +189,12 @@ class Session():
         if 'pupil_xpos' in self.videodata:
             self.respmat_pupilx = compute_respmat(self.videodata['pupil_xpos'],
                                                 self.videodata['ts'], self.trialdata['tOnset'],
-                                                t_resp_start=0, t_resp_stop=t_resp_stop, method='mean', label='pupil x position')
+                                                t_resp_start=t_resp_start, t_resp_stop=t_resp_stop, method='mean', label='pupil x position')
             
         if 'pupil_ypos' in self.videodata:
             self.respmat_pupily = compute_respmat(self.videodata['pupil_ypos'],
                                                 self.videodata['ts'], self.trialdata['tOnset'],
-                                                t_resp_start=0, t_resp_stop=t_resp_stop, method='mean', label='pupil y position')
+                                                t_resp_start=t_resp_start, t_resp_stop=t_resp_stop, method='mean', label='pupil y position')
         
         if 'pupil_area' in self.videodata:
             self.respmat_pupilarea = compute_respmat(self.videodata['pupil_area'],

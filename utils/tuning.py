@@ -412,6 +412,14 @@ def compute_tuning_wrapper(sessions):
             oris, speeds    = [np.unique(sessions[ises].trialdata[col]).astype('int') for col in ('centerOrientation', 'centerSpeed')]
             sessions[ises].celldata['pref_ori'],sessions[ises].celldata['pref_speed'] = get_pref_orispeed(resp_mean,oris,speeds,asindex=False)
 
+        elif sessions[ises].sessiondata['protocol'].isin(['IM'])[0]:
+            sessions[ises].celldata['tuning_SNR']                          = compute_tuning_SNR(sessions[ises])
+            sessions[ises].celldata['corr_half'],sessions[ises].celldata['rel_half']  = compute_splithalf_reliability(sessions[ises])
+            sessions[ises].celldata['sparseness']          = compute_sparseness(sessions[ises].respmat)
+            sessions[ises].celldata['selectivity_index']   = compute_selectivity_index(sessions[ises].respmat)
+            sessions[ises].celldata['fano_factor']         = compute_fano_factor(sessions[ises].respmat)
+            sessions[ises].celldata['gini_coefficient']    = compute_gini_coefficient(sessions[ises].respmat)
+
 
     return sessions
 

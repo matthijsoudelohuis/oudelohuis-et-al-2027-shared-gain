@@ -7,7 +7,6 @@ Matthijs Oude Lohuis, 2023, Champalimaud Center
 
 #%% ###################################################
 import os
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -35,44 +34,6 @@ figdir = os.path.join(params['figdir'],'popgeometry')
 #       #     # ####### #     #    #     # #######    #    ####### 
 #       #     # #     # #     #    #     # #     #    #    #     # 
 #######  #####  #     # ######     ######  #     #    #    #     # 
-
-#%% Load an example mouse session: 
-session_list            = np.array(['LPE12223_2024_06_10']) #GR
-sessions,nSessions      = filter_sessions(protocols = 'GR',only_session_id=session_list)
-
-
-#%%  Load data properly:        
-calciumversion = 'deconv'
-for ises in range(nSessions):
-    sessions[ises].load_respmat(load_behaviordata=True, load_calciumdata=True,load_videodata=True,
-                                calciumversion=calciumversion,keepraw=False)
-
-
-#%% ########################### Compute tuning metrics: ###################################
-sessions = compute_tuning_wrapper(sessions)
-
-celldata = pd.concat([ses.celldata for ses in sessions]).reset_index(drop=True)
-
-#%% Make the 3D figure the cone data:
-fig = plot_PCA_gratings_3D(sessions[0],thr_tuning=0)
-axes = fig.get_axes()
-axes[0].view_init(elev=-45, azim=0, roll=-10)
-axes[0].set_zlim([-5,45])
-# fig.savefig(os.path.join(figdir,'Cone_3D_V1_Original_%s' % sessions[0].sessiondata['session_id'][0] + '.png'), format = 'png')
-
-
-
-#%% Make the 3D figure for original data:
-fig = plot_PCA_gratings_3D(sessions[1],size='uniform',thr_tuning=0)
-axes = fig.get_axes()
-axes[0].view_init(elev=-45, azim=0, roll=-10)
-axes[0].set_zlim([-5,45])
-my_savefig(fig,figdir,'Cone_3D_V1_V2_KohnData_%s' % sessions[1].session_id,formats=['png'])
-
-
-#%% 
-
-
 
 
 

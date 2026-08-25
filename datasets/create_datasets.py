@@ -187,6 +187,7 @@ session_list            = np.array(['LPE13959_2025_02_24'])
 sessions,nSessions      = filter_sessions(protocols = 'IM',only_session_id=session_list,filter_noiselevel=True)
 sessions[0].load_respmat()
 sessions = compute_pop_coupling(sessions,version='radius_500')
+sessions = compute_tuning_wrapper(sessions)
 
 savefilename = os.path.join(os.getcwd(),'datasets','dataset_C_1_exampleses')
 np.savez(savefilename + '.npz',sessions=sessions,allow_pickle=True)
@@ -196,6 +197,7 @@ sessions,nSessions   = filter_sessions(protocols = 'IM',filter_areas='V1',filter
 for ises in range(nSessions):
     sessions[ises].load_respmat()
 sessions = compute_pop_coupling(sessions,version='radius_500')
+sessions = compute_tuning_wrapper(sessions)
 
 savefilename = os.path.join(os.getcwd(),'datasets','dataset_C_2_allV1neural')
 np.savez(savefilename + '.npz',sessions=sessions,allow_pickle=True)
@@ -205,6 +207,7 @@ sessions,nSessions   = filter_sessions(protocols = 'IM',filter_areas='V1',filter
 for ises in range(nSessions):
     sessions[ises].load_respmat()
 sessions = compute_pop_coupling(sessions,version='radius_500')
+sessions = compute_tuning_wrapper(sessions)
 
 savefilename = os.path.join(os.getcwd(),'datasets','dataset_C_3_repeatsV1neural')
 np.savez(savefilename + '.npz',sessions=sessions,allow_pickle=True)
