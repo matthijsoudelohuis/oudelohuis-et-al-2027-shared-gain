@@ -440,7 +440,7 @@ def plot_PCA_gratings_3D(ses, size='runspeed', export_animation=False, figdir=No
     ori_ind = [np.argwhere(np.array(ori) == iori)[:, 0] for iori in oris]
 
     pal = sns.color_palette('husl', len(oris))
-    pal = np.tile(sns.color_palette('husl', 8), (2, 1))
+    pal = np.tile(sns.color_palette('husl', len(oris)), (2, 1))
     minperc = 10
     maxperc = 90
     if size == 'runspeed':

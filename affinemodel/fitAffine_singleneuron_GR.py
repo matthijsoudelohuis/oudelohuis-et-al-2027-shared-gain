@@ -9,9 +9,6 @@ from tqdm import tqdm
 from scipy.stats import linregress
 import statsmodels.formula.api as smf
 
-
-from loaddata.session_info import filter_sessions
-from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
@@ -19,123 +16,34 @@ from utils.params import params
 
 figdir = os.path.join(params['figdir'],'affinemodel')
 
-#%% #############################################################################
-session_list            = np.array([['LPE10919_2023_11_06']])
-session_list        = np.array([['LPE12223_2024_06_10']])
-# session_list        = np.array([['LPE11086_2024_01_05']])
+#%% Load an example session: 
+data = np.load(os.path.join(os.getcwd(),'datasets','dataset_A_1_exampleses' + '.npz'),allow_pickle=True)
+sessions = data['sessions']
 
-sessions,nSessions      = filter_sessions(protocols = ['GR'],only_session_id=session_list)
-sessiondata             = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
-
-#%% Load all GR sessions: 
-sessions,nSessions   = filter_sessions(protocols = 'GR')
-
-#%% Remove sessions with too much drift in them:
-sessiondata         = pd.concat([ses.sessiondata for ses in sessions]).reset_index(drop=True)
-sessions_in_list    = np.where(~sessiondata['session_id'].isin(['LPE12013_2024_05_02','LPE10884_2023_10_20','LPE09830_2023_04_12']))[0]
-sessions            = [sessions[i] for i in sessions_in_list]
-nSessions           = len(sessions)
-
-#%%  Load data properly:        
-calciumversion = 'deconv'
-for ises in range(nSessions):
-    sessions[ises].load_respmat(load_behaviordata=True, load_calciumdata=True,load_videodata=True,
-                                calciumversion=calciumversion,keepraw=False)
-    
 #%%
-sessions = compute_pairwise_anatomical_distance(sessions)
-sessions = compute_tuning_wrapper(sessions)
-sessions = compute_pop_coupling(sessions,version='radius_500')
-
-#%% #########################################################################################
-ises        = 0
-ses         = sessions[ises]
-
-Y           = zscore(ses.respmat, axis=1)
-
-T           = copy.deepcopy(Y)
-
-trial_ori   = ses.trialdata['Orientation']
-oris        = np.sort(trial_ori.unique())
-
-## Compute tuned response:
-for ori in oris:
-    ori_idx     = np.where(ses.trialdata['Orientation']==ori)[0]
-    temp        = np.mean(Y[:,ses.trialdata['Orientation']==ori],axis=1)
-    T[:,ori_idx] = np.repeat(temp[:, np.newaxis], len(ori_idx), axis=1)
+celldata = pd.concat([ses.celldata for ses in sessions]).reset_index(drop=True)
 
 #%% 
-N               = ses.respmat.shape[0]
+N               = len(celldata)
 
 modelversions = ['all','area','plane','radius_50','radius_100','radius_500','radius_1000']
 modelversions = ['random','runspeed','videome','all','area','plane','radius_50','radius_100','radius_500','radius_1000']
+modelversions = ['random','area','allfast']
 nmodels         = len(modelversions)
 modelcoefs      = np.full((nmodels,N,3),np.nan)
 model_R2        = np.full((nmodels,N),np.nan)
 
-Y_hat           = np.full((ses.respmat.shape[0],ses.respmat.shape[1],nmodels),np.nan)
+for imodelversion,modelversion in enumerate(modelversions):
+    sessions = fitAffine_GR_singleneuron_full(sessions,
+                                              modelversion=modelversion,recompute_poprate=True)
+    celldata = pd.concat([ses.celldata for ses in sessions]).reset_index(drop=True)
+    modelcoefs[imodelversion,:,0] = celldata['aff_alpha_grfull']
+    modelcoefs[imodelversion,:,1] = celldata['aff_beta_grfull']
+    modelcoefs[imodelversion,:,2] = celldata['aff_offset_grfull']
+    model_R2[imodelversion,:] = celldata['aff_r2_grfull']
 
-for modelversion in modelversions:
-    print(modelversion)
-    
-    for iN in range(N):
-        if modelversion == 'all':
-            r = np.mean(ses.respmat[np.setdiff1d(np.arange(N),iN),:], axis=0)
-            # r = poprate
-        elif modelversion == 'area':
-            idx_N = ses.celldata['roi_name'] == ses.celldata['roi_name'][iN]
-            idx_N[iN] = False
-            r = np.nanmean(ses.respmat[idx_N,:], axis=0)
-        elif modelversion == 'plane':
-            # r = poprate_planes[ses.celldata['plane_idx'][iN]]
-            idx_N = ses.celldata['plane_idx'] == ses.celldata['plane_idx'][iN]
-            idx_N[iN] = False
-            r = np.nanmean(ses.respmat[idx_N,:], axis=0)
-        elif modelversion == 'radius_50':
-            idx_N = ses.distmat_xyz[iN,:] < 50
-            idx_N[iN] = False
-            r = np.nanmean(ses.respmat[idx_N,:], axis=0)
-        elif modelversion == 'radius_100':
-            idx_N = ses.distmat_xyz[iN,:] < 100
-            idx_N[iN] = False
-            r = np.nanmean(ses.respmat[idx_N,:], axis=0)
-        elif modelversion == 'radius_500':
-            idx_N = ses.distmat_xyz[iN,:] < 500
-            idx_N[iN] = False
-            r = np.nanmean(ses.respmat[idx_N,:], axis=0)
-        elif modelversion == 'radius_1000':
-            idx_N = ses.distmat_xyz[iN,:] < 1000
-            idx_N[iN] = False
-            r = np.nanmean(ses.respmat[idx_N,:], axis=0)
-        elif modelversion == 'random':
-            r = np.random.randn(1,ses.respmat.shape[1])
-        elif modelversion == 'runspeed':
-            r = ses.respmat_runspeed
-        elif modelversion == 'videome':
-            r = ses.respmat_videome
-
-        y = Y[iN,:]
-        x = T[iN,:]
-        
-        if np.isnan(r).all():
-            modelcoefs[modelversions.index(modelversion), iN, :] = np.nan
-            model_R2[modelversions.index(modelversion), iN] = np.nan
-            Y_hat[iN,:,modelversions.index(modelversion)] = np.nan
-            continue
-        # Construct the design matrix
-        A = np.vstack([r * x, r, np.ones_like(y)]).T
-
-        # Perform linear regression using least squares
-        coefs, residuals, rank, s = np.linalg.lstsq(A, y, rcond=None)
-
-        # Store the coefficients
-        modelcoefs[modelversions.index(modelversion), iN, :] = coefs
-
-        # Compute R^2 value
-        y_pred = A @ coefs
-        model_R2[modelversions.index(modelversion), iN] = r2_score(y, y_pred)
-
-        Y_hat[iN,:,modelversions.index(modelversion)] = y_pred
+#%%
+sessions = fitAffine_GR_singleneuron_full(sessions,modelversion='allfast')
 
 #%%
 idx_N = ses.celldata['tuning_var'] > 0.01
@@ -150,10 +58,10 @@ axes[1].set_title('Tuned')
 for i in range(nmodels):
     axes[i+2].imshow(Y_hat[idx_N,:,i],aspect='auto',vmin=-0.5,vmax=0.5)
     axes[i+2].set_title(modelversions[i])
-my_savefig(fig,figdir,'Heatmap_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
+# my_savefig(fig,figdir,'Heatmap_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
 
 #%% 
-idx_N = ses.celldata['tuning_var'] > 0.01
+idx_N = ses.celldata['tuning_var'] > 0.025
 
 clrs = sns.color_palette('colorblind',nmodels)
 fig,ax = plt.subplots(1,1,figsize=(nmodels*0.8,3))
@@ -166,136 +74,27 @@ ax.set_xticks(range(nmodels))
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
 ax.set_xticklabels([v if i != np.argmax(np.nanmean(model_R2[:,idx_N],axis=1)) else '*'+v for i,v in enumerate(modelversions)],
                    rotation=45,ha='right',fontsize=9)
-my_savefig(fig,figdir,'R2_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
+# my_savefig(fig,figdir,'R2_AffineModel_SingleNeuron_GR_%ssession' % ses.session_id,formats=['png'])
 
 print('Mean R2 for:')
 for i in range(nmodels):
     idx_N = ses.celldata['tuning_var'] > 0.025
+    idx_N = ses.celldata['tuning_var'] > 0
     print('%s: %.2f' % (modelversions[i],np.nanmean(model_R2[i,idx_N])))
     # print('%s: %.2f' % (modelversions[i],np.nanmean(model_R2[i,:])))
     # print('Median R2 for %s: %.2f' % (modelversions[i],np.nanmedian(model_R2[i,:])))
 
-
-#%% 
-def fitAffine_GR_singleneuron_full(sessions,radius=500):
-    for ses in tqdm(sessions,desc='Fitting Single Neuron Affine Model',total=len(sessions)):
-
-        ses.celldata['aff_r2_grfull'] = np.nan
-        ses.celldata['aff_alpha_grfull'] = np.nan
-        ses.celldata['aff_beta_grfull'] = np.nan
-        ses.celldata['aff_offset_grfull'] = np.nan
-
-        Y           = zscore(ses.respmat, axis=1)
-
-        T           = copy.deepcopy(Y)
-
-        trial_ori   = ses.trialdata['Orientation']
-        oris        = np.sort(trial_ori.unique())
-
-        ## Compute tuned response:
-        for ori in oris:
-            ori_idx     = np.where(ses.trialdata['Orientation']==ori)[0]
-            temp        = np.mean(Y[:,ses.trialdata['Orientation']==ori],axis=1)
-            T[:,ori_idx] = np.repeat(temp[:, np.newaxis], len(ori_idx), axis=1)
-
-        N = ses.respmat.shape[0]
-
-        Y_hat           = np.full_like(ses.respmat, np.nan)
-
-        for iN in range(N):
-            idx_N       = ses.distmat_xyz[iN,:] < radius
-            idx_N[iN]   = False
-            r           = np.nanmean(ses.respmat[idx_N,:], axis=0)
-        
-            y           = Y[iN,:]
-            x           = T[iN,:]
-            
-            if np.isnan(r).all():
-                # modelcoefs[modelversions.index(modelversion), iN, :] = np.nan
-                # model_R2[modelversions.index(modelversion), iN] = np.nan
-                # Y_hat[iN,:,modelversions.index(modelversion)] = np.nan
-                continue
-            # Construct the design matrix
-            A = np.vstack([r * x, r, np.ones_like(y)]).T
-
-            # Perform linear regression using least squares
-            coefs, residuals, rank, s = np.linalg.lstsq(A, y, rcond=None)
-
-            # Store the coefficients
-            [ses.celldata.loc[iN,'aff_alpha_grfull'], ses.celldata.loc[iN,'aff_beta_grfull'], 
-                ses.celldata.loc[iN,'aff_offset_grfull']] = coefs
-
-            # Compute R^2 value
-            y_pred = A @ coefs
-            ses.celldata.loc[iN,'aff_r2_grfull'] = r2_score(y, y_pred)
-
-            # Y_hat[iN,:,modelversions.index(modelversion)] = y_pred
-    return sessions
-
-#%% 
-def fitAffine_GR_singleneuron_split(sessions,radius=500,perc=50):
-    for ses in tqdm(sessions,desc='Fitting Single Neuron Affine Model',total=len(sessions)):
-
-        ses.celldata['aff_r2_grsplit'] = np.nan
-        ses.celldata['aff_alpha_grsplit'] = np.nan
-        ses.celldata['aff_beta_grsplit'] = np.nan
-
-        trial_ori   = ses.trialdata['Orientation']
-        oris        = np.sort(trial_ori.unique())
-
-        N = ses.respmat.shape[0]
-
-        Y_hat           = np.full_like(ses.respmat, np.nan)
-
-        r = np.nanmean(zscore(ses.respmat, axis=1), axis=0)
-# 
-        for iN in range(N):
-            # idx_N       = ses.distmat_xyz[iN,:] < radius
-            # idx_N[iN]   = False
-            # r           = np.nanmean(ses.respmat[idx_N,:], axis=0)
-            
-            if np.isnan(r).all():
-                # modelcoefs[modelversions.index(modelversion), iN, :] = np.nan
-                # model_R2[modelversions.index(modelversion), iN] = np.nan
-                # Y_hat[iN,:,modelversions.index(modelversion)] = np.nan
-                continue
-
-            idx_low    = r<=np.percentile(r,perc)
-            idx_high   = r>np.percentile(r,100-perc)
-
-            meanresp    = np.empty([len(oris),2])
-            for i,ori in enumerate(oris):
-                meanresp[i,0] = np.nanmean(ses.respmat[iN,np.logical_and(ses.trialdata['Orientation']==ori,idx_low)])
-                meanresp[i,1] = np.nanmean(ses.respmat[iN,np.logical_and(ses.trialdata['Orientation']==ori,idx_high)])
-                
-            # meanresp_pref          = meanresp.copy()
-            # for n in range(N):
-            #     meanresp_pref[n,:,0] = np.roll(meanresp[n,:,0],-prefori[n])
-            #     meanresp_pref[n,:,1] = np.roll(meanresp[n,:,1],-prefori[n])
-
-            # normalize by peak response during still trials
-            tempmin,tempmax = meanresp[:,0].min(axis=0,keepdims=True),meanresp[:,0].max(axis=0,keepdims=True)
-            meanresp[:,0] = (meanresp[:,0] - tempmin) / (tempmax - tempmin)
-            meanresp[:,1] = (meanresp[:,1] - tempmin) / (tempmax - tempmin)
-            
-            b = linregress(meanresp[:,0],meanresp[:,1])
-
-            # Store the coefficients
-            [ses.celldata.loc[iN,'aff_alpha_grsplit'], ses.celldata.loc[iN,'aff_beta_grsplit'], 
-                ses.celldata.loc[iN,'aff_r2_grsplit']] = b[:3]
-            
-    return sessions
-
 #%%
-
-sessions = fitAffine_GR_singleneuron_full(sessions,radius=500)
-
-#%%
-
-sessions = fitAffine_GR_singleneuron_split(sessions,radius=500,perc=50)
-
+sessions = fitAffine_GR_singleneuron_split(sessions,modelversion='allfast',perc=50,recompute_poprate=True)
 
 #%% 
+ises = 0
+fig,axes = plt.subplots(1,1,figsize=(4*cm,4*cm))
+ax = axes
+scatter_alphabeta(ax,sessions[ises].celldata)
+
+#%% 
+ises = 0
 fig,axes = plt.subplots(1,2,figsize=(8,4))
 sns.histplot(data=sessions[ises].celldata,x='aff_alpha_grsplit',color='green',element="step",
              common_norm=False,ax=axes[0],stat="density",hue='arealabel')
@@ -303,7 +102,8 @@ sns.histplot(data=sessions[ises].celldata,x='aff_beta_grsplit',color='blue',elem
              common_norm=False,ax=axes[1],stat="density",hue='arealabel')
 axes[0].set_title('Mult')
 axes[1].set_title('Add')
-my_savefig(fig,figdir,'AffineModelCoefHist_SingleNeuron_GR_%ssession' % sessions[ises].session_id,formats=['png'])
+# my_savefig(fig,figdir,'AffineModelCoefHist_SingleNeuron_GR_%ssession' % sessions[ises].session_id,formats=['png'])
+
 
 #%% 
 celldata = pd.concat([ses.celldata for ses in sessions]).reset_index(drop=True)
@@ -319,7 +119,7 @@ for imod,mod in enumerate(['alpha','beta']):
     ax = axes[imod]
     idx_N = np.all((celldata['roi_name'].isin(arealabels),
                     # celldata['OSI']>0.5,
-                    celldata['noise_level']<20),axis=0)
+                    ),axis=0)
     sns.histplot(data=celldata[idx_N],x='aff_%s_grsplit' % mod,element="step",common_norm=False,ax=ax,fill=False,
                 bins=bins,stat="probability",hue='roi_name',hue_order=arealabels,palette=get_clr_areas(arealabels),cumulative=True)
     for ialp,arealabel in enumerate(arealabels):
@@ -343,7 +143,7 @@ for imod,mod in enumerate(['alpha','beta']):
     ax.text(0.75,0.5,'p=%1.4f' % (pval),ha='center',va='center',transform=ax.transAxes)
 plt.tight_layout()
 sns.despine(fig=fig, top=True, right=True, offset=3,trim=True)
-my_savefig(fig,figdir,'AffineModel_Areas_CoefHist_SingleNeuron_GR_%d' % nSessions,formats=['png'])
+# my_savefig(fig,figdir,'AffineModel_Areas_CoefHist_SingleNeuron_GR_%d' % nSessions,formats=['png'])
 
 #%% Show histograms of the coefficients for each area
 arealabels      = ['V1unl','V1lab','PMunl','PMlab']
@@ -409,7 +209,6 @@ for iy,yvar in enumerate(yvars):
 my_savefig(fig,figdir,'AffineModel_VarCorrs_GR_%d' % nSessions,formats=['png'])
 
 #%%
-
 idx_N = np.all((
                 celldata['aff_r2_grsplit']>0.1,
                 celldata['noise_level']<20),axis=0)
@@ -420,12 +219,6 @@ sns.scatterplot(data=celldata[idx_N],x='gOSI',y='aff_beta_grsplit')
 sns.scatterplot(data=celldata[idx_N],x='tuning_var',y='aff_beta_grsplit')
 
 sns.scatterplot(data=celldata[idx_N],x='tuning_var',y='aff_alpha_grsplit')
-
-#%%
-# from utils.rf_lib import filter_nearlabeled
-# for ises in tqdm(range(nSessions),total=nSessions,desc='Filtering sessions for nearby labeled cells'):
-#     sessions[ises].celldata['idx_nearby'] = filter_nearlabeled(sessions[ises],radius=50)
-# celldata = pd.concat([ses.celldata for ses in sessions],ignore_index=True)
 
 #%% 
 area = 'V1'

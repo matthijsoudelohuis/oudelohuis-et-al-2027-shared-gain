@@ -1,10 +1,13 @@
 #%% 
 import numpy as np
+import seaborn as sns
 from sklearn.metrics import r2_score
 from tqdm import tqdm
 from scipy.optimize import minimize
+from scipy.stats import zscore,linregress
 
 from utils.gain_lib import comp_poprate
+from utils.plot_lib import *
 
 #%% ###########################################################################
 # NONLINEAR TRANSFER FUNCTION FITTING PIPELINE
@@ -59,6 +62,7 @@ NL_CONFIGS = [
 
 nl_names = [c[0] for c in NL_CONFIGS]
 nNL      = len(NL_CONFIGS)
+clrs_nl  = sns.color_palette('tab10', nNL)
 
 #%%
 def tuning_input(stim, pref=0.0, width=1.0, gain=1.0):
@@ -131,15 +135,17 @@ def fit_nl_models(resp, stim_ids, poprate, configs=NL_CONFIGS):
             r2    = r2_score(resp, pred)
             results[name] = dict(r2=r2, theta=theta, gamma=gamma, b=b,
                                  nl_par=shape, pred=pred, u=u,
+                                 stim_ids = stim_ids,poprate=poprate,
                                  resp_norm=resp, success=opt.success)
         except Exception:
             results[name] = dict(r2=np.nan, theta=None, gamma=None, b=None,
                                  nl_par=None, pred=None, u=None,
+                                 stim_ids = None,poprate=None,
                                  resp_norm=resp, success=False)
     return results
 
 
-#%% Fit all neurons across all sessions and collect R², Gamma, Beta, theta, nl_par
+# Fit all neurons across all sessions and collect R², Gamma, Beta, theta, nl_par
 def fit_nl_models_sessions(sessions, nl_configs=NL_CONFIGS, verbose=False):
     nSessions = len(sessions)
     nl_names = [c[0] for c in nl_configs]
@@ -179,3 +185,200 @@ def fit_nl_models_sessions(sessions, nl_configs=NL_CONFIGS, verbose=False):
             ses_idx_arr.append(ises)
 
     return sessions, theta_arr, nlpar_arr, ses_idx_arr
+
+# Diagnostic figure for the example neuron
+def diagnostic_nonlinfit(results_ex):
+    pref_k    = int(np.argmax(results_ex[nl_names[0]]['theta']))
+    # stim_ids??
+    # oris = ses.trialdata['Orientation'].to_numpy()
+    stim_ids = results_ex[nl_names[0]]['stim_ids']
+    nstim    = len(np.unique(stim_ids))
+    ustim    = np.linspace(0,360-360/nstim,nstim)
+    poprate = results_ex[nl_names[0]]['poprate']
+
+    orth_k    = (pref_k + nstim//4) % nstim
+    pop_sweep = np.linspace(np.percentile(poprate, 1), np.percentile(poprate, 99), 200)
+
+    best_name = max(nl_names, key=lambda n: results_ex[n]['r2']
+                    if not np.isnan(results_ex[n]['r2']) else -1)
+    best_res     = results_ex[best_name]
+    resp_norm_ex = best_res['resp_norm']
+    residuals    = resp_norm_ex - best_res['pred']
+
+    fig, axes = plt.subplots(3, 3, figsize=(22*cm, 17*cm))
+
+    # (0,0) Fitted nonlinearity shapes over the actual input range seen by each model
+    ax = axes[0, 0]
+    for i, (name, nl_func, n_shape, _, _) in enumerate(NL_CONFIGS):
+        entry = results_ex[name]
+        if entry['theta'] is None:
+            continue
+        u_vals  = entry['u']
+        u_sweep = np.linspace(np.percentile(u_vals, 1), np.percentile(u_vals, 99), 300)
+        y = nl_func(u_sweep, *entry['nl_par']) if n_shape else nl_func(u_sweep)
+        u_norm = np.linspace(0,1,300)
+        ax.plot(u_norm, y, color=clrs_nl[i], lw=2, label=name)
+        # ax.plot(u_sweep, y, color=clrs_nl[i], lw=2, label=name)
+    ax.axhline(0, color='k', lw=0.5, ls=':')
+    ax.axvline(0, color='k', lw=0.5, ls=':')
+    ax.set_xlabel('u  (θ_k + γ·P + b)')
+    ax.set_ylabel('f(u)  [normalised scale]')
+    ax.set_title('Fitted nonlinearities\n(over actual input range)')
+    ax.legend(fontsize=7, frameon=False)
+    sns.despine(ax=ax, trim=True, offset=3)
+
+    # (0,1) Fitted θ — tuning curve in input space
+    ax = axes[0, 1]
+    for i, (name, *_) in enumerate(NL_CONFIGS):
+        if results_ex[name]['theta'] is None:
+            continue
+        # ax.plot(ustim, results_ex[name]['theta'], color=clrs_nl[i], lw=1.5,
+        ax.plot(ustim, zscore(results_ex[name]['theta']), color=clrs_nl[i], lw=1.5,
+                marker='o', ms=3, label=name)
+    ax.set_xlabel('Orientation (°)')
+    ax.set_ylabel('θ_k  (input-space drive)')
+    ax.set_title('Fitted stimulus drive (pre-NL)')
+    ax.legend(fontsize=7, frameon=False)
+    ax.set_xticks(ustim[::2])
+    ax.tick_params(axis='x', labelrotation=45)
+    sns.despine(ax=ax, trim=True, offset=3)
+
+    # (0,2) Mean output tuning curve: observed vs all model predictions
+    ax = axes[0, 2]
+    mean_obs = np.array([np.mean(resp_norm_ex[stim_ids == k]) for k in range(nstim)])
+    ax.plot(ustim, mean_obs, color='k', lw=2, marker='o', ms=4, label='observed', zorder=5)
+    for i, (name, nl_func, n_shape, _, _) in enumerate(NL_CONFIGS):
+        entry = results_ex[name]
+        if entry['pred'] is None:
+            continue
+        mean_pred = np.array([np.mean(entry['pred'][stim_ids == k]) for k in range(nstim)])
+        ax.plot(ustim, mean_pred, color=clrs_nl[i], lw=1.5, ls='--', label=name)
+    ax.set_xlabel('Orientation (°)')
+    ax.set_ylabel('Mean response (normalised)')
+    ax.set_title('Mean tuning curve\n(observed vs fitted)')
+    ax.legend(fontsize=7, frameon=False)
+    ax.set_xticks(ustim[::2])
+    ax.tick_params(axis='x', labelrotation=45)
+    sns.despine(ax=ax, trim=False, offset=3)
+
+    # (1,0) Response vs pop rate for preferred and orthogonal orientations
+    ax = axes[1, 0]
+    for k_ori, lbl, col in [(pref_k, 'pref', 'tab:blue'), (orth_k, 'orth', 'tab:orange')]:
+        idx_T = stim_ids == k_ori
+        ax.scatter(poprate[idx_T], resp_norm_ex[idx_T], s=4, alpha=0.35, color=col,
+                zorder=1, label=f'data ({lbl})')
+        for i, (name, nl_func, n_shape, _, _) in enumerate(NL_CONFIGS):
+            entry = results_ex[name]
+            if entry['theta'] is None:
+                continue
+            u_line    = entry['theta'][k_ori] + entry['gamma'] * pop_sweep + entry['b']
+            pred_line = nl_func(u_line, *entry['nl_par']) if n_shape else nl_func(u_line)
+            ax.plot(pop_sweep, pred_line, color=clrs_nl[i], lw=1.2, alpha=0.8)
+    ax.set_xlabel('Population rate (z)')
+    ax.set_ylabel('Response (normalised)')
+    ax.set_title('Resp vs pop rate\n(pref & orth, all models)')
+    ax.set_xlim([pop_sweep[0], pop_sweep[-1]])
+    ax.legend(fontsize=7, frameon=False)
+    sns.despine(ax=ax, trim=False, offset=3)
+
+    # (1,1) R² bar plot
+    ax = axes[1, 1]
+    r2s = [results_ex[n]['r2'] for n in nl_names]
+    ax.bar(np.arange(nNL), r2s, color=clrs_nl)
+    ax.set_xticks(np.arange(nNL))
+    ax.set_ylabel('R²')
+    ax.set_title(f'R² per model')
+    ax.set_ylim([0, max(r for r in r2s if not np.isnan(r)) * 1.25])
+    for i, v in enumerate(r2s):
+        if not np.isnan(v):
+            ax.text(i, v + 0.003, f'{v:.3f}', ha='center', va='bottom', fontsize=7)
+    sns.despine(ax=ax, trim=False, offset=3)
+    ax.set_xticklabels(nl_names, rotation=45, ha='right', fontsize=8)
+
+    # (1,2) Predicted vs observed (best model, normalised space)
+    ax = axes[1, 2]
+    ax.scatter(resp_norm_ex, best_res['pred'], s=2, alpha=0.3, color='k')
+    lims = [min(resp_norm_ex.min(), best_res['pred'].min()),
+            max(resp_norm_ex.max(), best_res['pred'].max())]
+    ax.plot(lims, lims, 'r--', lw=1)
+    ax.set_xlabel('Observed (normalised)')
+    ax.set_ylabel('Predicted')
+    ax.set_title(f'Predicted vs observed\n({best_name}, R²={best_res["r2"]:.3f})')
+    sns.despine(ax=ax, trim=False, offset=3)
+
+    # (2,0) Distribution of fitted inputs u across models
+    ax = axes[2, 0]
+    for i, (name, *_) in enumerate(NL_CONFIGS):
+        u = results_ex[name]['u']
+        if u is not None:
+            sns.kdeplot(u, ax=ax, color=clrs_nl[i], label=name, fill=False)
+    ax.axvline(0, color='k', lw=0.5, ls=':')
+    ax.set_xlabel('Input  u = θ_k + γ·P + b')
+    ax.set_ylabel('Density')
+    ax.set_title('Distribution of fitted inputs')
+    ax.legend(fontsize=7, frameon=False)
+    sns.despine(ax=ax, trim=False, offset=3)
+
+    # (2,1) Residuals vs pop rate (best model)
+    ax = axes[2, 1]
+    ax.scatter(poprate, residuals, s=2, alpha=0.3, color='k')
+    ax.axhline(0, color='r', lw=1)
+    _, _, rv, pv, _ = linregress(poprate, residuals)
+    ax.text(0.05, 0.93, f'r={rv:.2f}, p={pv:.2e}', transform=ax.transAxes, fontsize=8)
+    ax.set_xlabel('Population rate (z)')
+    ax.set_ylabel('Residual')
+    ax.set_title(f'Residuals vs pop rate  ({best_name})')
+    sns.despine(ax=ax, trim=False, offset=3)
+
+    # (2,2) Mean residuals per orientation (best model)
+    ax = axes[2, 2]
+    mean_resid = [np.mean(residuals[stim_ids == k]) for k in range(nstim)]
+    ax.bar(ustim, mean_resid, width=18, color='steelblue', alpha=0.8)
+    ax.axhline(0, color='k', lw=0.5)
+    ax.set_xlabel('Orientation (°)')
+    ax.set_ylabel('Mean residual')
+    ax.set_title(f'Residuals by orientation  ({best_name})')
+    ax.set_xticks(ustim[::2])
+    ax.tick_params(axis='x', labelrotation=45)
+    sns.despine(ax=ax, trim=False, offset=3)
+
+    # plt.suptitle(f'NL model fits', fontsize=8, y=1.01)
+    plt.tight_layout()
+
+    return fig
+
+# Analytical TF derivative functions  (match NL_CONFIGS exactly)
+def tfd_linear(u):
+    return np.ones_like(u)
+
+def tfd_relu(u):
+    return (u > 0).astype(float)
+
+def tfd_softplus(u, beta):
+    b = np.abs(beta) + 1e-4
+    return 1.0 / (1.0 + np.exp(-np.clip(b * u, -500.0, 500.0)))
+
+def tfd_sigmoid(u, a):
+    s = 1.0 / (1.0 + np.exp(-np.clip(u, -500.0, 500.0)))
+    return np.abs(a) * s * (1.0 - s)
+
+def tfd_tanh(u, a):
+    return np.abs(a) * 0.5 * (1.0 - np.tanh(u) ** 2)
+
+def tfd_powerlaw(u, p):
+    exp = np.abs(p) + 1e-4
+    return exp * np.power(np.maximum(u, 1e-8), exp - 1.0) * (u > 0).astype(float)
+
+def tfd_exp(u):
+    return np.maximum(0.0, np.exp(np.clip(u, -500.0, 10.0)))
+
+TF_DERIVS = {
+    'Linear':          tfd_linear,
+    'ReLU':            tfd_relu,
+    'Softplus':        tfd_softplus,
+    'Sigmoid':         tfd_sigmoid,
+    'Tanh':            tfd_tanh,
+    'Power-law (p=2)': tfd_powerlaw,
+    'Exp':             tfd_exp,
+}
+

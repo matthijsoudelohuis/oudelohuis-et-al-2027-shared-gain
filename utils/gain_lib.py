@@ -3,12 +3,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
-from scipy.stats import zscore
-
+from scipy.stats import zscore,pearsonr,spearmanr
+from tqdm import tqdm
+from scipy.stats import linregress
 
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
-
 
 def plot_respmat(orientations, datasets, labels, prefori):
     data = datasets[0]
@@ -167,3 +167,126 @@ def compute_pop_coupling(sessions,version='allfast'):
     
     return sessions
 
+
+def fitAffine_GR_singleneuron_full(sessions,modelversion='radius_500',recompute_poprate=True):
+    if recompute_poprate:
+        print('recomputing population rate\n')
+        sessions = comp_poprate(sessions,version=modelversion)
+
+    for ses in tqdm(sessions,desc='Fitting Single Neuron Affine Model',total=len(sessions)):
+
+        ses.celldata['aff_r2_grfull'] = np.nan
+        ses.celldata['aff_alpha_grfull'] = np.nan
+        ses.celldata['aff_beta_grfull'] = np.nan
+        ses.celldata['aff_offset_grfull'] = np.nan
+
+        Y           = zscore(ses.respmat, axis=1)
+
+        T           = copy.deepcopy(Y)
+
+        trial_ori   = ses.trialdata['Orientation']
+        oris        = np.sort(trial_ori.unique())
+
+        ## Compute tuned response:
+        for ori in oris:
+            ori_idx     = np.where(ses.trialdata['Orientation']==ori)[0]
+            temp        = np.mean(Y[:,ses.trialdata['Orientation']==ori],axis=1)
+            T[:,ori_idx] = np.repeat(temp[:, np.newaxis], len(ori_idx), axis=1)
+
+        N               = ses.respmat.shape[0]
+
+        Y_hat           = np.full_like(ses.respmat, np.nan)
+
+        for iN in range(N):
+            # idx_N       = ses.distmat_xyz[iN,:] < radius
+            # idx_N[iN]   = False
+            r           = ses.popratemat[iN,:]
+        
+            y           = Y[iN,:]
+            x           = T[iN,:]
+            
+            if np.isnan(r).all():
+                # modelcoefs[modelversions.index(modelversion), iN, :] = np.nan
+                # model_R2[modelversions.index(modelversion), iN] = np.nan
+                # Y_hat[iN,:,modelversions.index(modelversion)] = np.nan
+                continue
+            # Construct the design matrix
+            A = np.vstack([r * x, r, np.ones_like(y)]).T
+
+            # Perform linear regression using least squares
+            coefs, residuals, rank, s = np.linalg.lstsq(A, y, rcond=None)
+
+            # Store the coefficients
+            [ses.celldata.loc[iN,'aff_alpha_grfull'], ses.celldata.loc[iN,'aff_beta_grfull'], 
+                ses.celldata.loc[iN,'aff_offset_grfull']] = coefs
+
+            # Compute R^2 value
+            y_pred = A @ coefs
+            ses.celldata.loc[iN,'aff_r2_grfull'] = r2_score(y, y_pred)
+
+    return sessions
+
+def fitAffine_GR_singleneuron_split(sessions,modelversion='radius_500',perc=50,recompute_poprate=True):
+    if recompute_poprate:
+        sessions = comp_poprate(sessions,version=modelversion)
+
+    for ses in tqdm(sessions,desc='Fitting Single Neuron Affine Model',total=len(sessions)):
+
+        ses.celldata['aff_r2_grsplit'] = np.nan
+        ses.celldata['aff_alpha_grsplit'] = np.nan
+        ses.celldata['aff_beta_grsplit'] = np.nan
+
+        trial_ori   = ses.trialdata['Orientation']
+        oris        = np.sort(trial_ori.unique())
+
+        N = ses.respmat.shape[0]
+
+        Y_hat           = np.full_like(ses.respmat, np.nan)
+
+        for iN in range(N):
+            # idx_N       = ses.distmat_xyz[iN,:] < radius
+            # idx_N[iN]   = False
+            r           = ses.popratemat[iN,:]
+            
+            if np.isnan(r).all():
+                # modelcoefs[modelversions.index(modelversion), iN, :] = np.nan
+                # model_R2[modelversions.index(modelversion), iN] = np.nan
+                # Y_hat[iN,:,modelversions.index(modelversion)] = np.nan
+                continue
+
+            idx_low    = r<=np.percentile(r,perc)
+            idx_high   = r>np.percentile(r,100-perc)
+
+            meanresp    = np.empty([len(oris),2])
+            for i,ori in enumerate(oris):
+                meanresp[i,0] = np.nanmean(ses.respmat[iN,np.logical_and(ses.trialdata['Orientation']==ori,idx_low)])
+                meanresp[i,1] = np.nanmean(ses.respmat[iN,np.logical_and(ses.trialdata['Orientation']==ori,idx_high)])
+                
+            # meanresp_pref          = meanresp.copy()
+            # for n in range(N):
+            #     meanresp_pref[n,:,0] = np.roll(meanresp[n,:,0],-prefori[n])
+            #     meanresp_pref[n,:,1] = np.roll(meanresp[n,:,1],-prefori[n])
+
+            # normalize by peak response during still trials
+            tempmin,tempmax = meanresp[:,0].min(axis=0,keepdims=True),meanresp[:,0].max(axis=0,keepdims=True)
+            meanresp[:,0] = (meanresp[:,0] - tempmin) / (tempmax - tempmin)
+            meanresp[:,1] = (meanresp[:,1] - tempmin) / (tempmax - tempmin)
+            
+            b = linregress(meanresp[:,0],meanresp[:,1])
+
+            # Store the coefficients
+            [ses.celldata.loc[iN,'aff_alpha_grsplit'], ses.celldata.loc[iN,'aff_beta_grsplit'], 
+                ses.celldata.loc[iN,'aff_r2_grsplit']] = b[:3]
+            
+    return sessions
+
+def scatter_alphabeta(ax,celldata,xfield='aff_alpha_grsplit',yfield='aff_beta_grsplit'):
+    sns.scatterplot(data=celldata,x=xfield,y=yfield,
+                    color='green',ax=ax,hue='roi_name',marker='.',s=8)
+    sns.regplot(data=celldata,x=xfield,y=yfield,
+                color='k',line_kws={'linewidth': 1},scatter=False)
+    print('r=%2.2g,p=%2.2g' % pearsonr(celldata[xfield],celldata[yfield]))
+    ax.set_xlabel('mult')
+    ax.set_ylabel('add')
+    sns.despine(ax=ax,top=True,right=True,offset=2)
+    
