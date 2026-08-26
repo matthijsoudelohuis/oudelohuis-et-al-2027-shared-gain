@@ -97,7 +97,7 @@ ses         = Session(protocol='GR', animal_id=dat.session_names[ii_session], se
 ses.sessiondata  = pd.DataFrame({'protocol': ['GR'], 'sessiondate': dat.session_names[ii_session],
                                  'species': 'Macaca fascicularis', 'experimenter': 'Amin Zandvakili',
                                  'lab': 'Adam Kohn'})
-sessions[0].sessiondata
+ses.session_id  = dat.session_names[ii_session]
 Nstimuli    = 8
 oris        = np.arange(0,180,180/Nstimuli)
 NV1         = np.shape(spikesV1_array)[0]
@@ -106,7 +106,7 @@ Nrepet      = int(spikesV1_array.shape[1]/Nstimuli)
 Ntrials     = spikesV1_array.shape[1]
 
 ses.celldata  = pd.DataFrame({'roi_name': np.concatenate((np.tile(['V1'],NV1),np.tile(['V2'],NV2))),
-                              'tuning_var': np.zeros(NV1+NV2)
+                            'session_id': np.repeat(dat.session_names[ii_session],NV1+NV2)
                               })
 
 ses.trialdata = pd.DataFrame({'Orientation': oris[stimID[::2]-1]})
@@ -143,6 +143,7 @@ for ii_session in range(len(dat.session_names)):
     ses.sessiondata  = pd.DataFrame({'protocol': ['GR'], 'sessiondate': dat.session_names[ii_session],
                                  'species': 'Macaca fascicularis', 'experimenter': 'Amin Zandvakili',
                                  'lab': 'Adam Kohn'})
+    ses.session_id  = dat.session_names[ii_session]
 
     Nstimuli    = 8
     oris        = np.arange(0,180,180/Nstimuli)
@@ -152,7 +153,7 @@ for ii_session in range(len(dat.session_names)):
     Ntrials     = spikesV1_array.shape[1]
 
     ses.celldata  = pd.DataFrame({'roi_name': np.concatenate((np.tile(['V1'],NV1),np.tile(['V2'],NV2))),
-                                'tuning_var': np.zeros(NV1+NV2)
+                                'session_id': np.repeat(dat.session_names[ii_session],NV1+NV2)
                                 })
 
     ses.trialdata = pd.DataFrame({'Orientation': oris[stimID[::2]-1]})
@@ -232,18 +233,18 @@ monkey          = 'monkey1'
 matdata         = scipy.io.loadmat(path + 'data_%s_gratings.mat' % monkey)
 EVENTS          = matdata['data'][0,0]['EVENTS']  #neurons x stimuli x trials, spike times (s) rel. to stim onset
 
-NV1,Nstim,Ntrialsperstim    = EVENTS.shape
+NNeurons,Nstim,Ntrialsperstim    = EVENTS.shape
 oris            = np.arange(0,360,360/Nstim)    #12 directions, spaced 30 deg apart
 
 t_resp_start    = 0    #response window start (s), relative to stimulus onset
 t_resp_stop     = 1    #response window stop (s), relative to stimulus onset
 
 Ntrials         = Nstim * Ntrialsperstim
-respmat         = np.full((NV1,Ntrials),np.nan)
+respmat         = np.full((NNeurons,Ntrials),np.nan)
 trialoris       = np.repeat(oris,Ntrialsperstim)
 
 #Convert spike times to average firing rate (Hz) in the 0-1s poststimulus window, for each neuron and trial:
-for iN in range(NV1):
+for iN in range(NNeurons):
     for istim in range(Nstim):
         for irep in range(Ntrialsperstim):
             spiketimes                 = EVENTS[iN,istim,irep].flatten()
@@ -255,9 +256,10 @@ ses             = Session(protocol='GR', animal_id=monkey, sessiondate=monkey)
 ses.sessiondata = pd.DataFrame({'protocol': ['GR'], 'sessiondate': monkey,
                                  'species': 'Macaca fascicularis', 'experimenter': 'Matthew Smith',
                                  'lab': 'Adam Kohn'})
+ses.session_id  = monkey
 
-ses.celldata    = pd.DataFrame({'roi_name': np.tile(['V1'],NV1),
-                                 'tuning_var': np.zeros(NV1)
+ses.celldata    = pd.DataFrame({'roi_name': np.tile(['V1'],NNeurons),
+                                'session_id': np.repeat(monkey,NNeurons)
                                  })
 
 ses.trialdata   = pd.DataFrame({'Orientation': trialoris})
@@ -282,18 +284,18 @@ for ises,monkey in enumerate(['monkey1','monkey2','monkey3']):
     matdata         = scipy.io.loadmat(path + 'data_%s_gratings.mat' % monkey)
     EVENTS          = matdata['data'][0,0]['EVENTS']  #neurons x stimuli x trials, spike times (s) rel. to stim onset
 
-    NV1,Nstim,Ntrialsperstim    = EVENTS.shape
+    NNeurons,Nstim,Ntrialsperstim    = EVENTS.shape
     oris            = np.arange(0,360,360/Nstim)    #12 directions, spaced 30 deg apart
 
     t_resp_start    = 0    #response window start (s), relative to stimulus onset
     t_resp_stop     = 1    #response window stop (s), relative to stimulus onset
 
     Ntrials         = Nstim * Ntrialsperstim
-    respmat         = np.full((NV1,Ntrials),np.nan)
+    respmat         = np.full((NNeurons,Ntrials),np.nan)
     trialoris       = np.repeat(oris,Ntrialsperstim)
 
     #Convert spike times to average firing rate (Hz) in the 0-1s poststimulus window, for each neuron and trial:
-    for iN in range(NV1):
+    for iN in range(NNeurons):
         for istim in range(Nstim):
             for irep in range(Ntrialsperstim):
                 spiketimes                 = EVENTS[iN,istim,irep].flatten()
@@ -305,9 +307,9 @@ for ises,monkey in enumerate(['monkey1','monkey2','monkey3']):
     ses.sessiondata = pd.DataFrame({'protocol': ['GR'], 'sessiondate': monkey,
                                     'species': 'Macaca fascicularis', 'experimenter': 'Matthew Smith',
                                     'lab': 'Adam Kohn'})
-
-    ses.celldata    = pd.DataFrame({'roi_name': np.tile(['V1'],NV1),
-                                    'tuning_var': np.zeros(NV1)
+    ses.session_id  = monkey
+    ses.celldata    = pd.DataFrame({'roi_name': np.tile(['V1'],NNeurons),
+                                    'session_id': np.repeat(monkey,NNeurons)
                                     })
 
     ses.trialdata   = pd.DataFrame({'Orientation': trialoris})
@@ -350,7 +352,7 @@ cache           = EcephysProjectCache.from_warehouse(manifest=manifest_path)
 
 session_id      = 767871931
 allensession    = cache.get_session_data(session_id)
-
+session_id      = 'AllenNP_%d' % session_id
 visualareas     = ['VISp','VISpm','VISal','VISam','VISrl','VISli']
 areamap         = {'VISp':'V1','VISpm':'PM','VISal':'AL','VISam':'AM','VISrl':'RL','VISli':'LI'}
 
@@ -387,13 +389,13 @@ for it,t0 in enumerate(starts):
     respmat_runspeed[it]       = np.mean(runspeed[idx_start:idx_stop])
 
 #Make a session object to directly relate to mouse data:
-ses             = Session(protocol='GR', animal_id='AllenNP_%d' % session_id, sessiondate='AllenNP_%d' % session_id)
-ses.sessiondata = pd.DataFrame({'protocol': ['GR'], 'sessiondate': 'AllenNP_%d' % session_id,
+ses             = Session(protocol='GR', animal_id=session_id, sessiondate=session_id)
+ses.sessiondata = pd.DataFrame({'protocol': ['GR'], 'sessiondate': session_id,
                                  'species': 'Mus musculus', 'experimenter': 'Allen Institute',
                                  'lab': 'Allen Institute (Visual Coding Neuropixels, Functional Connectivity)'})
-
+ses.session_id = session_id
 ses.celldata    = pd.DataFrame({'roi_name': units['ecephys_structure_acronym'].map(areamap).to_numpy(),
-                                 'tuning_var': np.zeros(NNeurons)
+                                 'session_id': np.repeat(session_id,NNeurons)
                                  })
 
 ses.trialdata   = pd.DataFrame({'Orientation': stimdata['orientation'].to_numpy(dtype=float),

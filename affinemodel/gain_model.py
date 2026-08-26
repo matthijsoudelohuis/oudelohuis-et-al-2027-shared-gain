@@ -5,12 +5,10 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.linalg import norm
-from scipy.stats import vonmises
 from sklearn.metrics import r2_score
 from tqdm import tqdm
 
 from loaddata.session_info import filter_sessions,load_sessions
-from loaddata.session import Session
 from utils.explorefigs import plot_PCA_gratings
 from utils.corr_lib import *
 from utils.tuning import compute_tuning_wrapper
@@ -19,83 +17,34 @@ from utils.gain_lib import *
 from utils.plot_lib import shaded_error
 from utils.params import params
 
-figdir = os.path.join(params['figdir'],'affinemodel')
+figdir = os.path.join(params['figdir'],'affinevariability','affinemodel')
 
-#%% Explore this lib as well for multiplicative gain fit with alternating least squares: 
-# https://github.com/jcbyts/V1Locomotion/tree/main
+#%% Show different geometries:
+model_ses = generate_affine_data(gain_level=0,offset_level=0,noise_level=1)
+fig = plot_PCA_gratings(model_ses)
+my_savefig(fig=fig,figdir=figdir,filename='pop_geometry_synthetic_affine_onlynoise')
 
+model_ses = generate_affine_data(gain_level=.4,offset_level=0,noise_level=1)
+# model_ses = generate_affine_data(gain_level=.4,offset_level=0,noise_level=0,poisson_level=10)
+fig = plot_PCA_gratings(model_ses)
+my_savefig(fig=fig,figdir=figdir,filename='pop_geometry_synthetic_affine_onlymult')
 
+model_ses = generate_affine_data(gain_level=0,offset_level=1.5,noise_level=1)
+fig = plot_PCA_gratings(model_ses)
+my_savefig(fig=fig,figdir=figdir,filename='pop_geometry_synthetic_affine_onlyadd')
 
-#%%  
-nNeurons        = 1000
-nTrials         = 3200
+model_ses = generate_affine_data(gain_level=.4,offset_level=1.5,noise_level=1)
+fig = plot_PCA_gratings(model_ses)
+my_savefig(fig=fig,figdir=figdir,filename='pop_geometry_synthetic_affine_both')
 
-noise_level     = 15
-gain_level      = 5
-offset_level    = 0
+#%% Show different geometries:
+model_ses = generate_nonlin_data(nonlin='Linear',tuning_level=1,popmodulation_level=1,noise_std=.15)
+# model_ses = generate_nonlin_data(nonlin='Exp',tuning_level=1,popmodulation_level=1,noise_std=.15)
+# model_ses = generate_nonlin_data(nonlin='Sigmoid',tuning_level=1,popmodulation_level=1,noise_std=.15)
+# model_ses = generate_affine_data(gain_level=0,offset_level=0,noise_level=1)
+fig = plot_PCA_gratings(model_ses)
+# my_savefig(fig=fig,figdir=figdir,filename='pop_geometry_synthetic_affine_onlynoise')
 
-noris           = 16
-
-oris            = np.linspace(0,360,noris+1)[:-1]
-locs            = np.random.rand(nNeurons) * np.pi * 2  # circular mean
-kappa           = 2  # concentration
-
-tuning_var      = np.random.rand(nNeurons) #how strongly tuned neurons are
-
-ori_trials      = np.random.choice(oris,nTrials)
-
-R = np.empty((nNeurons,nTrials))
-for iN in range(nNeurons):
-    tuned_resp = vonmises.pdf(np.deg2rad(ori_trials), loc=locs[iN], kappa=kappa)
-    R[iN,:] = (tuned_resp / np.max(tuned_resp)) * tuning_var[iN]
-
-# plt.figure()
-# plt.imshow(R)
-# plt.scatter(ori_trials,R[23,:])
-
-# The distribution of gains across trials determines the distribution of points within each column of the cone
-# I.e. if gain is rand <0,1> then there are trials with zero gain. If gain is strongly dependent on locomotion
-# then there are many trials with large gains in sessions where the mouse is continuously moving.
-# However, it seems that gain (1 + weights * trials) should be positive, otherwise tuning response is inverted
-
-gain_trials = np.random.rand(nTrials)
-gain_weights = np.random.randn(nNeurons) * gain_level
-
-gain_trials = np.random.rand(nTrials)
-gain_weights = np.random.normal(0,1,nNeurons) * gain_level
-
-gain_trials = sessions[ises].respmat_runspeed+1
-# gain_trials = np.random.lognormal(0,1,nTrials)
-gain_weights = (np.random.lognormal(0,1,nNeurons)-1) * gain_level
-gain_weights = np.random.lognormal(0,1,nNeurons) * gain_level
-
-gain_weights = [np.corrcoef(np.nanmean(R,axis=0),R[n,:])[0,1] for n in range(R.shape[0])]
-gain_trials = np.nanmean(R,axis=0)
-
-
-G = 1 + np.outer(gain_weights,gain_trials) 
-
-offset_trials = np.random.rand(nTrials)
-offset_weights = np.random.randn(nNeurons) * offset_level
-
-O = np.outer(offset_weights,offset_trials) 
-
-N = np.random.randn(nNeurons,nTrials) * noise_level
-
-# model is tuned response (R) multiplied by a gain (G) + offset (O) + noise (N)
-Full = R * G + O + N 
-
-model_ses = Session()
-model_ses.respmat = Full
-model_ses.trialdata = pd.DataFrame()
-model_ses.trialdata['Orientation'] = ori_trials
-model_ses.respmat_runspeed = gain_trials
-model_ses.sessiondata = pd.DataFrame()
-model_ses.sessiondata['protocol'] = ['GR']
-
-fig = plot_PCA_gratings(model_ses,apply_zscore=True)
-
-# fig.savefig(os.path.join(figdir,'AffineModel_Gain%1.2f_O%1.2f_noise%1.2f_N%d_K%d' % (gain_level,offset_level,noise_level,nNeurons,nTrials) + '.png'), format = 'png')
 
 #%% ########################### Compute noise correlations: ###################################
 model_ses = compute_signal_noise_correlation([model_ses],filter_stationary=False)[0]

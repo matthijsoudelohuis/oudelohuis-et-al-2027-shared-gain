@@ -356,11 +356,11 @@ def plot_tuned_response(calciumdata, trialdata, t_axis, example_cells,plot_n_tri
 
     return fig
 
-def plot_PCA_gratings(ses,size='runspeed',cellfilter=None,apply_zscore=True,plotgainaxis=False):
+def plot_PCA_gratings(ses,size='poprate',cellfilter=None,apply_zscore=False,plotgainaxis=False):
     """
     The plot_PCA_gratings function is used to visualize the first two principal components of a population of neurons' responses to grating stimuli. It takes in three inputs:
     ses: a ses object containing the responses to be analyzed.
-    size (optional): a string specifying the size of the scatter plot markers. Default is 'runspeed'.
+    size (optional): a string specifying the size of the scatter plot markers. Default is 'poprate'.
     cellfilter (optional): a boolean array specifying which cells to include in the analysis. Default is None.
     apply_zscore (optional): a boolean specifying whether to apply a zscore to each neuron's responses. Default is True.
     returns: a figure with subplots for each orientation, with the first two principal components plotted as x and y.
@@ -382,12 +382,12 @@ def plot_PCA_gratings(ses,size='runspeed',cellfilter=None,apply_zscore=True,plot
     ori         = ses.trialdata['Orientation']
     oris        = np.sort(pd.Series.unique(ses.trialdata['Orientation']))
 
-    ori_ind = [np.argwhere(np.array(ori) == iori)[:, 0] for iori in oris]
+    ori_ind     = [np.argwhere(np.array(ori) == iori)[:, 0] for iori in oris]
 
     shade_alpha = 0.2
     lines_alpha = 0.8
     pal = sns.color_palette('husl', len(oris))
-    pal = np.tile(sns.color_palette('husl', int(len(oris)/2)), (2, 1))
+    # pal = np.tile(sns.color_palette('husl', int(len(oris)/2)), (2, 1))
     if size == 'runspeed':
         sizes = (ses.respmat_runspeed - np.percentile(ses.respmat_runspeed, 5)) / \
             (np.percentile(ses.respmat_runspeed, 95) -
@@ -396,6 +396,11 @@ def plot_PCA_gratings(ses,size='runspeed',cellfilter=None,apply_zscore=True,plot
         sizes = (ses.respmat_videome - np.percentile(ses.respmat_videome, 5)) / \
             (np.percentile(ses.respmat_videome, 95) -
              np.percentile(ses.respmat_videome, 5))
+    elif size=='poprate':
+        poprate = np.nanmean(respmat,axis=0)
+        sizes = (poprate - np.percentile(poprate, 5)) / \
+                    (np.percentile(poprate, 95) -
+                     np.percentile(poprate, 5))
 
     projections = [(0, 1), (1, 2), (0, 2)]
     projections = [(0, 1), (1, 2)]
@@ -425,7 +430,7 @@ def plot_PCA_gratings(ses,size='runspeed',cellfilter=None,apply_zscore=True,plot
 
     return fig
 
-def plot_PCA_gratings_3D(ses, size='runspeed', export_animation=False, figdir=None,idx_N=None,plotgainaxis=False):
+def plot_PCA_gratings_3D(ses, size='poprate', export_animation=False, figdir=None,idx_N=None,plotgainaxis=False):
 
     ########### PCA on trial-averaged responses ############
     ######### plot result as scatter by orientation ########
@@ -455,9 +460,9 @@ def plot_PCA_gratings_3D(ses, size='runspeed', export_animation=False, figdir=No
         sizes = np.ones_like(ses.respmat_runspeed)*0.5
     elif size == 'poprate':
         poprate = np.nanmean(zscore(ses.respmat, axis=1), axis=0)
-        sizes = (poprate- np.percentile(poprate, minperc)) / \
+        sizes = np.clip((poprate- np.percentile(poprate, minperc)) / \
             (np.percentile(poprate, maxperc) -
-             np.percentile(poprate, minperc))
+             np.percentile(poprate, minperc)),0,1)
         
     fig = plt.figure(figsize=[len(areas)*4, 4])
     # fig,axes = plt.figure(1, len(areas), figsize=[len(areas)*3, 3])
@@ -527,8 +532,8 @@ def plot_PCA_gratings_3D(ses, size='runspeed', export_animation=False, figdir=No
         ax.zaxis.pane.set_edgecolor('w')
 
             # ax.view_init(elev=-30, azim=45, roll=-45)
-        print('Variance Explained (%s) by first 3 components: %2.2f' %
-              (area, pca.explained_variance_ratio_.cumsum()[2]))
+        # print('Variance Explained (%s) by first 3 components: %2.2f' %
+        #       (area, pca.explained_variance_ratio_.cumsum()[2]))
 
     if export_animation:
         print("Making animation")

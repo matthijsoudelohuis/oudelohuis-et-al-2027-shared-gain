@@ -4,10 +4,11 @@ import seaborn as sns
 from sklearn.metrics import r2_score
 from tqdm import tqdm
 from scipy.optimize import minimize
-from scipy.stats import zscore,linregress
+from scipy.stats import zscore,pearsonr,spearmanr,vonmises,linregress
 
 from utils.gain_lib import comp_poprate
 from utils.plot_lib import *
+from loaddata.session import Session
 
 #%% ###########################################################################
 # NONLINEAR TRANSFER FUNCTION FITTING PIPELINE
@@ -64,18 +65,15 @@ nl_names = [c[0] for c in NL_CONFIGS]
 nNL      = len(NL_CONFIGS)
 clrs_nl  = sns.color_palette('tab10', nNL)
 
-#%%
 def tuning_input(stim, pref=0.0, width=1.0, gain=1.0):
     return gain * np.exp(-(stim - pref)**2 / (2 * width**2))
 
-
-#%%
 def simulate_responses(
     x,
     nonlinearity,
     noise_std=0.2,
     n_trials=1000
-):
+    ):
     responses = []
     for _ in range(n_trials):
         noisy_x = x + np.random.normal(0, noise_std, size=x.shape)
@@ -83,8 +81,7 @@ def simulate_responses(
         responses.append(y)
     return np.array(responses)
 
-#%% Core fitting function
-
+# Core fitting function
 def fit_nl_models(resp, stim_ids, poprate, configs=NL_CONFIGS):
     """
     Fit all NL models to a single neuron's trial-by-trial responses.
@@ -382,3 +379,114 @@ TF_DERIVS = {
     'Exp':             tfd_exp,
 }
 
+def generate_nonlin_data(nonlin='Linear',tuning_level=1,popmodulation_level=1,noise_std=.15,
+                         drive_mean=1.0,drive_std=1.0):
+    """
+    Nonlinear transfer-function model.
+
+    The tuned response and the population rate are combined additively into a single input
+    drive, standardized per neuron, then passed through a shared static nonlinearity f (chosen
+    via `nonlin`, see NL_CONFIGS); noise is added to the drive before the nonlinearity:
+
+        r_i(t) = f( u_i(t) + eps_i(t) )
+        u_i(t)  = drive_std * ( theta_i(t) + c_i*P(t) - mean_t[theta_i+c_i*P] ) / std_t[theta_i+c_i*P]
+
+        theta_i(t)  tuned response of neuron i to the orientation shown on trial t
+                     (von Mises tuning curve, peak-normalized, scaled by neuron i's tuning strength)
+        P(t)        population rate on trial t, P(t) ~ U(0, popmodulation_level), shared across neurons
+        c_i         neuron i's population coupling, c_i ~ U(0,1)
+        u_i(t)      neuron i's raw drive (theta_i + c_i*P), z-scored per neuron (over trials) and
+                     rescaled to drive_std, so every neuron is exposed to a comparable slice of f's
+                     curvature regardless of its own tuning/coupling magnitude - rather than rescaling
+                     into a hand-picked, per-nonlinearity numeric operating range
+        eps_i(t)    ~ N(0, noise_std * drive_std) private trial noise on the standardized drive
+        f(.)        static nonlinearity (Linear/ReLU/Softplus/Exp/Power-law/Sigmoid); any shape
+                     parameter it has (softplus beta, sigmoid/power-law a/p) already controls where
+                     its own interesting behavior sits, so no per-function range table is needed
+
+    Per-neuron z-scoring keeps each neuron's *relative* mix of orientation- vs. population-rate-
+    driven variance intact (a per-neuron affine transform preserves that ratio, still set by
+    tuning_level/popmodulation_level) while removing sensitivity to a single outlier neuron/trial
+    setting the scale for the whole population; drive_std is then the one knob controlling how far
+    into f's curvature the population sits.
+
+    Because population rate enters additively *before* a shared nonlinearity rather than
+    multiplying the tuned response directly, its effect on the output is itself nonlinear and
+    depends on where u_i(t) falls on f (contrast with generate_slopegain_data, where the
+    population rate multiplies the tuned response directly with no static f, and
+    generate_affine_data, where gain/offset act directly on the response with no f at all).
+    """
+    nNeurons        = 1000
+    nTrials         = 3200
+
+    noris           = 8
+    oris            = np.linspace(0,360,noris+1)[:-1]
+    locs            = np.random.rand(nNeurons) * np.pi * 2  # circular mean
+    kappa           = 2  #tuning concentration parameter (higher = more sharply tuned)
+
+    tuning_var      = np.random.rand(nNeurons) * tuning_level #how strongly tuned neurons are
+    popcouplings    = np.random.rand((nNeurons))
+    poprates        = np.random.rand((nTrials)) * popmodulation_level
+
+    ori_trials      = np.random.choice(oris,nTrials)
+
+    R = np.empty((nNeurons,nTrials))
+    for iN in range(nNeurons):
+        tuned_resp = vonmises.pdf(np.deg2rad(ori_trials), loc=locs[iN], kappa=kappa)
+        R[iN,:] = (tuned_resp / np.max(tuned_resp)) * tuning_var[iN]
+
+    inputmat = np.full((nNeurons,nTrials),np.nan)
+    for iN in range(nNeurons):
+        inputmat[iN,:] = R[iN,:] + poprates * popcouplings[iN]
+
+    if isinstance(nonlin, str):
+        inonlin = next(i for i, (name, *_) in enumerate(NL_CONFIGS) if name == nonlin)
+    else:
+        inonlin = int(nonlin)
+
+    name, nl_func, n_shape, p0_shape, bounds_shape = NL_CONFIGS[inonlin]
+
+    # # Standardize the drive per neuron (mean 0, std = drive_std) instead of rescaling into a
+    # # hand-picked per-nonlinearity operating range - robust to outlier neurons/trials and
+    # # generalizes to any nonlinearity without a table entry:
+    # drive_mean = inputmat.mean(axis=1, keepdims=True)
+    # drive_sd   = inputmat.std(axis=1, keepdims=True)
+    # drive_sd[drive_sd == 0] = 1.0
+    # drivemat = (inputmat - drive_mean) / drive_sd * drive_std
+
+    # Standardize the drive per neuron (mean 0, std = drive_std) instead of rescaling into a
+    # hand-picked per-nonlinearity operating range - robust to outlier neurons/trials and
+    # generalizes to any nonlinearity without a table entry:
+    emp_drive_mean = inputmat.mean(axis=(0,1), keepdims=True)
+    emp_drive_sd   = inputmat.std(axis=(0,1), keepdims=True)
+    emp_drive_sd[emp_drive_sd == 0] = 1.0
+    drivemat = (inputmat - emp_drive_mean) / emp_drive_sd 
+
+    drivemat *= drive_std
+    drivemat += drive_mean
+    # plt.hist(drivemat.flatten(),bins=100)
+
+    respmat = np.full((nNeurons, nTrials), np.nan)
+    for iN in range(nNeurons):
+        respmat[iN, :] = simulate_responses(
+            drivemat[iN, :],
+            nl_func,
+            noise_std=noise_std * drive_std,
+            n_trials=1,
+        )
+
+    session_id = 'synthetic%d%d%d' % (tuning_level,popmodulation_level,noise_std)
+    model_ses = Session()
+    model_ses.session_id = session_id
+    model_ses.respmat = respmat
+    model_ses.trialdata = pd.DataFrame()
+    model_ses.trialdata['Orientation'] = ori_trials
+    model_ses.sessiondata = pd.DataFrame()
+    model_ses.sessiondata['protocol'] = ['GR']
+    model_ses.sessiondata['session_id'] = session_id
+    model_ses.celldata = pd.DataFrame()
+    model_ses.celldata['cell_id'] = [str(i) for i in range(nNeurons)]
+    model_ses.celldata['session_id'] = session_id
+    model_ses.celldata['roi_name'] = 'synth'
+
+    return model_ses

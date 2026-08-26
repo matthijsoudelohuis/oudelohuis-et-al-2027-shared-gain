@@ -33,10 +33,6 @@ figdir = os.path.join(params['figdir'],'popgeometry','example')
 data = np.load(os.path.join(os.getcwd(),'datasets','dataset_A_1_exampleses' + '.npz'),allow_pickle=True)
 sessions = data['sessions']
 
-#%% ########################### Compute tuning metrics: ###################################
-sessions = compute_tuning_wrapper(sessions)
-sessions = compute_pop_coupling(sessions,version='radius_500')
-
 #%% 
 ises = 0
 ses = sessions[0]
@@ -288,12 +284,6 @@ my_savefig(fig,figdir,'Example_Cone_3D_PopRate_%s' % ses.session_id)
 # fig.savefig(os.path.join(figdir,'Cone_3D_V1_Nogain_%s' % ses.sessiondata['session_id'][0] + '.png'), format = 'png')
 
 # # #%% #############################################################################
-
-
-
-
-#%% Add how neurons are coupled to the population rate: 
-sessions = compute_pop_coupling(sessions)
 
 
 #%% PCA for differently coupled neurons: 

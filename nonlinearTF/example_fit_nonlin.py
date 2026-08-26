@@ -211,9 +211,11 @@ plt.tight_layout()
 
 #%%
 
+
 #%% Load an example session: 
 # data = np.load(os.path.join(os.getcwd(),'datasets','dataset_B_1_exampleses' + '.npz'),allow_pickle=True)
-data = np.load(os.path.join(os.getcwd(),'datasets','dataset_D_1_exampleses' + '.npz'),allow_pickle=True)
+# data = np.load(os.path.join(os.getcwd(),'datasets','dataset_D_1_exampleses' + '.npz'),allow_pickle=True)
+data = np.load(os.path.join(os.getcwd(),'datasets','dataset_E_1_exampleses' + '.npz'),allow_pickle=True)
 sessions = data['sessions']
 
 #%% Pick example neuron: well-tuned with moderate–high pop coupling

@@ -10,7 +10,6 @@ from sklearn.decomposition import PCA
 from scipy.optimize import curve_fit
 
 from loaddata.session_info import filter_sessions,load_sessions
-from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 
 from utils.plot_lib import * 
 from utils.params import params
@@ -20,10 +19,6 @@ figdir = os.path.join(params['figdir'],'popgeometry','curvature')
 #%% Load an example session: 
 data = np.load(os.path.join(os.getcwd(),'datasets','dataset_A_1_exampleses' + '.npz'),allow_pickle=True)
 sessions = data['sessions']
-
-#%% ########################### Compute tuning metrics: ###################################
-# sessions = compute_tuning_wrapper(sessions)
-# sessions = compute_pop_coupling(sessions,version='radius_500')
 
 #%% ######### plot result as scatter by orientation for projection ########
 ses = sessions[0]
@@ -167,9 +162,6 @@ my_savefig(fig,figdir,'Cone_Slice_V1_%s_alloris' % (ses.session_id))
 data = np.load(os.path.join(os.getcwd(),'datasets','dataset_A_2_V1only' + '.npz'),allow_pickle=True)
 sessions = data['sessions']
 nSessions = len(sessions)
-
-sessions = compute_tuning_wrapper(sessions)
-sessions = compute_pop_coupling(sessions,version='radius_500')
 
 #%% Fit linear and exponential curves to the gain axis vs orientation axis projection,
 # for each orientation, for each session, and store the R2 of both fits:

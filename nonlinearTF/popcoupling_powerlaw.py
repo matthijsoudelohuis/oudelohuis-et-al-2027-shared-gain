@@ -8,8 +8,6 @@ from sklearn.metrics import r2_score
 from tqdm import tqdm
 from scipy.stats import linregress,binned_statistic
 
-
-
 from loaddata.session_info import filter_sessions
 from utils.tuning import compute_tuning_wrapper
 from utils.gain_lib import * 

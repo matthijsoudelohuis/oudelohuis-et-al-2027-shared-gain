@@ -3,12 +3,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
-from scipy.stats import zscore,pearsonr,spearmanr
+from scipy.stats import zscore,pearsonr,spearmanr,vonmises,linregress
 from tqdm import tqdm
-from scipy.stats import linregress
 
 from utils.pair_lib import compute_pairwise_anatomical_distance
 from utils.plot_lib import * #get all the fixed color schemes
+from loaddata.session import Session
 
 def plot_respmat(orientations, datasets, labels, prefori):
     data = datasets[0]
@@ -280,13 +280,118 @@ def fitAffine_GR_singleneuron_split(sessions,modelversion='radius_500',perc=50,r
             
     return sessions
 
-def scatter_alphabeta(ax,celldata,xfield='aff_alpha_grsplit',yfield='aff_beta_grsplit'):
+def scatter_alphabeta(ax,celldata,xfield='aff_alpha_grsplit',yfield='aff_beta_grsplit',hue='roi_name'):
     sns.scatterplot(data=celldata,x=xfield,y=yfield,
-                    color='green',ax=ax,hue='roi_name',marker='.',s=8)
+                    color='green',ax=ax,hue=hue,marker='.',s=8,palette='magma')
     sns.regplot(data=celldata,x=xfield,y=yfield,
                 color='k',line_kws={'linewidth': 1},scatter=False)
     print('r=%2.2g,p=%2.2g' % pearsonr(celldata[xfield],celldata[yfield]))
     ax.set_xlabel('mult')
     ax.set_ylabel('add')
     sns.despine(ax=ax,top=True,right=True,offset=2)
-    
+
+
+def generate_affine_data(tuning_level=1,gain_level=0,offset_level=0,noise_level=1,poisson_level=0):
+    """
+    Affine gain model.
+
+    Each neuron's tuned response is rescaled by a shared multiplicative gain and shifted
+    by a shared additive offset, each an independent per-trial latent factor with its own
+    per-neuron weight, plus two independent noise sources:
+
+        r_i(t) = theta_i(t) * G_i(t) + O_i(t) + N_i(t)
+
+        theta_i(t)  tuned response of neuron i to the orientation shown on trial t
+                     (von Mises tuning curve, peak-normalized, scaled by neuron i's tuning strength)
+        G_i(t) = 1 + w_i_gain   * g(t)     multiplicative gain, g(t) shared across neurons,
+                                            w_i_gain   ~ N(0.5, gain_level) per neuron
+        O_i(t) =     w_i_offset * o(t)     additive offset, o(t) ~ U(0,1) shared across neurons
+                                            (independent of g(t)), w_i_offset ~ N(0, offset_level) per neuron
+        N_i(t) = N_gauss_i(t) + N_poisson_i(t)     combined observation noise:
+            N_gauss_i(t)   ~ N(0, noise_level)         homoscedastic (mean-independent) Gaussian
+                                                        observation noise
+            N_poisson_i(t) = poisson_level * (Pois(mu_i(t)/poisson_level) - mu_i(t)/poisson_level)
+                                                        zero-mean, mean-dependent shot-noise-like term,
+                                                        where mu_i(t) = max(0, theta_i(t)*G_i(t)+O_i(t))
+                                                        is the clipped noise-free signal and poisson_level
+                                                        sets its Fano factor (variance / mean)
+
+    Multiplicative and additive population-wide variability act directly and independently
+    on the already-tuned response, on top of which sits a Poisson-Gaussian noise mixture (as
+    commonly used for photon-/count-limited imaging data): a signal-independent Gaussian term
+    plus a signal-dependent, mean-scaling Poisson-like term. There is no static nonlinearity
+    (contrast with generate_nonlin_data, where population-rate variability instead enters as an
+    input to a shared nonlinear transfer function).
+    """
+    nNeurons        = 1000
+    nTrials         = 3200
+
+    noris           = 8
+    oris            = np.linspace(0,360,noris+1)[:-1]
+    locs            = np.random.rand(nNeurons) * np.pi * 2  # circular mean
+    kappa           = 2  # concentration
+
+    tuning_var      = np.random.rand(nNeurons) * tuning_level #how strongly tuned neurons are
+
+    # gain_trials     = np.random.rand(nTrials)
+    # gain_weights    = np.random.normal(0,1,nNeurons) * gain_level
+
+    gain_trials     = np.random.standard_gamma(3.5,nTrials)
+    gain_weights    = np.random.normal(0.5,1,nNeurons) * gain_level
+
+    offset_trials   = np.random.rand(nTrials)
+    offset_weights  = np.random.randn(nNeurons) * offset_level
+
+    ori_trials      = np.random.choice(oris,nTrials)
+
+    R = np.empty((nNeurons,nTrials))
+    for iN in range(nNeurons):
+        tuned_resp = vonmises.pdf(np.deg2rad(ori_trials), loc=locs[iN], kappa=kappa)
+        R[iN,:] = (tuned_resp / np.max(tuned_resp)) * tuning_var[iN] 
+
+    # plt.hist(np.random.standard_gamma(2.5,nTrials),bins=50)
+    # plt.hist(np.random.lognormal(mean=2.5, sigma=1, size=nNeurons),bins=50)
+
+    # The distribution of gains across trials determines the distribution of points within each column of the cone
+    # I.e. if gain is rand <0,1> then there are trials with zero gain. If gain is strongly dependent on locomotion
+    # then there are many trials with large gains in sessions where the mouse is continuously moving.
+    # However, it seems that gain (1 + weights * trials) should be positive, otherwise tuning response is inverted
+
+    G = 1 + np.outer(gain_weights,gain_trials)
+
+    O = np.outer(offset_weights,offset_trials)
+
+    # Gaussian observation noise: constant variance, independent of the mean response
+    N_gauss = np.random.randn(nNeurons,nTrials) * noise_level
+
+    # Poisson (shot-noise-like) noise: variance scales with the mean response. mu is the
+    # noise-free signal clipped at 0 (Poisson rates can't be negative); poisson_level rescales
+    # the counting process so it acts as a Fano factor (variance/mean) rather than forcing
+    # unit variance-to-mean ratio.
+    mu = np.clip(R * G + O, a_min=0, a_max=None)
+    if poisson_level > 0:
+        lam = mu / poisson_level
+        N_poisson = poisson_level * (np.random.poisson(lam) - lam)
+    else:
+        N_poisson = np.zeros((nNeurons,nTrials))
+
+    N = N_gauss + N_poisson
+
+    # model is tuned response (R) multiplied by a gain (G) + offset (O) + noise (N)
+    Full = R * G + O + N
+    session_id = 'synthetic%d%d%d%d' % (gain_level,offset_level,noise_level,poisson_level)
+
+    model_ses = Session()
+    model_ses.session_id = session_id
+    model_ses.respmat = Full
+    model_ses.trialdata = pd.DataFrame()
+    model_ses.trialdata['Orientation'] = ori_trials
+    model_ses.sessiondata = pd.DataFrame()
+    model_ses.sessiondata['protocol'] = ['GR']
+    model_ses.sessiondata['session_id'] = session_id
+    model_ses.celldata = pd.DataFrame()
+    model_ses.celldata['cell_id'] = [str(i) for i in range(nNeurons)]
+    model_ses.celldata['session_id'] = session_id
+    model_ses.celldata['roi_name'] = 'synth'
+
+    return model_ses
