@@ -23,5 +23,15 @@ var/
 .installed.cfg
 *.egg
 
-# Data
-data/
+# Data (repo-root data/ only; sharedgain/data/ is tracked)
+/data/
+
+# 2_pipeline/<script>/: one folder per script in 1_scripts/, fully regenerable by re-running it.
+# Commit only the png figures and csv tables under out/; everything in store/ (model fits,
+# datasets, caches) and all other file types (pdf, npz, pkl, ...) stay local.
+2_pipeline/**
+!2_pipeline/*/
+!2_pipeline/*/out/
+!2_pipeline/*/out/**/
+!2_pipeline/*/out/**/*.png
+!2_pipeline/*/out/**/*.csv
